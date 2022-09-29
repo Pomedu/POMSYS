@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link,useMatch,useResolvedPath } from 'react-router-dom';
-import './Navbar.css';
+import './ClientNavbar.css';
 
 export default function ClientNavbar() {
     return (

@@ -32,37 +32,7 @@
     border-bottom: solid 2px #222222;
 }
 
-.discovery-button {
-    height: 10px;
-    text-decoration: none;
-    font-size: 16px;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.ongoing-button {
-    height: 10px;
-    text-decoration: none;
-    font-size: 16px;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.leaderboard-button {
-    height: 10px;
-    text-decoration: none;
-    font-size: 16px;
-    color: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-button {
+.tap-button {
     height: 10px;
     text-decoration: none;
     font-size: 16px;

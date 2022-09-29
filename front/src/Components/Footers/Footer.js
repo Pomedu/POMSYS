@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import "./Footer.css";
 
-export default function ClientFooter() {
+export default function Footer() {
   return (
     <div className="footer">
       <div className="wrap">
