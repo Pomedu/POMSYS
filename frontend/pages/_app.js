@@ -4,9 +4,6 @@ import ClientLayout from '../components/Layouts/ClientLayout';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
 import "../components/Footers/Footer.css"
-import '../components/Layouts/AdminLayout.css'
-import '../components/Navbars/AdminNavbar.css'
-import '../components/Navbars/ClientNavbar.css'
 import "../components/Navbars/AdminTopbar.css"
 import "../styles/globals.css"
 
@@ -15,6 +12,7 @@ const layouts = {
     L1: AdminLayout,
     L2: ClientLayout,
 };
+
 
 const MyApp = ({ Component, pageProps }) => {
     const Layout = layouts[Component.layout] || ((children) => <>{children}</>);

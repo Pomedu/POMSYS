@@ -13,8 +13,9 @@ const AdminNavbar = () => {
     return (
         <div className="vertical-menu">
             <div data-simplebar className="h-100">
-                <div className="sidebar-menu">
+                <div id="sidebar-menu">
                     <ul className="metismenu list-unstyled" id="side-menu">
+                        <li className="menu-title" key="t-apps">업무</li>
                         <li>
                             <Link href={"/admin/lectures"}>
                                 <a className={router.pathname === '/admin/lectures' ? "mm-active" : ''}>

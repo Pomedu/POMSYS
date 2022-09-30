@@ -4,39 +4,39 @@ import Link from "next/link";
 
 export default function AdminTopbar(props) {
   const showMenu = () => {
-          props.onChange(sidebarisOpen => !sidebarisOpen); 
-      }
-
-  
-    return (
-      <header className="page-topbar">
-            <div className="navbar-header">
-                <div className="d-flex">
-                    <div className="navbar-brand-box">
-                      <Link href={"/admin"}>
-                        <a className="adminlogo adminlogo-light">
-                          <span className="adminlogo-sm">
-                            🤔
-                          </span>
-                          <span className="adminlogo-lg">
-                            🤔POMSYS Admin
-                          </span>
-                        </a>
-                      </Link>
-                    </div>
-                    <div className="header-item px-3 font-size-20">
-                     <IonIcon onClick={()=>showMenu()} name="menu-outline"/>
-                    </div>
-                </div>
-
-                <div className="d-flex">
-                 Admin님 환영합니다
-                </div>
-            </div>
-        </header>
-    );
-
-    
-  
+    props.onChange(sidebarisOpen => !sidebarisOpen);
   }
+
+
+  return (
+    <header id="page-topbar">
+      <div className="navbar-header">
+        <div className="d-flex">
+          <div className="navbar-brand-box">
+            <Link href={"/admin"}>
+              <a className="logo logo-light">
+                <span className="logo-sm">
+                  <img src='images/logo.svg' style={{ height: "22px" }} />
+                </span>
+                <span className="logo-lg">
+                  <img src='images/logo-light.png' style={{ height: "22px" }} />
+                </span>
+              </a>
+            </Link>
+          </div>
+          <button type="button" className="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn" onClick={() => showMenu()}>
+            <IonIcon  name="menu-outline" />
+          </button>
+        </div>
+
+        <div className="d-flex">
+          Admin님 환영합니다
+        </div>
+      </div>
+    </header>
+  );
+
+
+
+}
 
