@@ -1,7 +1,6 @@
 import React from "react";
-import "./Footer.css";
 
-export default function Footer() {
+const Footer = () => {
   return (
     <div className="footer">
       <div className="wrap">
@@ -41,3 +40,5 @@ export default function Footer() {
     </div>
   );
 }
+
+export default Footer
