@@ -4,6 +4,8 @@ from lectureapp.models import Lecture, Lesson, CourseRegistration, Test, TestRec
 from teacherapp.models import Teacher
 
 class LectureSerializer(serializers.ModelSerializer):
+    teacher = serializers.StringRelatedField(many=False)
+    status = serializers.CharField(source='get_status_display')
     class Meta:
         model = Lecture
         fields = "__all__"

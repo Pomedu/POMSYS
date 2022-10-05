@@ -65,8 +65,8 @@ const AdminLayout = ({ children }) => {
                     </div>
                 </div>
             </div>
-            <Script src="/libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
-            <Script src="/libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
+            <Script src="../../libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
+            <Script src="../../libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
         </div>
     );
 };

@@ -1,6 +1,8 @@
 import React from "react";
-import IonIcon from "@reacticons/ionicons";
 import Link from "next/link";
+import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 export default function AdminTopbar(props) {
   const showMenu = () => {
@@ -16,16 +18,16 @@ export default function AdminTopbar(props) {
             <Link href={"/admin"}>
               <a className="logo logo-light">
                 <span className="logo-sm">
-                  <img src='images/logo.svg' style={{ height: "22px" }} />
+                  <Image src='/images/logo.svg' height="22px" width="22px"/>
                 </span>
                 <span className="logo-lg">
-                  <img src='images/logo-light.png' style={{ height: "22px" }} />
+                  <Image src='/images/logo-light.png' height="22px" width="60px" />
                 </span>
               </a>
             </Link>
           </div>
           <button type="button" className="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn" onClick={() => showMenu()}>
-            <IonIcon  name="menu-outline" />
+            <FontAwesomeIcon  icon={faBars} />
           </button>
         </div>
 

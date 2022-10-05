@@ -2,6 +2,9 @@ import React from 'react';
 import IonIcon from '@reacticons/ionicons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBox, faUserCircle, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+
 
 function MoveToHomePage() {
     window.location.replace("student/");
@@ -19,24 +22,24 @@ const AdminNavbar = () => {
                         <li>
                             <Link href={"/admin/lectures"}>
                                 <a className={router.pathname === '/admin/lectures' ? "mm-active" : ''}>
-                                    <i><IonIcon name="folder-outline" /></i>
+                                    <i><FontAwesomeIcon icon={faBox} /></i>
                                     <span>강의관리</span>
                                 </a>
                             </Link>
                         </li>
                         <li>
-                            <Link href={"/admin/lectures"}>
-                                <a className={router.pathname === '/admin/lectures' ? "mm-active" : ''}>
-                                    <i><IonIcon name="folder-outline" /></i>
-                                    <span>강의관리</span>
+                            <Link href={"/admin/teachers"}>
+                                <a className={router.pathname === '/admin/teachers' ? "mm-active" : ''}>
+                                <i><FontAwesomeIcon icon={faUserCircle} /></i>
+                                    <span>강사관리</span>
                                 </a>
                             </Link>
                         </li>
                         <li>
-                            <Link href={"/admin/lectures"}>
-                                <a className={router.pathname === '/admin/lectures' ? "mm-active" : ''}>
-                                <i><IonIcon name="folder-outline" /></i>
-                                <span>강의관리</span>
+                            <Link href={"/admin/students"}>
+                                <a className={router.pathname === '/admin/students' ? "mm-active" : ''}>
+                                <i><FontAwesomeIcon icon={faUserGroup} /></i>
+                                <span>학생관리</span>
                                 </a>
                             </Link>
                         </li>

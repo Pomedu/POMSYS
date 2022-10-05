@@ -16,7 +16,7 @@ class Lecture(models.Model):
     description = models.TextField(null=True,blank=True)
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
-    coursetime = models.JSONField(default=list, null=False) #{'day':0,'start_time': '1800','end_time': '1930'}
+    coursetime = models.JSONField(default=list, null=False) #{"day":0,"start_time": "1800","end_time": "1930"}
     status = models.CharField(max_length=20, choices=status_choices, null=False)
     cost = models.IntegerField(null=True, blank=True)
     textbook = models.JSONField(default=list, null=True, blank=True)

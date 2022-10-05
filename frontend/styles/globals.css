@@ -356,6 +356,9 @@ body[data-layout="horizontal"] .footer {
       color: #7f8387;
       -webkit-transition: all .4s;
       transition: all .4s; }
+      #sidebar-menu ul li a i svg{
+        width:20px;
+      }
     #sidebar-menu ul li a:hover {
       color: #383c40; }
       #sidebar-menu ul li a:hover i {
