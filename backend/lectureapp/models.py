@@ -19,7 +19,7 @@ class Lecture(models.Model):
     coursetime = models.JSONField(default=list, null=False) #{"day":0,"start_time": "1800","end_time": "1930"}
     status = models.CharField(max_length=20, choices=status_choices, null=False)
     cost = models.IntegerField(null=True, blank=True)
-    textbook = models.JSONField(default=list, null=True, blank=True)
+    textbook = models.JSONField(default=list, null=True, blank=True) #리스트형태
     students = models.ManyToManyField(Student, through='CourseRegistration', related_name='lectures')
     def __str__(self):
         return self.name

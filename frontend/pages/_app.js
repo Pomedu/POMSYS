@@ -7,6 +7,7 @@ import "../components/Footers/Footer.css"
 import "../components/Navbars/AdminTopbar.css"
 import "../styles/globals.css"
 import wrapper from '../store/configureStore';
+import { Provider } from 'react-redux';
 
 const queryClient = new QueryClient();
 const layouts = {
@@ -17,14 +18,17 @@ const layouts = {
 
 const MyApp = ({ Component, pageProps }) => {
     const Layout = layouts[Component.layout] || ((children) => <>{children}</>);
+    const { store, props } = wrapper.useWrappedStore(pageProps);
     return (
-        <Layout>
-            <QueryClientProvider client={queryClient}>
-                <Component {...pageProps} />
-                <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-        </Layout>);
-
+        <Provider store={store}>
+            <Layout>
+                <QueryClientProvider client={queryClient}>
+                    <Component {...pageProps} />
+                    <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+            </Layout>
+        </Provider>
+    )
 }
 
-export default wrapper.withRedux(MyApp);
+export default MyApp;
