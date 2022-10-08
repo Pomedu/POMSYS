@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchLectures } from "../../../store/modules/lectures";
+import { deleteLecture, fetchLectures, searchLectures } from "../../../store/modules/lecturesSlice";
 import DataTable from "react-data-table-component";
 import "moment/locale/ko"
 import moment from "moment/moment";
@@ -9,24 +9,26 @@ import SearchBox from "../../../components/Common/SearchBox";
 import ContentTitle from "../../../components/Common/ContentTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/router";
 
 const AdminLectureListPage = () => {
-    const getLectures = useSelector(state => state.lecturesReducer);
+    const lecturesList = useSelector(state => state.lectures.lecturesData);
+    const filteredLecturesList = useSelector(state=>state.lectures.filteredLecturesData);
+    const router = useRouter()
     const dispatch = useDispatch();
 
+    // Data Fetch (Lectures)
     useEffect(() => {
         dispatch(fetchLectures())
             .unwrap()
-            .then(response => {
-            })
             .catch(error => {
                 console.log("### error: ", error);
             });
-
     }, []);
 
+    // Set Columns 
     const columnData = [
-        {
+        {   
             name: '강의명',
             selector: row => row.name,
             sortable: true,
@@ -58,15 +60,16 @@ const AdminLectureListPage = () => {
         },
         {
             name: '동작',
-            cell: () => (<span style={{ display: 'flex' }}>
-                <button className="btn-sm btn-danger me-1 "><FontAwesomeIcon icon={faTrashCan}/></button>
-                <button className="btn-sm btn-success"><FontAwesomeIcon icon={faEdit}/></button>
+            cell: (row) => (<span style={{ display: 'flex' }}>
+                <button className="btn-sm btn-danger me-1 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan}/></button>
+                <button className="btn-sm btn-success" onClick={() => router.push(`lectures/${row.id}`)}><FontAwesomeIcon icon={faEdit}/></button>
                 </span>)
         },
     ]
 
     const columns = useMemo(() => columnData, []);
 
+    // Expanded Component
     const ExpandedComponent = ({ data }) => {
         return (
         <div className="card">
@@ -91,11 +94,21 @@ const AdminLectureListPage = () => {
         </div>);
     };
 
-    const [filterText, setFilterText] = React.useState('');
-    const teacherfliter = getLectures.lectures.filter(item => item.teacher.toLowerCase().includes(filterText.toLowerCase()));
-    const namefilter = getLectures.lectures.filter(item => item.name.toLowerCase().includes(filterText.toLowerCase()));
-    const filteredItems = Array.from(new Set(teacherfliter.concat(namefilter)));
+    // Data Filtering
+    const [filterText, setFilterText] = useState('');
+    
+    useEffect(() => {
+        dispatch(searchLectures(filterText));
+    }, [filterText]);
 
+    // Data Delete
+    const onDelete = (e, lectureId)=>{
+        e.preventDefault();
+        dispatch(deleteLecture(lectureId)).unwrap().then(response => console.log("삭제되었습니다"))
+            .catch(error => {
+                console.log("### error: ", error);
+            });
+    }
 
     return (
         <div>
@@ -119,10 +132,11 @@ const AdminLectureListPage = () => {
                     <div>
                         <DataTable
                             columns={columns}
-                            data={filteredItems}
+                            data={filteredLecturesList}
                             pagination
                             expandableRows
                             expandableRowsComponent={ExpandedComponent}
+                            defaultSortFieldId={3} // 개강일로 정렬
                         />
                     </div>
                 </div>

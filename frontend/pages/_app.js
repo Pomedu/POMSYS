@@ -6,8 +6,8 @@ import { ReactQueryDevtools } from "react-query/devtools"
 import "../components/Footers/Footer.css"
 import "../components/Navbars/AdminTopbar.css"
 import "../styles/globals.css"
-import wrapper from '../store/configureStore';
 import { Provider } from 'react-redux';
+import wrapper from '../store/configureStore';
 
 const queryClient = new QueryClient();
 const layouts = {

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lectureapp.models import Lecture, CourseRegistration, Test, Lesson, TestRecord
-from lectureapp.serailizers import LectureSerializer, CourseRegistrationSerializer, TestSerializer, TestRecordSerializer
+from lectureapp.serailizers import LectureSerializer, CourseRegistrationSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer
 
 
 class LectureList(APIView):
@@ -17,7 +17,7 @@ class LectureList(APIView):
         return Response(serializer.data)
 
     def post(self,request):
-        serializer = LectureSerializer(data=request.data)
+        serializer = LectureCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -33,12 +33,12 @@ class LectureDetail(APIView):
 
     def get(self, request, lecture_pk, format=None):
         lecture = self.get_object(lecture_pk)
-        serializer = LectureSerializer(lecture)
+        serializer = LectureCreateSerializer(lecture)
         return Response(serializer.data)
 
     def put(self, request, lecture_pk, format=None):
         lecture = self.get_object(lecture_pk)
-        serializer = LectureSerializer(lecture, data=request.data)
+        serializer = LectureCreateSerializer(lecture, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

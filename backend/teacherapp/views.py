@@ -11,7 +11,7 @@ from lectureapp.serailizers import LectureSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
-from teacherapp.serailizers import TeacherSerializer
+from teacherapp.serailizers import TeacherSerializer, TeacherCreateSerializer
 
 
 class TeacherList(APIView):
@@ -21,7 +21,7 @@ class TeacherList(APIView):
         return Response(serializer.data)
 
     def post(self,request):
-        serializer = TeacherSerializer(data=request.data)
+        serializer = TeacherCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

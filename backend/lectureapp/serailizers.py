@@ -6,6 +6,19 @@ from teacherapp.models import Teacher
 class LectureSerializer(serializers.ModelSerializer):
     teacher = serializers.StringRelatedField(many=False)
     status = serializers.CharField(source='get_status_display')
+    students = serializers.StringRelatedField(many=True)
+    class Meta:
+        model = Lecture
+        fields = "__all__"
+
+class SimpleLectureSerializer(serializers.ModelSerializer):
+    students = serializers.StringRelatedField(many=True)
+    teacher = serializers.StringRelatedField(many=False)
+    class Meta:
+        model = Lecture
+        fields = ('id','name','teacher','students')
+
+class LectureCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
         fields = "__all__"
