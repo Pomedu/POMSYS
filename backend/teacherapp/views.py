@@ -36,12 +36,12 @@ class TeacherDetail(APIView):
 
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
-        serializer = TeacherSerializer(teacher)
+        serializer = TeacherCreateSerializer(teacher)
         return Response(serializer.data)
 
     def put(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
-        serializer = TeacherSerializer(teacher, data=request.data)
+        serializer = TeacherCreateSerializer(teacher, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

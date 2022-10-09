@@ -4,7 +4,7 @@ import axios from 'axios';
 export const fetchStudents = createAsyncThunk("GET/STUDENTS", async (_, { rejectWithValue }) => {
     return axios({
         method: "get",
-        url: 'http://127.0.0.1:8000/api/students'
+        url: 'http://127.0.0.1:8000/api/students/'
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -29,12 +29,12 @@ export const createStudent = createAsyncThunk("POST/STUDENT", async (newStudent,
 export const deleteStudent = createAsyncThunk("DELETE/STUDENT", async (studentId, { rejectWithValue }) => {
     return axios({
         method: "delete",
-        url:   `http://127.0.0.1:8000/api/students/${studentId}`,
-    }).then(response => {return response.data})
+        url: `http://127.0.0.1:8000/api/students/${studentId}`,
+    }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
 
-export const updateStudent = createAsyncThunk("UPDATE/STUDENT", async ({editedStudent, studentId}, { rejectWithValue }) => {
+export const updateStudent = createAsyncThunk("UPDATE/STUDENT", async ({ editedStudent, studentId }, { rejectWithValue }) => {
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/students/${studentId}`,
@@ -56,7 +56,7 @@ export const studentsSlice = createSlice({
         searchStudents: (state, action) => {
             const namefilter = [...state.studentsData].filter(item => item.name.toLowerCase().includes(action.payload.toLowerCase()));
             const phonefilter = [...state.studentsData].filter(item => item.phone_number.includes(action.payload));
-            const merged =namefilter.concat(phonefilter);
+            const merged = namefilter.concat(phonefilter);
             state.filteredStudentsData = merged.filter((item, pos) => merged.indexOf(item) === pos);
         },
     },
@@ -93,9 +93,9 @@ export const studentsSlice = createSlice({
             .addCase(deleteStudent.fulfilled, (state, action) => {
                 state.loading = false;
                 const id = action.meta.arg;
-                if(id){
-                state.studentsData = state.studentsData.filter((item) => item.id !== id);
-                state.filteredStudentsData = state.filteredStudentsData.filter((item) => item.id !== id);
+                if (id) {
+                    state.studentsData = state.studentsData.filter((item) => item.id !== id);
+                    state.filteredStudentsData = state.filteredStudentsData.filter((item) => item.id !== id);
                 }
             })
             .addCase(deleteStudent.rejected, (state, { payload }) => {
@@ -120,9 +120,6 @@ export const studentsSlice = createSlice({
             })
             .addCase(updateStudent.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                const index = state.studentsData.findIndex(student => student.id === payload.id);
-                state.studentsData[index] = payload;
-                state.filteredStudentsData[index] = payload;
                 state.studentData = payload;
             })
             .addCase(updateStudent.rejected, (state, { payload }) => {

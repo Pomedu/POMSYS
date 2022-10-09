@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 
 const AdminLectureListPage = () => {
     const lecturesList = useSelector(state => state.lectures.lecturesData);
-    const filteredLecturesList = useSelector(state=>state.lectures.filteredLecturesData);
+    const filteredLecturesList = useSelector(state => state.lectures.filteredLecturesData);
     const router = useRouter()
     const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ const AdminLectureListPage = () => {
 
     // Set Columns 
     const columnData = [
-        {   
+        {
             name: '강의명',
             selector: row => row.name,
             sortable: true,
@@ -55,15 +55,15 @@ const AdminLectureListPage = () => {
         },
         {
             name: '수강생',
-            selector: row => String(row.students.length)+"명",
+            selector: row => String(row.students.length) + "명",
             sortable: true,
         },
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <button className="btn-sm btn-danger me-1 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan}/></button>
-                <button className="btn-sm btn-success" onClick={() => router.push(`lectures/${row.id}`)}><FontAwesomeIcon icon={faEdit}/></button>
-                </span>)
+                <button className="btn-sm btn-danger me-1 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan} /></button>
+                <button className="btn-sm btn-success" onClick={() => router.push(`lectures/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></button>
+            </span>)
         },
     ]
 
@@ -72,37 +72,37 @@ const AdminLectureListPage = () => {
     // Expanded Component
     const ExpandedComponent = ({ data }) => {
         return (
-        <div className="card">
-            <div className="card-body">
-                <div className="card-title">강의시간</div>
-                <div className="card-title-desc">{data.coursetime.map((ct, index) => {
-                    const day = moment().weekday(ct.day).format('dddd');
-                    const start_time = moment(ct.start_time, "HHmm").format("HH:mm");
-                    const end_time = moment(ct.end_time, "HHmm").format("HH:mm");
-                    return <span key={index}>{day}:{start_time}~{end_time}, </span>
-                })}
+            <div className="card">
+                <div className="card-body">
+                    <div className="card-title">강의시간</div>
+                    <div className="card-title-desc">{data.coursetime.map((ct, index) => {
+                        const day = moment().weekday(ct.day).format('dddd');
+                        const start_time = moment(ct.start_time, "HHmm").format("HH:mm");
+                        const end_time = moment(ct.end_time, "HHmm").format("HH:mm");
+                        return <span key={index}>{day}:{start_time}~{end_time}, </span>
+                    })}
+                    </div>
+                    <div className="card-title">강의설명</div>
+                    <div className="card-title-desc">{data.description}</div>
+                    <div className="card-title">사용교재</div>
+                    <div className="card-title-desc">{data.textbook.map((book, index) => {
+                        return <span key={index}>{book}, </span>
+                    })}</div>
+                    <div className="card-title">수강료</div>
+                    <div className="card-title-desc">{data.cost}원</div>
                 </div>
-                <div className="card-title">강의설명</div>
-                <div className="card-title-desc">{data.description}</div>    
-                <div className="card-title">사용교재</div>
-                <div className="card-title-desc">{data.textbook.map((book,index)=>{
-                    return <span key={index}>{book}, </span>
-                })}</div>
-                <div className="card-title">수강료</div>
-                <div className="card-title-desc">{data.cost}원</div>     
-            </div>
-        </div>);
+            </div>);
     };
 
     // Data Filtering
     const [filterText, setFilterText] = useState('');
-    
+
     useEffect(() => {
         dispatch(searchLectures(filterText));
     }, [filterText]);
 
     // Data Delete
-    const onDelete = (e, lectureId)=>{
+    const onDelete = (e, lectureId) => {
         e.preventDefault();
         dispatch(deleteLecture(lectureId)).unwrap().then(response => console.log("삭제되었습니다"))
             .catch(error => {
@@ -112,23 +112,23 @@ const AdminLectureListPage = () => {
 
     return (
         <div>
-            <ContentTitle title="강의 리스트" mainTitle="강의 관리"/>
+            <ContentTitle title="강의 리스트" mainTitle="강의 관리" />
             <div className="card">
                 <div className="card-body">
-                        <div className="row">
-                            <div className="col-4">
-                                <Link href={'/admin/lectures/create/'}>
-                                    <div className="btn btn-primary row ms-2">
-                                        New
-                                    </div>
-                                </Link>
-                            </div>
-                            <div className="col-8">
-                                <div className="float-end">
-                                <SearchBox onChange={setFilterText} filterText={filterText} />
+                    <div className="row">
+                        <div className="col-4">
+                            <Link href={'/admin/lectures/create/'}>
+                                <div className="btn btn-primary row ms-2">
+                                    New
                                 </div>
+                            </Link>
+                        </div>
+                        <div className="col-8">
+                            <div className="float-end">
+                                <SearchBox onChange={setFilterText} filterText={filterText} />
                             </div>
                         </div>
+                    </div>
                     <div>
                         <DataTable
                             columns={columns}

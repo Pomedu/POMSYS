@@ -2,14 +2,21 @@ import React, { useEffect, useState } from "react";
 import SelectBox from "../Common/SelectBox";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTeachers } from "../../store/modules/teachersSlice";
-import { createLecture, fetchLecture, updateLecture } from "../../store/modules/lecturesSlice";
+import { updateLecture } from "../../store/modules/lecturesSlice";
 import router from "next/router";
 import moment from "moment";
-import wrapper from "../../store/configureStore";
 
-const UpdateLectureForm = (props) => {
-    const [inputFields, setInputFields] = useState(props.lectureData);
-    const [inputCourseTimeFields, setInputCourseTimeFields] = useState(props.lectureData.coursetime)
+const UpdateLectureForm = () => {
+    const lectureData = useSelector(state=>state.lectures.lectureData);
+    const [inputFields, setInputFields] = useState();
+    const [inputCourseTimeFields, setInputCourseTimeFields] = useState();
+
+    useEffect(()=>{
+        const deepcopy = JSON.parse(JSON.stringify(lectureData));
+        setInputFields(deepcopy);
+        setInputCourseTimeFields(deepcopy.coursetime);
+    },[lectureData])
+
     const handleFormChange = (event) => {
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
@@ -45,30 +52,30 @@ const UpdateLectureForm = (props) => {
     const onUpdate = (e) => {
         e.preventDefault();
         if (inputFields) {
-            const editedLecture = inputFields;
             const id = inputFields.id;
-            dispatch(updateLecture({editedLecture:editedLecture, lectureId:id}))
-            .then(router.push('/admin/lectures'))
+            dispatch(updateLecture({ editedLecture: inputFields, lectureId: id }))
+                .then(router.push('/admin/lectures'))
+
         } else {
             console.log("생성못함");
         }
     };
 
-
     const addCourseTimeFields = () => {
+        console.log(inputCourseTimeFields);
         let object = {
             day: '', start_time: '', end_time: ''
         }
-
-        setInputCourseTimeFields([...inputCourseTimeFields, object])
+        setInputCourseTimeFields([...inputCourseTimeFields, object]);
+        console.log(inputCourseTimeFields);
     }
 
     const removeFields = (index) => {
+        console.log(inputCourseTimeFields);
         let data = [...inputCourseTimeFields];
         data.splice(index, 1)
         setInputCourseTimeFields(data)
     }
-
 
     const statusOptions = [
         { value: "P", name: "대기" },
@@ -87,8 +94,8 @@ const UpdateLectureForm = (props) => {
     ];
 
     const teacherOptions = teacherList.map(teacher => ({ "value": teacher.id, "name": teacher.name }));
-
-    return (
+    
+    if(inputFields){ return (
         <div>
             <div className="row mb-4">
                 <label className="col-form-label col-lg-2">강의명</label>
@@ -142,7 +149,7 @@ const UpdateLectureForm = (props) => {
                 <div className="col-lg-10">
                     <div className="mb-3 row">
                         <div>
-                            {props.lectureData.coursetime&&props.lectureData.coursetime.map((form, index) => {
+                            {inputCourseTimeFields.map((form, index) => {
                                 return (
                                     <div className="input-group mb-2" key={index}>
                                         <select value={form.day} className="form-control" name="day" onChange={event => handleCourseTimeFormChange(event, index)}>
@@ -161,14 +168,14 @@ const UpdateLectureForm = (props) => {
                                             name='start_time'
                                             onChange={event => handleCourseTimeFormChange(event, index)}
                                             className="form-control"
-                                            value={moment(form.start_time,'HHmm').format("HH:mm")}
+                                            value={moment(form.start_time, 'HHmm').format("HH:mm")}
                                         />
                                         <input
                                             type='time'
                                             name='end_time'
                                             onChange={event => handleCourseTimeFormChange(event, index)}
                                             className="form-control"
-                                            value={moment(form.end_time,'HHmm').format("HH:mm")}
+                                            value={moment(form.end_time, 'HHmm').format("HH:mm")}
                                         />
                                         <button className="btn btn-primary" onClick={() => removeFields(index)}>삭제</button>
                                     </div>
@@ -222,7 +229,7 @@ const UpdateLectureForm = (props) => {
                 </div>
             </div>
         </div>
-    )
+    )}
 }
 
 export default UpdateLectureForm

@@ -6,14 +6,13 @@ import UpdateStudentForm from "../../../components/Forms/UpdateStudentForm";
 import wrapper from "../../../store/configureStore";
 import { fetchStudent } from "../../../store/modules/studentsSlice";
 
-const AdminStudentUpdatePage = (props) => {
-    const studentData = useSelector(state=>state.students.studentData) 
+const AdminStudentUpdatePage = () => {
     return (
         <div>
             <ContentTitle title="학생 정보 수정" mainTitle="학생 관리" />
             <div className="card">
                 <div className="card-body">
-                    <UpdateStudentForm studentData={studentData}/>
+                    <UpdateStudentForm />
                 </div>
             </div>
         </div>
@@ -24,7 +23,7 @@ AdminStudentUpdatePage.layout = "L1";
 
 export default AdminStudentUpdatePage;
 
-export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) =>{
-    const id = {...etc}.query.id
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
+    const id = { ...etc }.query.id
     await store.dispatch(fetchStudent(id))
-  });
+});

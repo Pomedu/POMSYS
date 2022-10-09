@@ -7,7 +7,7 @@ from studentapp.views import StudentList, StudentDetail, StudentLectureList, Stu
 
 urlpatterns = [
     path('',StudentList.as_view()),
-    path('<int:student_pk>/',StudentDetail.as_view()),
+    path('<int:student_pk>',StudentDetail.as_view()),
     path('<int:student_pk>/lectures', StudentLectureList.as_view()),
     path('<int:student_pk>/teachers', StudentTeacherList.as_view()),
     path('<int:student_pk>/tests', StudentTestList.as_view()),
