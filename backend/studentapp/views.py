@@ -7,11 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lectureapp.models import Lecture, Test, TestRecord
-from lectureapp.serailizers import LectureSerializer, TestSerializer
+from lectureapp.serializers import LectureSerializer, TestSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
-from teacherapp.serailizers import TeacherSerializer
+from teacherapp.serializers import TeacherSerializer
 
 
 class StudentList(APIView):

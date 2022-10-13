@@ -11,7 +11,7 @@ class Lecture(models.Model):
         ('O', '진행중'),
         ('F', '종강'),
     )
-    name = models.CharField(max_length=100, null=False)
+    name = models.CharField(max_length=100, null=False, unique=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='lectures', null=False)
     description = models.TextField(null=True,blank=True)
     start_date = models.DateField(null=True)
@@ -20,7 +20,7 @@ class Lecture(models.Model):
     status = models.CharField(max_length=20, choices=status_choices, null=False)
     cost = models.IntegerField(null=True, blank=True)
     textbook = models.JSONField(default=list, null=True, blank=True) #리스트형태
-    students = models.ManyToManyField(Student, through='CourseRegistration', related_name='lectures')
+    students = models.ManyToManyField(Student, through='Enroll', related_name='lectures')
     def __str__(self):
         return self.name
 
@@ -33,9 +33,9 @@ class Lesson(models.Model):
     def __str__(self):
         return str(self.lecture)+" - "+str(self.date)
 
-class CourseRegistration(models.Model):
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='courses')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='courses')
+class Enroll(models.Model):
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='enrolls')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrolls')
     joined_at = models.DateField(null=False)
     created_at = models.DateField(auto_now_add=True, null=False)
     class Meta:

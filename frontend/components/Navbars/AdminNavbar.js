@@ -3,7 +3,7 @@ import IonIcon from '@reacticons/ionicons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBox, faUserCircle, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faBox, faFileSignature, faUserCircle, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 
 
 function MoveToHomePage() {
@@ -40,6 +40,14 @@ const AdminNavbar = () => {
                                 <a className={router.pathname === '/admin/students' ? "mm-active" : ''}>
                                 <i><FontAwesomeIcon icon={faUserGroup} /></i>
                                 <span>학생관리</span>
+                                </a>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href={"/admin/enrolls"}>
+                                <a className={router.pathname === '/admin/enrolls' ? "mm-active" : ''}>
+                                <i><FontAwesomeIcon icon={faFileSignature} /></i>
+                                <span>수강관리</span>
                                 </a>
                             </Link>
                         </li>

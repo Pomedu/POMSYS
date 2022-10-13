@@ -65,7 +65,6 @@ const CreateLectureForm = () => {
         let object = {
             day: '', start_time: '', end_time: ''
         }
-
         setInputCourseTimeFields([...inputCourseTimeFields, object])
     }
 

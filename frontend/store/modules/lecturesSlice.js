@@ -17,6 +17,14 @@ export const fetchLecture = createAsyncThunk("GET/LECTURE", async (lectureId, { 
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchTeacherLectures = createAsyncThunk("GET/TEACHER/LECTURE", async (teacherId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/teachers/${teacherId}/lectures`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const createLecture = createAsyncThunk("POST/LECTURE", async (newLecture, { rejectWithValue }) => {
     return axios({
         method: "post",
@@ -43,15 +51,17 @@ export const updateLecture = createAsyncThunk("UPDATE/LECTURE", async ({ editedL
         .catch(error => console.log(error.response.data));
 });
 
+const initialState = {
+    lecturesData: [],
+    filteredLecturesData: [],
+    lectureData: {},
+    loading: false,
+    error: null,
+};
+
 export const lecturesSlice = createSlice({
     name: 'lectures',
-    initialState: {
-        lecturesData: [],
-        filteredLecturesData: [],
-        lectureData: {},
-        loading: false,
-        error: null,
-    },
+    initialState,
     reducers: {
         searchLectures: (state, action) => {
             const namefilter = [...state.lecturesData].filter(item => item.name.toLowerCase().includes(action.payload.toLowerCase()));
@@ -59,6 +69,9 @@ export const lecturesSlice = createSlice({
             const merged = namefilter.concat(teacherfilter);
             state.filteredLecturesData = merged.filter((item, pos) => merged.indexOf(item) === pos);
         },
+        resetLectures: (state) => {
+            Object.assign(state, initialState);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -125,8 +138,21 @@ export const lecturesSlice = createSlice({
             .addCase(updateLecture.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
+            })
+            .addCase(fetchTeacherLectures.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchTeacherLectures.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.lecturesData = payload;
+                state.filteredLecturesData = payload;
+            })
+            .addCase(fetchTeacherLectures.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
             });
     }
 })
 
-export const { searchLectures } = lecturesSlice.actions;
+export const { searchLectures, resetLectures } = lecturesSlice.actions;

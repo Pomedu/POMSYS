@@ -43,15 +43,17 @@ export const updateStudent = createAsyncThunk("UPDATE/STUDENT", async ({ editedS
         .catch(error => console.log(error.response.data));
 });
 
+const initialState = {
+    studentsData: [],
+    filteredStudentsData: [],
+    studentData: {},
+    loading: false,
+    error: null,
+};
+
 export const studentsSlice = createSlice({
     name: 'students',
-    initialState: {
-        studentsData: [],
-        filteredStudentsData: [],
-        studentData: {},
-        loading: false,
-        error: null,
-    },
+    initialState,
     reducers: {
         searchStudents: (state, action) => {
             const namefilter = [...state.studentsData].filter(item => item.name.toLowerCase().includes(action.payload.toLowerCase()));

@@ -9,11 +9,11 @@ const SearchBox = (props) => {
         props.onChange(e.target.value)
     };
     return (
-        <div className="search-box">
-            <a className="search-btn" href="#">
-                <FontAwesomeIcon icon={faSearch} />
-            </a>
-            <input type="text" className="search-txt" placeholder="검색어를 입력하세요" value={props.filterText} onChange={userInputHandler}/>
+        <div className="search-box mb-2 me-2">      
+             <div className="position-relative">
+             <input type="text" className="form-control bg-light border-light rounded" placeholder="검색어를 입력하세요" value={props.filterText} onChange={userInputHandler}/>
+             <i className='search-icon'><FontAwesomeIcon icon={faSearch} /></i>                
+            </div>
         </div>
     )
 }

@@ -7,7 +7,7 @@ const ClientLayout = ({ children }) => {
     return (
         <div className='client-layout'>
             <div className='main-header'>
-                <Link to='student/' style={{ textDecoration: 'none', margin: '10px 0 10px 0' }}>
+                <Link href={'/student'} style={{ textDecoration: 'none', margin: '10px 0 10px 0' }}>
                     <div className="title">
                         <div className="title-name">POMSYS</div>
                     </div>

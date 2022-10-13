@@ -43,15 +43,17 @@ export const updateTeacher = createAsyncThunk("UPDATE/TEACHER", async ({ editedT
         .catch(error => console.log(error.response.data));
 });
 
+const initialState= {
+    teachersData: [],
+    filteredTeachersData: [],
+    teacherData: {},
+    loading: false,
+    error: null,
+};
+
 export const teachersSlice = createSlice({
     name: 'teachers',
-    initialState: {
-        teachersData: [],
-        filteredTeachersData: [],
-        teacherData: {},
-        loading: false,
-        error: null,
-    },
+    initialState,
     reducers: {
         searchTeachers: (state, action) => {
             const namefilter = [...state.teachersData].filter(item => item.name.toLowerCase().includes(action.payload.toLowerCase()));
@@ -59,6 +61,9 @@ export const teachersSlice = createSlice({
             const merged = namefilter.concat(phonefilter);
             state.filteredTeachersData = merged.filter((item, pos) => merged.indexOf(item) === pos);
         },
+        resetTeachers: (state) => {
+            Object.assign(state, initialState);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -130,4 +135,4 @@ export const teachersSlice = createSlice({
 })
 
 
-export const { searchTeachers } = teachersSlice.actions;
+export const { searchTeachers, resetTeachers } = teachersSlice.actions;

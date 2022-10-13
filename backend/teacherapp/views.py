@@ -7,11 +7,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lectureapp.models import Lecture
-from lectureapp.serailizers import LectureSerializer
+from lectureapp.serializers import SimpleLectureSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
-from teacherapp.serailizers import TeacherSerializer, TeacherCreateSerializer
+from teacherapp.serializers import TeacherSerializer, TeacherCreateSerializer
 
 
 class TeacherList(APIView):
@@ -63,7 +63,7 @@ class TeacherLectureList(APIView):
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
         lectures = Lecture.objects.filter(teacher=teacher)
-        serializer = LectureSerializer(lectures, many=True)
+        serializer = SimpleLectureSerializer(lectures, many=True)
         return Response(serializer.data)
 
 # 특정 강사의 학생 리스트

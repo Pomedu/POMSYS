@@ -60,7 +60,7 @@ const AdminLayout = ({ children }) => {
             <AdminNavbar />
             <div className="main-content">
                 <div className="page-content">
-                    <div className="container-fluid">
+                    <div className="container-fluid h-100">
                         {children}
                     </div>
                 </div>

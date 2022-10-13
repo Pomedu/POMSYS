@@ -43,8 +43,8 @@ const AdminTeacherListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <button className="btn-sm btn-danger me-1 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan} /></button>
-                <button className="btn-sm btn-success" onClick={() => router.push(`teachers/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></button>
+                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan} /></a>
+                <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`teachers/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></a>
             </span>)
         },
     ]
@@ -87,11 +87,11 @@ const AdminTeacherListPage = () => {
             <ContentTitle title="강사 리스트" mainTitle="강사 관리" />
             <div className="card">
                 <div className="card-body">
-                    <div className="row">
+                    <div className="row mt-3">
                         <div className="col-4">
                             <Link href={'/admin/teachers/create/'}>
-                                <div className="btn btn-primary row ms-2">
-                                    New
+                                <div className="btn btn-light row ms-2">
+                                    + New
                                 </div>
                             </Link>
                         </div>
@@ -101,7 +101,7 @@ const AdminTeacherListPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div className="mt-3">
                         <DataTable
                             columns={columns}
                             data={filteredTeachersList}

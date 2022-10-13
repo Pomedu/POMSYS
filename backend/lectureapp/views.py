@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture, CourseRegistration, Test, Lesson, TestRecord
-from lectureapp.serailizers import LectureSerializer, CourseRegistrationSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer
+from lectureapp.models import Lecture, Enroll, Test, Lesson, TestRecord
+from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer
 
 
 class LectureList(APIView):
@@ -50,27 +50,35 @@ class LectureDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # 전체 수강 목록 가져오기, 수강 등록하기
-class AllCourseRegistrationList(APIView):
+class AllEnrollList(APIView):
     def get(self,request):
-        courseregistrations = CourseRegistration.objects.all()
-        serializer = CourseRegistrationSerializer(courseregistrations, many=True)
+        enrolls = Enroll.objects.all()
+        serializer = EnrollSerializer(enrolls, many=True)
         return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = EnrollCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # 특정 수강 정보 삭제하기
-class CourseRegistrationDelete(APIView):
-    def get_object(self, courseregistration_pk):
+class EnrollDelete(APIView):
+    def get_object(self, enroll_pk):
         try:
-            return CourseRegistration.objects.get(pk=courseregistration_pk)
-        except CourseRegistration.DoesNotExist:
+            return Enroll.objects.get(pk=enroll_pk)
+        except Enroll.DoesNotExist:
             raise Http404
 
-    def delete(self, request, courseregistration_pk, format=None):
-        courseregistration = self.get_object(courseregistration_pk)
-        courseregistration.delete()
+    def delete(self, request, enroll_pk, format=None):
+        enroll = self.get_object(enroll_pk)
+        enroll.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# 특정 강의의 수강정보 가져오기, 수강 등록하기
-class LectureCourseRegistrationList(APIView):
+# 특정 강의의 수강정보 가져오기
+class LectureEnrollList(APIView):
     def get_object(self, lecture_pk):
         try:
             return Lecture.objects.get(pk=lecture_pk)
@@ -79,18 +87,9 @@ class LectureCourseRegistrationList(APIView):
 
     def get(self, request, lecture_pk, format=None):
         lecture = self.get_object(lecture_pk)
-        courseregistrations = CourseRegistration.objects.filter(lecture=lecture)
-        serializer = CourseRegistrationSerializer(courseregistrations, many=True)
+        enrolls = Enroll.objects.filter(lecture=lecture)
+        serializer = EnrollSerializer(enrolls, many=True)
         return Response(serializer.data)
-
-    def post(self, request, lecture_pk, format=None):
-        lecture = self.get_object(lecture_pk)
-        serializer = CourseRegistrationSerializer(data=request.data, many=True)
-        if serializer.is_valid():
-            serializer.save(lecture=lecture)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # 시험 전체 리스트 가져오기,
 class AllTestList(APIView):

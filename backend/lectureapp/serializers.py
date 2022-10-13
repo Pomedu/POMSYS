@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
-from lectureapp.models import Lecture, Lesson, CourseRegistration, Test, TestRecord, Video, VideoWatchRecord, Attendance
+from lectureapp.models import Lecture, Lesson, Enroll, Test, TestRecord, Video, VideoWatchRecord, Attendance
 from teacherapp.models import Teacher
 
 class LectureSerializer(serializers.ModelSerializer):
     teacher = serializers.StringRelatedField(many=False)
     status = serializers.CharField(source='get_status_display')
-    students = serializers.StringRelatedField(many=True)
+    students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     class Meta:
         model = Lecture
         fields = "__all__"
 
 class SimpleLectureSerializer(serializers.ModelSerializer):
-    students = serializers.StringRelatedField(many=True)
+    students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     teacher = serializers.StringRelatedField(many=False)
     class Meta:
         model = Lecture
@@ -29,9 +29,17 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ('lecture',)
 
-class CourseRegistrationSerializer(serializers.ModelSerializer):
+class EnrollSerializer(serializers.ModelSerializer):
+    from studentapp.serializers import SimpleStudentSerializer
+    student = SimpleStudentSerializer(many=False, read_only=True)
+    lecture = SimpleLectureSerializer(many=False, read_only=True)
     class Meta:
-        model = CourseRegistration
+        model = Enroll
+        fields = "__all__"
+        
+class EnrollCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enroll
         fields = "__all__"
 
 class TestSerializer(serializers.ModelSerializer):
