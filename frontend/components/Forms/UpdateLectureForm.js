@@ -30,7 +30,6 @@ const UpdateLectureForm = () => {
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
         } else {
-            console.log(index);
             courseTimeData[index][event.target.name] = event.target.value;
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
@@ -62,16 +61,13 @@ const UpdateLectureForm = () => {
     };
 
     const addCourseTimeFields = () => {
-        console.log(inputCourseTimeFields);
         let object = {
             day: '', start_time: '', end_time: ''
         }
         setInputCourseTimeFields([...inputCourseTimeFields, object]);
-        console.log(inputCourseTimeFields);
     }
 
     const removeFields = (index) => {
-        console.log(inputCourseTimeFields);
         let data = [...inputCourseTimeFields];
         data.splice(index, 1)
         setInputCourseTimeFields(data)
@@ -177,7 +173,7 @@ const UpdateLectureForm = () => {
                                             className="form-control"
                                             value={moment(form.end_time, 'HHmm').format("HH:mm")}
                                         />
-                                        <button className="btn btn-primary" onClick={() => removeFields(index)}>삭제</button>
+                                        <button className="btn btn-primary waves-effect" onClick={() => removeFields(index)}>삭제</button>
                                     </div>
                                 )
                             })}
@@ -186,7 +182,7 @@ const UpdateLectureForm = () => {
                 </div>
                 <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button className="btn btn-success float-end" onClick={addCourseTimeFields}>시간추가</button>
+                    <button className="btn btn-success float-end waves-effect" onClick={addCourseTimeFields}>시간추가</button>
                 </div>
             </div>
 
@@ -225,7 +221,7 @@ const UpdateLectureForm = () => {
             <div className="row">
                 <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button type="submit" className="btn btn-primary float-end" onClick={onUpdate}>강의 수정</button>
+                    <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onUpdate}>강의 수정</button>
                 </div>
             </div>
         </div>

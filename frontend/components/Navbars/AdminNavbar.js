@@ -4,53 +4,46 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faFileSignature, faUserCircle, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import AdminNavbarMenu from './AdminNavebarMenu';
+import AdminNavbarMenuCollapse from './AdminNavbarMenuCollapse';
 
 
 function MoveToHomePage() {
     window.location.replace("student/");
 }
 
-const AdminNavbar = () => {
+const AdminNavbar = (props) => {
     const router = useRouter();
-
+    const lectureSubmenu = [{url:"/admin/lectures", menuName:"강의 리스트"}, 
+                             {url:"/admin/lectures/create", menuName:"신규 강의 등록"},
+                             {url:"/admin/lectures/timetable", menuName:"강의 시간표"},
+                             {url:"/admin/enrolls", menuName:"수강 관리"},
+                             {url:"/admin/enrolls/create", menuName:"신규 수강 등록"},
+                             {url:"/admin/lessons", menuName:"일일 수업 관리"}];
+    const studentSubmenu = [{url:"/admin/students", menuName:"학생 리스트"},
+                             {url:"/admin/students/create", menuName:"신규생 등록"}, 
+                            ];
+    const teacherSubmenu = [{url:"/admin/teachers", menuName:"강사 리스트"}, 
+                             {url:"/admin/teachers/create", menuName:"신규 강사 등록"}, 
+                            ];
     return (
         <div className="vertical-menu">
             <div data-simplebar className="h-100">
                 <div id="sidebar-menu">
                     <ul className="metismenu list-unstyled" id="side-menu">
                         <li className="menu-title" key="t-apps">업무</li>
-                        <li>
-                            <Link href={"/admin/lectures"}>
-                                <a className={router.pathname === '/admin/lectures' ? "mm-active" : ''}>
-                                    <i><FontAwesomeIcon icon={faBox} /></i>
-                                    <span>강의관리</span>
-                                </a>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={"/admin/teachers"}>
-                                <a className={router.pathname === '/admin/teachers' ? "mm-active" : ''}>
-                                <i><FontAwesomeIcon icon={faUserCircle} /></i>
-                                    <span>강사관리</span>
-                                </a>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={"/admin/students"}>
-                                <a className={router.pathname === '/admin/students' ? "mm-active" : ''}>
-                                <i><FontAwesomeIcon icon={faUserGroup} /></i>
-                                <span>학생관리</span>
-                                </a>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href={"/admin/enrolls"}>
-                                <a className={router.pathname === '/admin/enrolls' ? "mm-active" : ''}>
-                                <i><FontAwesomeIcon icon={faFileSignature} /></i>
-                                <span>수강관리</span>
-                                </a>
-                            </Link>
-                        </li>
+                        <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
+                            name="강의관리"
+                            icon="faBox"
+                            submenu={lectureSubmenu}/>
+                        <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
+                            name="강사관리"
+                            icon="faUserCircle"
+                            submenu={teacherSubmenu}/>
+                        <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
+                            name="학생관리"
+                            icon="faUserGroup"
+                            submenu={studentSubmenu}/>
                         <li>
                             <a onClick={() => {
                                 MoveToHomePage();

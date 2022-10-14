@@ -11,16 +11,11 @@ import ContentTitle from "../../../components/Common/ContentTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBox, faChalkboard, faChevronDown, faChevronUp, faEdit, faFolder, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
-import Script from "next/script";
-import DeleteModal from "../../../components/Modals/DeleteModal";
-import { modalOpen } from "../../../store/modules/modalSlice";
 
-const AdminEnrollListPage = () => {
-    const enrollsList = useSelector(state => state.enrolls.enrollsData);
+const AdminEnrollLessonPage = () => {
     const teachersList = useSelector(state => state.teachers.teachersData);
     const [selectedTeacher,setSelectedTeacher] = useState([]);
     const [selectedLecture,setSelectedLecture] = useState("");
-    const filteredEnrollsList = useSelector(state => state.enrolls.filteredEnrollsData);
     const router = useRouter()
     const dispatch = useDispatch();
 
@@ -43,19 +38,7 @@ const AdminEnrollListPage = () => {
     // Set Columns 
     const columnData = [
         {
-            name: '이름',
-            selector: row => row.student.name,
-        },
-        {
-            name: '번호(학생)',
-            selector: row => row.student.phone_number,
-        },
-        {
-            name: '번호(학부모)',
-            selector: row => row.student.phone_number_P,
-        },
-        {
-            name: '등록일',
+            name: '수업일',
             selector: row => row.joined_at,
             sortable: true,
         },
@@ -71,47 +54,13 @@ const AdminEnrollListPage = () => {
 
     const columns = useMemo(() => columnData, []);
 
-    // Data Filtering
-    const [filterText, setFilterText] = useState('');
-
-    useEffect(() => {
-        dispatch(searchEnrolls(filterText));
-    }, [filterText]);
-
-    // Data Delete
-    const deleteModalOpen = useSelector((state)=>state.modal.show);
-    const [deleteId,setDeleteId] = useState("");
-    const [deleteName,setDeleteName] = useState("");
-    const deleteButtonHandler = (id, studentName, lectureName) =>{
-        setDeleteId(id);
-        setDeleteName(lectureName+"에 대한 "+studentName+"의 수강정보");
-        dispatch(modalOpen('enrollDeleteModal'));
-    }
-
-    const onDelete = (e, enrollId) => {
-        e.preventDefault();
-        dispatch(deleteEnroll(enrollId)).unwrap().then(response => console.log("삭제되었습니다"))
-            .catch(error => {
-                console.log("### error: ", error);
-            });
-    }
-
     return (
         <div>
-            <ContentTitle title="수강 리스트" mainTitle="수강 관리" />
+            <ContentTitle title="일일 수업 관리" mainTitle="강의 관리" />
             <div className="d-xl-flex">
                 <div className="card filemanager-sidebar me-md-2">
                     <div className="card-body">
                         <div className="d-flex flex-column h-100">
-                            <div className="row mb-4 mt-3">
-                                <div className="mb-3">
-                                    <Link href={'/admin/enrolls/create/'}>
-                                        <div className="btn btn-light w-100 waves-effect">
-                                            + New
-                                        </div>
-                                    </Link>
-                                </div>
-                            </div>
                             <ul className="list-unstyled categories-list">
                                 {teachersList.map((teacher, teacher_index)=>{
                             return (<li key={teacher_index} className="mb-1" >
@@ -164,39 +113,25 @@ const AdminEnrollListPage = () => {
                                         <h5>{selectedLecture}</h5>
                                     </div>
                                 </div>
-                                <div className="col-xl-6 col-sm-6 mt-3">
-                                    <div>
-                                        <div className="float-end w-100" style={selectedLecture!==""?{}:{display:"none"}}>
-                                            <SearchBox onChange={setFilterText} filterText={filterText} />
-                                        </div>
-                                    </div>
-                                </div>
                             </div>                
                             <div className="mb-5 mt-5">
                                 <DataTable
-                                    noDataComponent={selectedLecture!==""?"등록된 수강정보가 없습니다.":"강의를 선택해주세요"}
+                                    noDataComponent={selectedLecture!==""?"등록된 수업정보가 없습니다.":"강의를 선택해주세요"}
                                     columns={columns}
-                                    data={filteredEnrollsList}
+                                    data={filteredLessonsList}
                                     pagination
-                                    defaultSortFieldId={4} // 등록일로 정렬
+                                    defaultSortFieldId={1} // 수업일로 정렬
                                 />
                             </div>
                         </div>
                     </div>
                 </div>  
             </div>
-            <DeleteModal 
-                deleteId={deleteId}
-                deleteName={deleteName} 
-                deleteModalOpen={deleteModalOpen}
-                onDelete={onDelete}
-                modalId={'enrollDeleteModal'}
-                />
         </div>
     )
 
 }
 
-AdminEnrollListPage.layout = "L1";
+AdminLessonListPage.layout = "L1";
 
-export default AdminEnrollListPage
+export default AdminLessonListPage

@@ -4,7 +4,6 @@ import ClientLayout from '../components/Layouts/ClientLayout';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
 import "../components/Footers/Footer.css"
-import "../components/Navbars/AdminTopbar.css"
 import "../styles/globals.css"
 import { Provider } from 'react-redux';
 import wrapper from '../store/configureStore';

@@ -19,7 +19,6 @@ const CreateStudentForm = () => {
 
     const onCreate = (e) => {
         e.preventDefault();
-        console.log(inputFields);
         if (inputFields) {
             const newStudent = inputFields;
             dispatch(createStudent(newStudent))
@@ -81,7 +80,7 @@ const CreateStudentForm = () => {
             <div className="row">
                 <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button type="submit" className="btn btn-primary float-end" onClick={onCreate}>학생 생성</button>
+                    <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onCreate}>학생 생성</button>
                 </div>
             </div>
         </div>

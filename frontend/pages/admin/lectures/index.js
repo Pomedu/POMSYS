@@ -10,6 +10,8 @@ import ContentTitle from "../../../components/Common/ContentTitle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import DeleteModal from "../../../components/Modals/DeleteModal";
+import { modalOpen, setModalId } from "../../../store/modules/modalSlice";
 
 const AdminLectureListPage = () => {
     const lecturesList = useSelector(state => state.lectures.lecturesData);
@@ -61,7 +63,7 @@ const AdminLectureListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan} /></a>
+                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FontAwesomeIcon icon={faTrashCan} /></a>
                 <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`lectures/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></a>
             </span>)
         },
@@ -102,6 +104,15 @@ const AdminLectureListPage = () => {
     }, [filterText]);
 
     // Data Delete
+    const deleteModalOpen = useSelector((state)=>state.modal.show);
+    const [deleteId,setDeleteId] = useState("");
+    const [deleteName,setDeleteName] = useState("");
+    const deleteButtonHandler = (id, name) =>{
+        setDeleteId(id);
+        setDeleteName(name);
+        dispatch(modalOpen('lectureDeleteModal'));
+    }
+
     const onDelete = (e, lectureId) => {
         e.preventDefault();
         dispatch(deleteLecture(lectureId)).unwrap().then(response => console.log("삭제되었습니다"))
@@ -118,7 +129,7 @@ const AdminLectureListPage = () => {
                     <div className="row mt-3">
                         <div className="col-4">
                             <Link href={'/admin/lectures/create/'}>
-                                <div className="btn btn-light row ms-2">
+                                <div className="btn btn-light row ms-2 waves-effect">
                                     + New
                                 </div>
                             </Link>
@@ -141,6 +152,13 @@ const AdminLectureListPage = () => {
                     </div>
                 </div>
             </div>
+            <DeleteModal 
+                deleteId={deleteId}
+                deleteName={deleteName} 
+                deleteModalOpen={deleteModalOpen}
+                onDelete={onDelete}
+                modalId={'lectureDeleteModal'}
+                />
         </div>
     )
 

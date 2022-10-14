@@ -29,7 +29,6 @@ const CreateLectureForm = () => {
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
         } else {
-            console.log(index);
             courseTimeData[index][event.target.name] = event.target.value;
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
@@ -50,7 +49,6 @@ const CreateLectureForm = () => {
 
     const onCreate = (e) => {
         e.preventDefault();
-        console.log(inputFields);
         if (inputFields) {
             const newLecture = inputFields;
             dispatch(createLecture(newLecture))
@@ -82,13 +80,13 @@ const CreateLectureForm = () => {
     ];
 
     const dayOptions = [
-        { value: "1", name: "월요일" },
-        { value: "2", name: "화요일" },
-        { value: "3", name: "수요일" },
-        { value: "4", name: "목요일" },
-        { value: "5", name: "금요일" },
-        { value: "6", name: "토요일" },
-        { value: "0", name: "일요일" },
+        { value: "0", name: "월요일" },
+        { value: "1", name: "화요일" },
+        { value: "2", name: "수요일" },
+        { value: "3", name: "목요일" },
+        { value: "4", name: "금요일" },
+        { value: "5", name: "토요일" },
+        { value: "6", name: "일요일" },
     ];
 
     const teacherOptions = teacherList.map(teacher => ({ "value": teacher.id, "name": teacher.name }));
@@ -173,7 +171,7 @@ const CreateLectureForm = () => {
                                             onChange={event => handleCourseTimeFormChange(event, index)}
                                             className="form-control"
                                         />
-                                        <button className="btn btn-primary" onClick={() => removeFields(index)}>삭제</button>
+                                        <button className="btn btn-primary waves-effect" onClick={() => removeFields(index)}>삭제</button>
                                     </div>
                                 )
                             })}
@@ -182,7 +180,7 @@ const CreateLectureForm = () => {
                 </div>
                 <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button className="btn btn-success float-end" onClick={addCourseTimeFields}>시간추가</button>
+                    <button className="btn btn-success float-end waves-effect" onClick={addCourseTimeFields}>시간추가</button>
                 </div>
             </div>
 
@@ -221,7 +219,7 @@ const CreateLectureForm = () => {
             <div className="row">
                 <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button type="submit" className="btn btn-primary float-end" onClick={onCreate}>강의 생성</button>
+                    <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onCreate}>강의 생성</button>
                 </div>
             </div>
         </div>

@@ -8,6 +8,8 @@ import DataTable from "react-data-table-component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
+import DeleteModal from "../../../components/Modals/DeleteModal";
+import { modalOpen } from "../../../store/modules/modalSlice";
 
 const AdminStudentListPage = () => {
     const studentsList = useSelector(state => state.students.studentsData);
@@ -47,7 +49,7 @@ const AdminStudentListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => onDelete(e, row.id)}><FontAwesomeIcon icon={faTrashCan} /></a>
+                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FontAwesomeIcon icon={faTrashCan} /></a>
                 <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`students/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></a>
             </span>)
         },
@@ -77,6 +79,14 @@ const AdminStudentListPage = () => {
     }, [filterText]);
 
     // Data Delete
+    const deleteModalOpen = useSelector((state)=>state.modal.show);
+    const [deleteId,setDeleteId] = useState("");
+    const [deleteName,setDeleteName] = useState("");
+    const deleteButtonHandler = (id, name) =>{
+        setDeleteId(id);
+        setDeleteName(name+" 학생");
+        dispatch(modalOpen('studentDeleteModal'));
+    }
     const onDelete = (e, studentId) => {
         e.preventDefault();
         dispatch(deleteStudent(studentId)).unwrap().then(response => console.log("삭제되었습니다"))
@@ -93,7 +103,7 @@ const AdminStudentListPage = () => {
                     <div className="row mt-3">
                         <div className="col-4">
                             <Link href={'/admin/students/create/'}>
-                                <div className="btn btn-light row ms-2">
+                                <div className="btn btn-light row ms-2 waves-effect">
                                     + New
                                 </div>
                             </Link>
@@ -115,6 +125,13 @@ const AdminStudentListPage = () => {
                     </div>
                 </div>
             </div>
+            <DeleteModal 
+                deleteId={deleteId}
+                deleteName={deleteName} 
+                deleteModalOpen={deleteModalOpen}
+                onDelete={onDelete}
+                modalId={'studentDeleteModal'}
+                />
         </div>
     )
 

@@ -22,7 +22,6 @@ const UpdateTeacherForm = () => {
     const onUpdate = (e) => {
         e.preventDefault();
         if (inputFields) {
-            console.log("put",inputFields);
             const id = inputFields.id;
             dispatch(updateTeacher({ editedTeacher: inputFields, teacherId: id }))
                 .then(router.push("/admin/teachers"));
@@ -76,7 +75,7 @@ const UpdateTeacherForm = () => {
                 <div className="row">
                     <div className="col-lg-2" />
                     <div className="col-lg-10">
-                        <button type="submit" className="btn btn-primary float-end" onClick={onUpdate}>정보 수정</button>
+                        <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onUpdate}>정보 수정</button>
                     </div>
                 </div>
             </div>

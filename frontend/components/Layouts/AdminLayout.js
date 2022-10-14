@@ -57,7 +57,7 @@ const AdminLayout = ({ children }) => {
                 sidebarisOpen={sidebarisOpen}
                 onChange={(isOpen) => setSidebar(isOpen)}
             />
-            <AdminNavbar />
+            <AdminNavbar setSidebar={setSidebar} isMobile={isMobile}/>
             <div className="main-content">
                 <div className="page-content">
                     <div className="container-fluid h-100">

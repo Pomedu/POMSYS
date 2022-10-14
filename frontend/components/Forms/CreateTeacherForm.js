@@ -18,7 +18,6 @@ const CreateTeacherForm = () => {
 
     const onCreate = (e) => {
         e.preventDefault();
-        console.log(inputFields);
         if (inputFields) {
             const newTeacher = inputFields;
             dispatch(createTeacher(newTeacher))
@@ -74,7 +73,7 @@ const CreateTeacherForm = () => {
             <div className="row">
             <div className="col-lg-2" />
                 <div className="col-lg-10">
-                    <button type="submit" className="btn btn-primary float-end" onClick={onCreate}>강사 생성</button>
+                    <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onCreate}>강사 생성</button>
                 </div>
             </div>
         </div>

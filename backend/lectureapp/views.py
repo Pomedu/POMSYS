@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lectureapp.models import Lecture, Enroll, Test, Lesson, TestRecord
-from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer
+from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer, LessonSerializer
 
 
 class LectureList(APIView):
@@ -57,7 +57,7 @@ class AllEnrollList(APIView):
         return Response(serializer.data)
     
     def post(self,request):
-        serializer = EnrollCreateSerializer(data=request.data)
+        serializer = EnrollCreateSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -89,6 +89,20 @@ class LectureEnrollList(APIView):
         lecture = self.get_object(lecture_pk)
         enrolls = Enroll.objects.filter(lecture=lecture)
         serializer = EnrollSerializer(enrolls, many=True)
+        return Response(serializer.data)
+
+# 특정 강의의 수업리스트 가져오기
+class LectureLessonList(APIView):
+    def get_object(self, lecture_pk):
+        try:
+            return Lecture.objects.get(pk=lecture_pk)
+        except Lecture.DoesNotExist:
+            raise Http404
+
+    def get(self, request, lecture_pk, format=None):
+        lecture = self.get_object(lecture_pk)
+        lessons = Lesson.objects.filter(lecture=lecture)
+        serializer = LessonSerializer(lessons, many=True)
         return Response(serializer.data)
 
 # 시험 전체 리스트 가져오기,
