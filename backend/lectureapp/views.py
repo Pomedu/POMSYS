@@ -7,7 +7,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from lectureapp.models import Lecture, Enroll, Test, Lesson, TestRecord
-from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, LectureCreateSerializer, LessonSerializer
+from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, \
+LectureCreateSerializer, LessonSerializer, LessonDetailSerializer
 
 
 class LectureList(APIView):
@@ -90,6 +91,45 @@ class LectureEnrollList(APIView):
         enrolls = Enroll.objects.filter(lecture=lecture)
         serializer = EnrollSerializer(enrolls, many=True)
         return Response(serializer.data)
+
+# 전체 수업 리스트 가져오기 및 생성하기
+class AllLessonList(APIView):
+    def get(self,request):
+        lessons = Lesson.objects.all()
+        serializer = LessonSerializer(lessons, many=True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = LessonSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LessonDetail(APIView):
+    def get_object(self, lesson_pk):
+        try:
+            return Lesson.objects.get(pk=lesson_pk)
+        except Lesson.DoesNotExist:
+            raise Http404
+
+    def get(self, request, lesson_pk, format=None):
+        lesson = self.get_object(lesson_pk)
+        serializer = LessonDetailSerializer(lesson)
+        return Response(serializer.data)
+
+    def put(self, request, lesson_pk, format=None):
+        lesson = self.get_object(lesson_pk)
+        serializer = LessonSerializer(lesson, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, lesson_pk, format=None):
+        lesson = self.get_object(lesson_pk)
+        lesson.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # 특정 강의의 수업리스트 가져오기
 class LectureLessonList(APIView):

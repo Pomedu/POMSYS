@@ -4,7 +4,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from lectureapp.views import LectureList, LectureDetail, AllEnrollList, \
     LectureEnrollList, EnrollDelete, LectureTestList, LessonTestList, AllTestList, TestDetail, \
-    TestRecordList, TestRecordDetail, LectureLessonList
+    TestRecordList, TestRecordDetail, AllLessonList, LessonDetail, LectureLessonList
 
 urlpatterns = [
     path('',LectureList.as_view()),
@@ -14,6 +14,8 @@ urlpatterns = [
     path('<int:lecture_pk>/enrolls', LectureEnrollList.as_view()),
     path('<int:lecture_pk>/lessons', LectureLessonList.as_view()),
     path('<int:lecture_pk>/tests', LectureTestList.as_view()),
+    path('lessons/', AllLessonList.as_view()),
+    path('lessons/<int:lesson_pk>', LessonDetail.as_view()),
     path('lessons/<int:lesson_pk>/tests', LessonTestList.as_view()),
     path('tests/', AllTestList.as_view()),
     path('tests/<int:test_pk>', TestDetail.as_view()),

@@ -24,6 +24,7 @@ class LectureCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class LessonSerializer(serializers.ModelSerializer):
+    lecture = serializers.StringRelatedField(many=False)
     class Meta:
         model = Lesson
         fields = "__all__"
@@ -52,7 +53,6 @@ class TestRecordSerializer(serializers.ModelSerializer):
         model = TestRecord
         fields = "__all__"
 
-
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
@@ -64,6 +64,21 @@ class VideoWatchRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class AttendanceSerializer(serializers.ModelSerializer):
+    student = serializers.StringRelatedField(many=False)
     class Meta:
         model = Attendance
+        fields = "__all__"
+
+class AttendanceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = "__all__"
+
+class LessonDetailSerializer(serializers.ModelSerializer):
+    lecture = SimpleLectureSerializer(many=False, read_only=True)
+    tests = TestSerializer(many=True, read_only=True)
+    videos = VideoSerializer(many=True, read_only=True)
+    attendees = AttendanceSerializer(many=True, read_only=True)
+    class Meta:
+        model = Lesson
         fields = "__all__"

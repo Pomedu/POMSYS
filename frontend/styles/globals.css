@@ -14082,6 +14082,16 @@ a {
   top: 0;
   line-height: 38px; }
 
+.text-omit {
+  text-overflow: ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
+}
 
+.no-line-break {
+  white-space:nowrap;
+}
   
-
+.clickable {
+  cursor:pointer
+}

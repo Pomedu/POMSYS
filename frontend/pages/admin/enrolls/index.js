@@ -28,11 +28,11 @@ const AdminEnrollListPage = () => {
     useEffect(() => {
         dispatch(fetchTeachers());
     }, []);
-    const selectedTeacherHandler=(teacherName)=>{
-        if(selectedTeacher.includes(teacherName)){
-            setSelectedTeacher(selectedTeacher.filter(function(teacher){return teacher !== teacherName}));
+    const selectedTeacherHandler=(teacherId)=>{
+        if(selectedTeacher.includes(teacherId)){
+            setSelectedTeacher(selectedTeacher.filter(function(teacher){return teacher !== teacherId}));
         } else {
-            setSelectedTeacher([...selectedTeacher,teacherName]);
+            setSelectedTeacher([...selectedTeacher,teacherId]);
         }
     }
     const selectedLectureHandler=(lectureName,lectureId)=>{
@@ -103,7 +103,7 @@ const AdminEnrollListPage = () => {
                 <div className="card filemanager-sidebar me-md-2">
                     <div className="card-body">
                         <div className="d-flex flex-column h-100">
-                            <div className="row mb-4 mt-3">
+                            <div className="row">
                                 <div className="mb-3">
                                     <Link href={'/admin/enrolls/create/'}>
                                         <div className="btn btn-light w-100 waves-effect">
@@ -117,16 +117,16 @@ const AdminEnrollListPage = () => {
                             return (<li key={teacher_index} className="mb-1" >
                                         <div className="custom-accordion">
                                             <a className="text-body fw-medium py-1 d-flex align-items-center" 
-                                                onClick={()=> selectedTeacherHandler(teacher.name)}>
+                                                onClick={()=> selectedTeacherHandler(teacher.id)}>
                                                 <i className="font-size-10 text-warning me-2">
-                                                    <FontAwesomeIcon icon={faUser} color={selectedTeacher.includes(teacher.name)?"#2A3042":"#CDCDCD"}/>
+                                                    <FontAwesomeIcon icon={faUser} color={selectedTeacher.includes(teacher.id)?"#2A3042":"#CDCDCD"}/>
                                                 </i>
                                                 {teacher.name}({teacher.subject})
                                                 <i className="ms-auto font-size-10">
                                                     <FontAwesomeIcon icon={faChevronDown}/>
                                                 </i>
                                             </a>
-                                            <div className={selectedTeacher.includes(teacher.name)?"collapse show mt-2 mb-1":"collapse"}>
+                                            <div className={selectedTeacher.includes(teacher.id)?"collapse show mt-2 mb-1":"collapse"}>
                                                 <div className="card border-0 shadow-none ps-2 mb-0">
                                                     <ul className="list-unstyled mb-0">
                                             {teacher.lectures.map((lecture, lecture_index)=>{

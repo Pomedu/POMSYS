@@ -45,7 +45,7 @@ class Enroll(models.Model):
 
 
 class Test(models.Model):
-    name = models.CharField(max_length=10, null=False)
+    name = models.CharField(max_length=100, null=False)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='tests')
     test_file = models.FileField(upload_to='tests/', null=True, validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     average_score = models.FloatField(null=True, blank=True)

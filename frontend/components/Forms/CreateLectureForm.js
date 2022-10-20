@@ -29,7 +29,7 @@ const CreateLectureForm = () => {
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
         } else {
-            courseTimeData[index][event.target.name] = event.target.value;
+            courseTimeData[index][event.target.name] = parseInt(event.target.value);
             setInputCourseTimeFields(courseTimeData);
             setInputFields({ ...inputFields, ['coursetime']: inputCourseTimeFields });
         }
@@ -80,13 +80,13 @@ const CreateLectureForm = () => {
     ];
 
     const dayOptions = [
-        { value: "0", name: "월요일" },
-        { value: "1", name: "화요일" },
-        { value: "2", name: "수요일" },
-        { value: "3", name: "목요일" },
-        { value: "4", name: "금요일" },
-        { value: "5", name: "토요일" },
-        { value: "6", name: "일요일" },
+        { value: 0, name: "월요일" },
+        { value: 1, name: "화요일" },
+        { value: 2, name: "수요일" },
+        { value: 3, name: "목요일" },
+        { value: 4, name: "금요일" },
+        { value: 5, name: "토요일" },
+        { value: 6, name: "일요일" },
     ];
 
     const teacherOptions = teacherList.map(teacher => ({ "value": teacher.id, "name": teacher.name }));
