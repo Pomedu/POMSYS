@@ -1,5 +1,4 @@
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { BiSearch } from 'react-icons/bi';
 import React from 'react'
 
 
@@ -12,7 +11,7 @@ const SearchBox = (props) => {
         <div className="search-box mb-2 me-2">      
              <div className="position-relative">
              <input type="text" className="form-control bg-light border-light rounded" placeholder="검색어를 입력하세요" value={props.filterText} onChange={userInputHandler}/>
-             <i className='search-icon'><FontAwesomeIcon icon={faSearch} /></i>                
+             <i className='search-icon'><BiSearch /></i>                
             </div>
         </div>
     )

@@ -1,12 +1,18 @@
-import * as Icons from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as Icons from "react-icons/bi";
 
 const FileManagerCard = (props) => {
+
+    const CustomFaIcon = ({ name }) => {
+        const FaIcon = Icons[name];
+        if (!FaIcon) return <></>;
+      
+        return <FaIcon />;
+      };
 
     const clickHandler = () => {
         if(props.id){
             props.onClick(props.id);
-        } else {
+        } else {    
             props.onClick();
         }
     }
@@ -19,12 +25,12 @@ const FileManagerCard = (props) => {
                 <div className="d-flex justify-content-between">
                     <div className="avatar-xs m e-3 mb-3">
                         <div className="avatar-title bg-transparent rounded">
-                            <i className="font-size-24" style={{color:props.iconColor}}><FontAwesomeIcon icon={Icons[props.icon]} /></i>
+                            <i className="font-size-24" style={{color:props.iconColor}}><CustomFaIcon name={props.icon} /></i>
                         </div>
                     </div>
                     {props.selected==props.id?
                     <div className="">
-                        <i className="font-size-24 text-success"><FontAwesomeIcon icon={Icons["faCheckCircle"]} /></i>
+                        <i className="font-size-24 text-success"><CustomFaIcon name="BiCheckCircle" /></i>
                     </div>:<></>}
                 </div>
                 <div className="d-flex">

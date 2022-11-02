@@ -5,8 +5,7 @@ import { deleteStudent, fetchStudents, searchStudents } from "../../../store/mod
 import ContentTitle from "../../../components/Common/ContentTitle";
 import SearchBox from "../../../components/Common/SearchBox";
 import DataTable from "react-data-table-component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FaTrashAlt, FaEdit } from 'react-icons/fa'; 
 import { useRouter } from "next/router";
 import DeleteModal from "../../../components/Modals/DeleteModal";
 import { modalOpen } from "../../../store/modules/modalSlice";
@@ -49,8 +48,8 @@ const AdminStudentListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FontAwesomeIcon icon={faTrashCan} /></a>
-                <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`students/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></a>
+                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FaTrashAlt/></a>
+                <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`students/${row.id}`)}><FaEdit/></a>
             </span>)
         },
     ]

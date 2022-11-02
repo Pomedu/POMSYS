@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import DataTable from "react-data-table-component";
 import SearchBox from "../../../components/Common/SearchBox";
 import ContentTitle from "../../../components/Common/ContentTitle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { FaTrashAlt, FaEdit } from 'react-icons/fa'; 
 import { deleteTeacher, fetchTeachers, searchTeachers } from "../../../store/modules/teachersSlice";
 import { useRouter } from "next/router";
 import { modalOpen } from "../../../store/modules/modalSlice";
@@ -45,8 +44,8 @@ const AdminTeacherListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FontAwesomeIcon icon={faTrashCan} /></a>
-                <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`teachers/${row.id}`)}><FontAwesomeIcon icon={faEdit} /></a>
+                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FaTrashAlt /></a>
+                <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`teachers/${row.id}`)}><FaEdit/></a>
             </span>)
         },
     ]

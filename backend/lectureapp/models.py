@@ -62,6 +62,7 @@ class TestRecord(models.Model):
 
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='videos')
+    name = models.CharField(max_length=100, null=False)
     link = models.URLField(max_length=250, null=False, blank=False)
 
 class VideoWatchRecord(models.Model):

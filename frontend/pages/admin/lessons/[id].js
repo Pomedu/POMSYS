@@ -7,18 +7,16 @@ import FileListCard from "../../../components/Common/FileListCard";
 import CommentCard from "../../../components/Common/CommentCard";
 import AttendanceCard from "../../../components/Common/AttendanceCard";
 import { fetchLecture } from "../../../store/modules/lecturesSlice";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { FaClock } from "react-icons/fa";
 import moment from "moment";
 import "moment/locale/ko"
 import DataTable from "react-data-table-component";
 import { useRouter } from "next/router";
+import VideoListCard from "../../../components/Common/VideoListCard";
+import { fetchEnrolls } from "../../../store/modules/enrollsSlice";
 
-const AdminLessonDetailPage = () => {
-    const lessonData = useSelector(state => state.lessons.lessonData)
-    const upcomingLessonsData = useSelector(state => state.lessons.upcomingLessonsData.slice(0,3))
-    const completedLessonsData = useSelector(state => state.lessons.completedLessonsData)
-
+const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, enrollsData }) => {
+    
     // Set Columns 
     const columnData = [
         {   
@@ -39,39 +37,40 @@ const AdminLessonDetailPage = () => {
         event.preventDefault();
         router.push(`/admin/lessons/${row.id}`)
     }
+        
     return (
         <div className="row">
             <ContentTitle title="일일 수업 관리(상세)" mainTitle="강의 관리" />
             <div className="col-lg-3">
-                <div className="card">
-                    <div className="card-body">
-                        <div className="flex-grow-1 overflow-hidden">
-                            <h5 className="text-truncate font-size-15">{lessonData.lecture.name}</h5>
-                            <p className="text-muted">수업일자 - {lessonData.date}</p>
-                            <p className="text-muted">강사 - {lessonData.lecture.teacher}</p>
-                        </div>
-                        <div className="row task-dates">
-
-                        </div>
+                <div className="card bg-primary ">
+                    <div className="card-header bg-transparent ">
+                        <div className="text-white font-size-15 fw-semibold">{lessonData.lecture.name}</div>
                     </div>
                 </div>
-            </div>
-            <div className="col-lg-3">
                 <div className="card">
                     <div className="card-body">
+                        <div className="row mb-4 justify-content-between">
+                            <div className="font-size-15 fw-semibold">{lessonData.date} 일자 수업</div>
+                        </div>
                         <div className="row task-dates">
                             <div className="col-6">
-                                <h5 className="font-size-14"><i className="me-1 text-primary"><FontAwesomeIcon icon={faClock} /></i> 수업 시작</h5>
+                                <h5 className="font-size-14"><i className="me-1 text-primary"><FaClock/></i> 수업 시작</h5>
                                 <h5 className="text-muted mb-0">{moment(lessonData.start_time, "HH:mm").format("A hh:mm")}</h5>
                             </div>
                             <div className="col-6">
-                                <h5 className="font-size-14"><i className="me-1 text-primary"><FontAwesomeIcon icon={faClock} /></i> 수업 종료</h5>
+                                <h5 className="font-size-14"><i className="me-1 text-primary"><FaClock/></i> 수업 종료</h5>
                                 <h5 className="text-muted mb-0">{moment(lessonData.end_time, "HH:mm").format("A hh:mm")}</h5>
                             </div>
                         </div>
                     </div>
                 </div>
-                <AttendanceCard attendees={lessonData.attendees} totalStudent={lessonData.lecture.students.length} />
+                
+            </div>
+            <div className="col-lg-3">
+                <AttendanceCard lessonData={lessonData} enrollsData={enrollsData} />
+            </div>
+            <div className="col-lg-3">
+                <VideoListCard title="강의영상" videos={lessonData.videos}/>
                 <FileListCard title="참고자료" files={lessonData.tests} />
                 <CommentCard title="질문/답변" comments={[]} />
             </div>
@@ -116,8 +115,16 @@ AdminLessonDetailPage.layout = "L1";
 export default AdminLessonDetailPage;
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
-    const lessonId = { ...etc }.query.id
-    await store.dispatch(fetchLesson(lessonId))
-    const lectureId = store.getState().lessons.lessonData.lecture.id
-    await store.dispatch(fetchLectureLessons(lectureId))
+    const lessonId = { ...etc }.query.id;
+    await store.dispatch(fetchLesson(lessonId));
+    const lectureId = store.getState().lessons.lessonData.lecture.id;
+    await store.dispatch(fetchLectureLessons(lectureId));
+    await store.dispatch(fetchEnrolls(lectureId));
+
+    const lessonData = store.getState().lessons.lessonData;
+    const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0,3);
+    const completedLessonsData = store.getState().lessons.completedLessonsData;
+    const enrollsData = store.getState().enrolls.enrollsData;
+    return { props: {lessonData, upcomingLessonsData, completedLessonsData, enrollsData}, };
+
 });

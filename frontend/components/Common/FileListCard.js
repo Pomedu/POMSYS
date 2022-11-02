@@ -1,5 +1,5 @@
-import { faDownload, faFile } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaRegClipboard } from 'react-icons/fa';
+import { BiDownload, BiClipboard } from "react-icons/bi";
 
 const FileListCard = (props) => {
 
@@ -43,23 +43,23 @@ const FileListCard = (props) => {
             :
             <div className="card">
                 <div className="card-body">
-                    <h4 className="card-title mb-4">{props.title}</h4>
+                    <h4 className="card-title">{props.title}</h4>
                     {props.files.map((file) => {
                         return (
-                            <div key={file.name} className="d-flex mb-4 align-items-center clickable" onClick={(e) => fileDownloadHandler(e, file)}>
+                            <div key={file.name} className="d-flex mt-4 align-items-center clickable" onClick={(e) => fileDownloadHandler(e, file)}>
                                 <div className="flex-shrink-0 me-3">
-                                    <div className="avatar-sm">
-                                        <span className="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-24">
-                                            <FontAwesomeIcon icon={faFile} />
+                                    <div className="avatar-xs ">
+                                        <span className="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
+                                            <BiClipboard />
                                         </span>
                                     </div>
                                 </div>
-                                <div className="flex-grow-1">
+                                <div className="flex-grow-1 align-middle">
                                     <h5 className="font-size-14 mb-1 w-75 text-omit"><a className="text-dark">{file.name}</a></h5>
                                     <small>Size : 3.25 MB</small>
                                 </div>
                                 <div>
-                                    <a className="text-dark" ><i className="h3 m-0"><FontAwesomeIcon icon={faDownload} /></i></a>
+                                    <a className="text-dark" ><i className="h3 m-0"><BiDownload/></i></a>
                                 </div>
                             </div>)
                     })}

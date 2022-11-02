@@ -183,7 +183,7 @@ const CreateEnrollForm = () => {
                         {filteredTeachersList.map((teacher) => {
                             return (
                                 <div className="col-xl-2 col-sm-6" key={teacher.id}>
-                                    <FileManagerCard icon="faUser"
+                                    <FileManagerCard icon="BiUser"
                                         iconColor="#34c38f"
                                         id={teacher.id}
                                         title={teacher.name}
@@ -197,7 +197,7 @@ const CreateEnrollForm = () => {
 
                     <div className="row" style={selectedTeacher !== "" ? {} : { display: "none" }}>
                         <div className="col-xl-3 col-sm-6">
-                            <FileManagerCard icon="faBox"
+                            <FileManagerCard icon="BiBox"
                                 iconColor="#f1b44c"
                                 title="..."
                                 onClick={resetLectureHandler}
@@ -206,7 +206,7 @@ const CreateEnrollForm = () => {
                         {filteredLecturesList.map((lecture) => {
                             return (
                                 <div className="col-xl-3 col-sm-6" key={lecture.id}>
-                                    <FileManagerCard icon="faChalkboard"
+                                    <FileManagerCard icon="BiChalkboard"
                                         iconColor="#50a5f1"
                                         id={lecture.id}
                                         title={lecture.name}

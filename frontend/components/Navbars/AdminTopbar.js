@@ -1,8 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { FaBars } from "react-icons/fa";
 
 export default function AdminTopbar(props) {
   const showMenu = () => {
@@ -27,7 +26,7 @@ export default function AdminTopbar(props) {
             </Link>
           </div>
           <button type="button" className="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn" onClick={() => showMenu()}>
-            <FontAwesomeIcon  icon={faBars} />
+            <FaBars/>
           </button>
         </div>
 

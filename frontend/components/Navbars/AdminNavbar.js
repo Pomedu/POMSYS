@@ -1,12 +1,9 @@
 import React from 'react';
-import IonIcon from '@reacticons/ionicons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBox, faFileSignature, faUserCircle, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import AdminNavbarMenu from './AdminNavebarMenu';
 import AdminNavbarMenuCollapse from './AdminNavbarMenuCollapse';
-
+import { BiHome } from "react-icons/bi";
 
 function MoveToHomePage() {
     window.location.replace("student/");
@@ -34,21 +31,21 @@ const AdminNavbar = (props) => {
                         <li className="menu-title" key="t-apps">업무</li>
                         <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
                             name="강의관리"
-                            icon="faBox"
+                            icon="BiBox"
                             submenu={lectureSubmenu}/>
                         <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
                             name="강사관리"
-                            icon="faUserCircle"
+                            icon="BiUserCircle"
                             submenu={teacherSubmenu}/>
                         <AdminNavbarMenuCollapse setSidebar={props.setSidebar} isMobile={props.isMobile}
                             name="학생관리"
-                            icon="faUserGroup"
+                            icon="BiFace"
                             submenu={studentSubmenu}/>
                         <li>
                             <a onClick={() => {
                                 MoveToHomePage();
                             }}>
-                                <i><IonIcon name="home"></IonIcon ></i>
+                                <i><BiHome/></i>
                                 <span>학생 홈페이지</span>
                             </a>
                         </li>

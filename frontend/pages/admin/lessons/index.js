@@ -7,10 +7,9 @@ import "moment/locale/ko"
 import moment from "moment/moment";
 import SearchBox from "../../../components/Common/SearchBox";
 import ContentTitle from "../../../components/Common/ContentTitle";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBox, faChalkboard, faChevronDown, faChevronUp, faEdit, faFolder, faTrashCan, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/router";
 import { fetchLectureLessons } from "../../../store/modules/lessonsSlice";
+import { BiUser, BiChevronDown, BiChevronUp, BiChalkboard } from 'react-icons/bi'
 
 const AdminLessonListPage = () => {
     const upcomingLessonsList = useSelector(state => state.lessons.upcomingLessonsData.slice(0,3));
@@ -89,12 +88,12 @@ const AdminLessonListPage = () => {
                                         <div className="custom-accordion">
                                             <a className="text-body fw-medium py-1 d-flex align-items-center"
                                                 onClick={() => selectedTeacherHandler(teacher.id)}>
-                                                <i className="font-size-10 text-warning me-2">
-                                                    <FontAwesomeIcon icon={faUser} color={selectedTeacher.includes(teacher.id) ? "#2A3042" : "#CDCDCD"} />
+                                                <i className="font-size-15 text-warning me-2">
+                                                    <BiUser color={selectedTeacher.includes(teacher.id) ? "#2A3042" : "#CDCDCD"} />
                                                 </i>
                                                 {teacher.name}({teacher.subject})
-                                                <i className="ms-auto font-size-10">
-                                                    <FontAwesomeIcon icon={faChevronDown} />
+                                                <i className="ms-auto font-size-15">
+                                                    {selectedTeacher.includes(teacher.id) ?<BiChevronDown />:<BiChevronUp/>}
                                                 </i>
                                             </a>
                                             <div className={selectedTeacher.includes(teacher.id) ? "collapse show mt-2 mb-1" : "collapse"}>
@@ -103,8 +102,8 @@ const AdminLessonListPage = () => {
                                                         {teacher.lectures.map((lecture, lecture_index) => {
                                                             return (<li key={lecture_index} className="mb-2">
                                                                 <a onClick={() => selectedLectureHandler(lecture.name, lecture.id)}>
-                                                                    <i className="font-size-10 text-warning me-2">
-                                                                        <FontAwesomeIcon icon={faChalkboard}
+                                                                    <i className="font-size-15 text-warning me-2">
+                                                                        <BiChalkboard
                                                                             color={lecture.name == selectedLecture ? "#2A3042" : "#CDCDCD"} />
                                                                     </i>
                                                                     {lecture.name}

@@ -71,8 +71,6 @@ export const lessonsSlice = createSlice({
                 state.lessonsData = payload;
                 state.upcomingLessonsData = payload.filter((item)=>item.done == false);
                 state.completedLessonsData = payload.filter((item)=>item.done == true);
-                console.log(state.upcomingLessonsData);
-                console.log(state.completedLessonsData);
             })
             .addCase(fetchLectureLessons.rejected, (state, { payload }) => {
                 state.error = payload;
