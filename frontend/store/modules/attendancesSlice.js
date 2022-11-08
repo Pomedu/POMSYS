@@ -79,6 +79,8 @@ export const attendancesSlice = createSlice({
             })
             .addCase(createAttendance.fulfilled, (state, { payload }) => {
                 state.loading = false;
+                state.attendanceData = payload;
+                console.log(payload);
             })
             .addCase(createAttendance.rejected, (state, { payload }) => {
                 state.error = payload;

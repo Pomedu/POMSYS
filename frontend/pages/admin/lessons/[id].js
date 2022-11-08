@@ -18,7 +18,7 @@ import { fetchLessonAttendances } from "../../../store/modules/attendancesSlice"
 import { fetchLessonVideos } from "../../../store/modules/videosSlice";
 import { fetchLessonTests } from "../../../store/modules/testsSlice";
 
-const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, enrollsData, attendancesData, videosData, testsData }) => {
+const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, videosData, testsData }) => {
     
     // Set Columns 
     const columnData = [
@@ -70,7 +70,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                 
             </div>
             <div className="col-lg-3">
-                <AttendanceCard attendancesData={attendancesData} enrollsData={enrollsData} lessonData={lessonData} />
+                <AttendanceCard lessonData={lessonData} />
             </div>
             <div className="col-lg-3">
                 <VideoListCard title="강의영상" videos={videosData}/>
@@ -130,10 +130,8 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const lessonData = store.getState().lessons.lessonData;
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0,3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;
-    const enrollsData = store.getState().enrolls.enrollsData;
-    const attendancesData = store.getState().attendances.attendancesData;
     const videosData = store.getState().videos.videosData;
     const testsData = store.getState().tests.testsData;
-    return { props: {lessonData, upcomingLessonsData, completedLessonsData, enrollsData, attendancesData, videosData, testsData}, };
+    return { props: {lessonData, upcomingLessonsData, completedLessonsData, videosData, testsData}, };
 
 });

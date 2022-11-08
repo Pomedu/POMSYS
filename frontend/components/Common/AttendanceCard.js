@@ -1,34 +1,64 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiEdit } from 'react-icons/bi'
+import { useDispatch, useSelector } from 'react-redux';
+import { createAttendance, fetchLessonAttendances, updateAttendance } from '../../store/modules/attendancesSlice';
 
-const AttendanceCard = (props) => {
+const AttendanceCard = () => {
+    const lessonData = useSelector(state => state.lessons.lessonData);
+    const enrollsData = useSelector(state => state.enrolls.enrollsData);
+    const attendancesData = useSelector(state => state.attendances.attendancesData);
+    const attendanceData = useSelector(state => state.attendances.attendanceData);
 
     var attendList = [];
     var absentList = [];
-    if (props.attendancesData) {
-        props.attendancesData.filter((item) => item.attend == true).map((item)=> attendList.push(item.id));
-        props.attendancesData.filter((item) => item.attend == false).map((item)=> absentList.push(item.id));
+    if (attendancesData) {
+        attendancesData.filter((item) => item.attend == true).map((item)=> attendList.push(item.student));
+        attendancesData.filter((item) => item.attend == false).map((item)=> absentList.push(item.student));
     }
 
-    const [attend, editAttend] = useState({"student": null, "attend": null, "lesson": props.lessonData.id});
+    const [newAttend, editNewAttend] = useState({"student": null, "attend": null, "lesson": lessonData.id});
+    const [selectedAttendance, setSelectedAttendance] = useState();
 
     const dropdownClickHandler=(studentId)=>{
-        if(attend.student==studentId){
-            editAttend({"student": null, "attend": null, "lesson": props.lessonData.id});
+        if(newAttend.student==studentId){
+            editNewAttend({student : null, attend : null, lesson : lessonData.id});
+            setSelectedAttendance();
         } else {
-            editAttend({"student": studentId, "attend": true, "lesson": props.lessonData.id});
+            editNewAttend({student: studentId, attend: null, lesson: lessonData.id});
+            try{
+                setSelectedAttendance(attendancesData.find((item) => item.student == studentId).id);
+            } catch(e) {
+                setSelectedAttendance();
+            }
         }
     }
 
     const attendChangeHandler= (e) => {
-        if(e.target.value=='true'){
-            editAttend({...attend, "attend": true});
-            console.log(attend);
+        if(e.target.value == 'true'){
+            editNewAttend({...newAttend, attend: true});
         } else {
-            editAttend({...attend, "attend": false});
-            console.log(attend);
+            editNewAttend({...newAttend, attend: false});
         }
     };
+
+    const dispatch = useDispatch();
+    const attendCreateHandler =(e)=> {
+        e.preventDefault();
+        if (newAttend.attend!==null) {
+            if(attendList.includes(newAttend.student)||absentList.includes(newAttend.student)){
+                dispatch(updateAttendance({ editedAttendance: newAttend, attendanceId: selectedAttendance }));
+            } else {
+                dispatch(createAttendance(newAttend));
+            }
+        } else {
+            console.log("생성못함");
+        }
+        editNewAttend({student : null, attend : null, lesson : lessonData.id});
+    }
+
+    useEffect(()=>{
+        dispatch(fetchLessonAttendances(lessonData.id));
+    },[attendanceData]);
 
     const newAttendData = {}
 
@@ -46,17 +76,17 @@ const AttendanceCard = (props) => {
                     </div>
                     <div className="col-3 text-center">
                         <div className="font-size-14 mb-2 no-line-break">총원</div>
-                        <h3 className="text-success">{props.enrollsData.length}</h3>
+                        <h3 className="text-success">{enrollsData.length}</h3>
                     </div>
                     <div className="col-3 text-center">
                         <div className="text-warning font-size-14 mb-2 no-line-break">미기입</div>
-                        <h3 className="text-warning">{props.enrollsData.length - attendList.length - absentList.length}</h3>
+                        <h3 className="text-warning">{enrollsData.length - attendList.length - absentList.length}</h3>
                     </div>
                 </div>
                 <div className="row">
                     <table className="table table-nowrap align-middle table-hover mb-0 mt-2 text-center">
                         <tbody>
-                            {props.enrollsData.map((enroll) =>
+                            {enrollsData.map((enroll) =>
                                 <tr key={enroll.student.id}>
                                     <td>
                                         <div className="avatar-xs">
@@ -78,11 +108,11 @@ const AttendanceCard = (props) => {
                                             <a className='badge badge-soft-success me-1 font-size-12' onClick={() => { dropdownClickHandler(enroll.student.id) }} >
                                                 <BiEdit />
                                             </a>
-                                            <div className={enroll.student.id == attend.student ? "dropdown-menu show" : "dropdown-menu"}>
+                                            <div className={enroll.student.id == newAttend.student ? "dropdown-menu show" : "dropdown-menu"}>
                                                 <div className='dropdown-item'>
                                                     <div className="form-radio-success text-success mb-2" >출석
                                                         <input className="form-check-input float-end" type="radio" name="attend" value="true"
-                                                        checked onChange={(e)=>attendChangeHandler(e)}/>
+                                                        onChange={(e)=>attendChangeHandler(e)}/>
                                                     </div>
                                                     <div className="form-radio-danger text-danger" >결석
                                                         <input className="form-check-input float-end" type="radio" name="attend" value="false"
@@ -90,7 +120,7 @@ const AttendanceCard = (props) => {
                                                     </div>
                                                 </div>
                                                 <div className='dropdown-item'>
-                                                    <button className='btn btn-sm btn-primary mt-2 float-end'>변경</button>
+                                                    <button className='btn btn-sm btn-primary mt-2 float-end' onClick={attendCreateHandler}>변경</button>
                                                 </div>
                                             </div>
                                         </div>
