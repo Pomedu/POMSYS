@@ -121,15 +121,15 @@ const CreateEnrollForm = () => {
         const _newInputFields = [];
         const _newEnrollTableData = [];
         selectedRows.map((row) => {
-            _newInputFields.push({ lecture: selectedLecture, student: row.id, joined_at: "" });
+            _newInputFields.push({ lecture: selectedLecture, student: row.id, joined_at: lectureData.start_date});
             if (lecturesList !== [] && studentsList !== []) {
                 _newEnrollTableData.push({
-                    lectureId: selectedLecture,
-                    lectureName: lecturesList.filter((lecture) => lecture.id == selectedLecture)[0].name,
+                    lectureId: lectureData.id,
+                    lectureName: lectureData.name,
                     studentId: row.id,
                     studentName: studentsList.filter((student) => student.id == row.id)[0].name,
                     studentPhoneNumber: studentsList.filter((student) => student.id == row.id)[0].phone_number,
-                    joined_at: ""
+                    joined_at: lectureData.start_date
                 });
             }
         })
@@ -260,20 +260,26 @@ const CreateEnrollForm = () => {
                                         <h5>수강 시작일 입력</h5>
                                     </div>
                                 </div>
-                                <div className="row mt-4 mb-2">
-                                    <div className="col-4 "> 강의 </div>
-                                    <div className="col-4"> 학생 </div>
-                                    <div className="col-4"> 수강 시작일 </div>
+                                <div className="">
+                                    <div className="row mt-4 mb-2">
+                                        <div className="col-4 font-size-12 fw-medium"> 강의</div>
+                                        <div className="col-4 font-size-12 fw-medium"> 학생 </div>
+                                        <div className="col-4 font-size-12 fw-medium"> 수강 시작일 </div>
+                                    </div>
+                                    <hr className="mt-3"/>
+                                    {newEnrollTableData.map((input, index) => {
+                                        return (
+                                            <div  key={index}>
+                                                <div className="row">
+                                                    <div className="col-4 text-truncate"> {input.lectureName} </div>
+                                                    <div className="col-4"> {input.studentName} </div>
+                                                    <div className="col-4"> <input type="date" value={input.joined_at} name="joined_at" className="form-control form-control-sm" onChange={(e) => handleJoinDate(e, index)} /> </div>
+                                                </div>
+                                                <hr />
+                                            </div>
+                                        )
+                                    })}
                                 </div>
-                                {newEnrollTableData.map((input, index) => {
-                                    return (
-                                        <div className="row mt-2 align-itmes-middle" key={index}>
-                                            <div className="col-4 "> {input.lectureName} </div>
-                                            <div className="col-4"> {input.studentName} </div>
-                                            <div className="col-4"> <input type="date" value={input.joined_at} name="joined_at" className="form-control" onChange={(e) => handleJoinDate(e, index)} /> </div>
-                                        </div>
-                                    )
-                                })}
                                 <div className="row mt-3">
                                     <div className="col-lg-12">
                                         <button type="submit" className="btn btn-primary float-end waves-effect" onClick={onCreate}>수강 등록</button>

@@ -14,8 +14,11 @@ import DataTable from "react-data-table-component";
 import { useRouter } from "next/router";
 import VideoListCard from "../../../components/Common/VideoListCard";
 import { fetchEnrolls } from "../../../store/modules/enrollsSlice";
+import { fetchLessonAttendances } from "../../../store/modules/attendancesSlice";
+import { fetchLessonVideos } from "../../../store/modules/videosSlice";
+import { fetchLessonTests } from "../../../store/modules/testsSlice";
 
-const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, enrollsData }) => {
+const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, enrollsData, attendancesData, videosData, testsData }) => {
     
     // Set Columns 
     const columnData = [
@@ -67,11 +70,11 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                 
             </div>
             <div className="col-lg-3">
-                <AttendanceCard lessonData={lessonData} enrollsData={enrollsData} />
+                <AttendanceCard attendancesData={attendancesData} enrollsData={enrollsData} lessonData={lessonData} />
             </div>
             <div className="col-lg-3">
-                <VideoListCard title="강의영상" videos={lessonData.videos}/>
-                <FileListCard title="참고자료" files={lessonData.tests} />
+                <VideoListCard title="강의영상" videos={videosData}/>
+                <FileListCard title="참고자료" files={testsData} />
                 <CommentCard title="질문/답변" comments={[]} />
             </div>
             <div className="col-lg-3">
@@ -117,6 +120,9 @@ export default AdminLessonDetailPage;
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
     const lessonId = { ...etc }.query.id;
     await store.dispatch(fetchLesson(lessonId));
+    await store.dispatch(fetchLessonAttendances(lessonId));
+    await store.dispatch(fetchLessonVideos(lessonId));
+    await store.dispatch(fetchLessonTests(lessonId));
     const lectureId = store.getState().lessons.lessonData.lecture.id;
     await store.dispatch(fetchLectureLessons(lectureId));
     await store.dispatch(fetchEnrolls(lectureId));
@@ -125,6 +131,9 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0,3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;
     const enrollsData = store.getState().enrolls.enrollsData;
-    return { props: {lessonData, upcomingLessonsData, completedLessonsData, enrollsData}, };
+    const attendancesData = store.getState().attendances.attendancesData;
+    const videosData = store.getState().videos.videosData;
+    const testsData = store.getState().tests.testsData;
+    return { props: {lessonData, upcomingLessonsData, completedLessonsData, enrollsData, attendancesData, videosData, testsData}, };
 
 });

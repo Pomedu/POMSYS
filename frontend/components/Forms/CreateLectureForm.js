@@ -17,6 +17,9 @@ const CreateLectureForm = () => {
     },])
 
     const handleFormChange = (event) => {
+        if(event.target.name=="cost"){
+            event.target.value = event.target.value.replace(/[^0-9]/g, "");
+        }
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
 

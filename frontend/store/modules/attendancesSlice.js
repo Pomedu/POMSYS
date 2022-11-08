@@ -18,27 +18,28 @@ export const fetchLessonAttendances = createAsyncThunk("GET/LESSON/ATTENDANCE", 
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const createLesson = createAsyncThunk("CREATE/ ", async (_, { rejectWithValue }) => {
+export const createAttendance = createAsyncThunk("CREATE/ATTENDANCE ", async (newAttendance, { rejectWithValue }) => {
     return axios({
         method: "post",
-        url: `http://127.0.0.1:8000/api/lectures/lessons/`,
+        url: `http://127.0.0.1:8000/api/lectures/attendances/`,
+        data: newAttendance,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
 
-export const deleteLesson = createAsyncThunk("DELETE/LESSON", async (lessonId, { rejectWithValue }) => {
+export const deleteAttendance = createAsyncThunk("DELETE/ATTENDANCE", async (attendanceId, { rejectWithValue }) => {
     return axios({
         method: "delete",
-        url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}`,
+        url: `http://127.0.0.1:8000/api/lectures/attendances/${attendanceId}`,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
 
-export const updateLesson = createAsyncThunk("UPDATE/LESSON", async ({ editedLesson, lessonId }, { rejectWithValue }) => {
+export const updateAttendance = createAsyncThunk("UPDATE/ATTENDANCE", async ({ editedAttendance, attendanceId }, { rejectWithValue }) => {
     return axios({
         method: "put",
-        url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}`,
-        data: editedLesson,
+        url: `http://127.0.0.1:8000/api/lectures/attendances/${attendanceId}`,
+        data: editedAttendance,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -60,68 +61,65 @@ export const attendancesSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchLectureLessons.pending, (state) => {
+            .addCase(fetchLectureAttendances.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
-            .addCase(fetchLectureLessons.fulfilled, (state, { payload }) => {
+            .addCase(fetchLectureAttendances.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.lessonsData = payload;
-                state.upcomingLessonsData = payload.filter((item)=>item.done == false);
-                state.completedLessonsData = payload.filter((item)=>item.done == true);
+                state.attendancesData = payload;
             })
-            .addCase(fetchLectureLessons.rejected, (state, { payload }) => {
+            .addCase(fetchLectureAttendances.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
-            .addCase(createLesson.pending, (state) => {
+            .addCase(createAttendance.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
-            .addCase(createLesson.fulfilled, (state, { payload }) => {
+            .addCase(createAttendance.fulfilled, (state, { payload }) => {
                 state.loading = false;
             })
-            .addCase(createLesson.rejected, (state, { payload }) => {
+            .addCase(createAttendance.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
-            .addCase(deleteLesson.pending, (state) => {
+            .addCase(deleteAttendance.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
-            .addCase(deleteLesson.fulfilled, (state, action) => {
+            .addCase(deleteAttendance.fulfilled, (state, action) => {
                 state.loading = false;
                 const id = action.meta.arg;
                 if (id) {
-                    state.upcomingLessonsData = state.upcomingLessonsData.filter((item) => item.id !== id);
-                    state.completedLessonsData = state.completedLessonsData.filter((item) => item.id !== id);
+                    state.attendancesData = state.attendancesData.filter((item) => item.id !== id);
                 }
             })
-            .addCase(deleteLesson.rejected, (state, { payload }) => {
+            .addCase(deleteAttendance.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
-            .addCase(fetchLesson.pending, (state) => {
+            .addCase(fetchLessonAttendances.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
-            .addCase(fetchLesson.fulfilled, (state, { payload }) => {
+            .addCase(fetchLessonAttendances.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.lessonData = payload;
+                state.attendancesData = payload;
             })
-            .addCase(fetchLesson.rejected, (state, { payload }) => {
+            .addCase(fetchLessonAttendances.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
-            .addCase(updateLesson.pending, (state) => {
+            .addCase(updateAttendance.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
-            .addCase(updateLesson.fulfilled, (state, { payload }) => {
+            .addCase(updateAttendance.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.lessonData = payload;
+                state.attendanceData = payload;
             })
-            .addCase(updateLesson.rejected, (state, { payload }) => {
+            .addCase(updateAttendance.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             });

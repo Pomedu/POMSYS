@@ -165,7 +165,7 @@ const AdminEnrollListPage = () => {
                                 </div>
                                 <div className="col-xl-6 col-sm-6 mt-3">
                                     <div>
-                                        <div className="float-end w-100" style={selectedLecture!==""?{}:{display:"none"}}>
+                                        <div className="float-end" style={selectedLecture!==""?{}:{display:"none"}}>
                                             <SearchBox onChange={setFilterText} filterText={filterText} />
                                         </div>
                                     </div>

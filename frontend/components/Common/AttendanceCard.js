@@ -5,20 +5,30 @@ const AttendanceCard = (props) => {
 
     var attendList = [];
     var absentList = [];
-    if (props.lessonData) {
-        attendList = props.lessonData.attendees.filter((item) => item.attend == true);
-        absentList = props.lessonData.attendees.filter((item) => item.attend == false);
+    if (props.attendancesData) {
+        props.attendancesData.filter((item) => item.attend == true).map((item)=> attendList.push(item.id));
+        props.attendancesData.filter((item) => item.attend == false).map((item)=> absentList.push(item.id));
     }
 
-    const [attend, editAttend] = useState("");
+    const [attend, editAttend] = useState({"student": null, "attend": null, "lesson": props.lessonData.id});
 
     const dropdownClickHandler=(studentId)=>{
-        if(attend==studentId){
-            editAttend("");
+        if(attend.student==studentId){
+            editAttend({"student": null, "attend": null, "lesson": props.lessonData.id});
         } else {
-            editAttend(studentId);
+            editAttend({"student": studentId, "attend": true, "lesson": props.lessonData.id});
         }
     }
+
+    const attendChangeHandler= (e) => {
+        if(e.target.value=='true'){
+            editAttend({...attend, "attend": true});
+            console.log(attend);
+        } else {
+            editAttend({...attend, "attend": false});
+            console.log(attend);
+        }
+    };
 
     const newAttendData = {}
 
@@ -68,17 +78,19 @@ const AttendanceCard = (props) => {
                                             <a className='badge badge-soft-success me-1 font-size-12' onClick={() => { dropdownClickHandler(enroll.student.id) }} >
                                                 <BiEdit />
                                             </a>
-                                            <div className={enroll.student.id == attend ? "dropdown-menu show" : "dropdown-menu"}>
+                                            <div className={enroll.student.id == attend.student ? "dropdown-menu show" : "dropdown-menu"}>
                                                 <div className='dropdown-item'>
                                                     <div className="form-radio-success text-success mb-2" >출석
-                                                        <input className="form-check-input float-end" type="radio" name="attend" id={enroll.id} ></input>
+                                                        <input className="form-check-input float-end" type="radio" name="attend" value="true"
+                                                        checked onChange={(e)=>attendChangeHandler(e)}/>
                                                     </div>
                                                     <div className="form-radio-danger text-danger" >결석
-                                                        <input className="form-check-input float-end" type="radio" name="attend" id={enroll.id} ></input>
+                                                        <input className="form-check-input float-end" type="radio" name="attend" value="false"
+                                                        onChange={(e)=>attendChangeHandler(e)}/>
                                                     </div>
                                                 </div>
                                                 <div className='dropdown-item'>
-                                                    <button className='btn btn-sm btn-primary mt-2'>제출</button>
+                                                    <button className='btn btn-sm btn-primary mt-2 float-end'>변경</button>
                                                 </div>
                                             </div>
                                         </div>

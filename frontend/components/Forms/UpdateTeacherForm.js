@@ -15,6 +15,9 @@ const UpdateTeacherForm = () => {
     }, [teacherData])
 
     const handleFormChange = (event) => {
+        if(event.target.name=="phone_number"){
+            event.target.value = event.target.value.replace(/[^0-9]/g, "");
+        }
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
 
@@ -59,7 +62,7 @@ const UpdateTeacherForm = () => {
                     <div className="col-lg-10">
                         <input
                             name='phone_number'
-                            placeholder='전화번호를 입력하세요...'
+                            placeholder='전화번호를 입력하세요(숫자만)'
                             className="form-control"
                             value={inputFields.phone_number}
                             onChange={event => handleFormChange(event)}

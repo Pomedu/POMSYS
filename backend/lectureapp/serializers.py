@@ -43,16 +43,16 @@ class EnrollCreateSerializer(serializers.ModelSerializer):
         model = Enroll
         fields = "__all__"
 
-class TestSerializer(serializers.ModelSerializer):
-    records = serializers.TestRecordSerializer(many=True, read_only=True)
-    class Meta:
-        model = Test
-        fields = "__all__"
-
 class TestRecordSerializer(serializers.ModelSerializer):
     student = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     class Meta:
         model = TestRecord
+        fields = "__all__"
+
+class TestSerializer(serializers.ModelSerializer):
+    records = TestRecordSerializer(many=True, read_only=True)
+    class Meta:
+        model = Test
         fields = "__all__"
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class VideoWatchRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class AttendanceSerializer(serializers.ModelSerializer):
-    student = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+
     class Meta:
         model = Attendance
         fields = "__all__"

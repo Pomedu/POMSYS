@@ -6,9 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture, Enroll, Test, Lesson, TestRecord
-from lectureapp.serializers import LectureSerializer, EnrollSerializer, EnrollCreateSerializer, TestSerializer, TestRecordSerializer, \
-LectureCreateSerializer, LessonSerializer, LessonDetailSerializer
+from lectureapp.models import *
+from lectureapp.serializers import *
 
 
 ########################################################## 강의(Lecture) ###################################################################
@@ -322,6 +321,13 @@ class AllAttendanceList(APIView):
         attendances = Attendance.objects.all()
         serializer = AttendanceSerializer(attendances, many=True)
         return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = AttendanceSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 특정 출석 상세정보 보기 수정하기 삭제하기
 class AttendanceDetail(APIView):

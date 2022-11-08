@@ -39,7 +39,7 @@ const FileManagerCard = (props) => {
                         <p className="text-muted text-truncate mb-0">{props.subtitle}</p>
                     </div>
                     <div className="align-self-end ms-2">
-                        <p className="text-muted mb-0">{props.caption}</p>
+                        <p className="text-muted mb-0 text-nowrap">{props.caption}</p>
                     </div>
                 </div>
             </div>
