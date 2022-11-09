@@ -152,10 +152,10 @@ const AdminLectureListPage = () => {
                 </div>
             </div>
             <DeleteModal 
-                deleteId={deleteId}
-                deleteName={deleteName} 
-                deleteModalOpen={deleteModalOpen}
-                onDelete={onDelete}
+                Id={deleteId}
+                Name={deleteName} 
+                ModalOpen={deleteModalOpen}
+                onChange={onDelete}
                 modalId={'lectureDeleteModal'}
                 />
         </div>

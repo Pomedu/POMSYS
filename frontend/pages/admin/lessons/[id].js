@@ -17,8 +17,9 @@ import { fetchEnrolls } from "../../../store/modules/enrollsSlice";
 import { fetchLessonAttendances } from "../../../store/modules/attendancesSlice";
 import { fetchLessonVideos } from "../../../store/modules/videosSlice";
 import { fetchLessonTests } from "../../../store/modules/testsSlice";
+import Script from "next/script";
 
-const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData, videosData, testsData }) => {
+const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData }) => {
     
     // Set Columns 
     const columnData = [
@@ -70,11 +71,11 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                 
             </div>
             <div className="col-lg-3">
-                <AttendanceCard lessonData={lessonData} />
+                <AttendanceCard />
             </div>
             <div className="col-lg-3">
-                <VideoListCard title="강의영상" videos={videosData}/>
-                <FileListCard title="참고자료" files={testsData} />
+                <VideoListCard title="강의영상" />
+                <FileListCard title="참고자료"  />
                 <CommentCard title="질문/답변" comments={[]} />
             </div>
             <div className="col-lg-3">
@@ -109,6 +110,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                     </div>
                 </div>
             </div>
+            <Script src="../../../libs/dropzone/min/dropzone.min.js" strategy="lazyOnload" />
         </div>
     );
 };
@@ -130,8 +132,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const lessonData = store.getState().lessons.lessonData;
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0,3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;
-    const videosData = store.getState().videos.videosData;
-    const testsData = store.getState().tests.testsData;
-    return { props: {lessonData, upcomingLessonsData, completedLessonsData, videosData, testsData}, };
+
+    return { props: {lessonData, upcomingLessonsData, completedLessonsData}, };
 
 });
