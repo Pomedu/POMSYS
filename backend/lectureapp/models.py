@@ -43,21 +43,23 @@ class Enroll(models.Model):
     def __str__(self):
         return str(self.lecture)+" - "+str(self.student)
 
-
+class Attachment(models.Model):
+    name = models.CharField(max_length=100, null=False)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='attachments')
+    attachment_file = models.FileField(upload_to='attachments/', null=False)
+    size = models.FloatField(null=False)
+    
 class Test(models.Model):
     name = models.CharField(max_length=100, null=False)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='tests')
-    test_file = models.FileField(upload_to='tests/', null=True, validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     average_score = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return str(self.lesson) + " - " + str(self.name)
 
-
 class TestRecord(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='records')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='testrecords')
-    date = models.DateField(null=False, blank=False)
     score = models.FloatField(null=False, blank=False)
 
 class Video(models.Model):

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lectureapp.models import Lecture, Lesson, Enroll, Test, TestRecord, Video, VideoWatchRecord, Attendance
+from lectureapp.models import Lecture, Lesson, Enroll, Test, TestRecord, Video, VideoWatchRecord, Attendance, Attachment
 from teacherapp.models import Teacher
 
 class LectureSerializer(serializers.ModelSerializer):
@@ -53,6 +53,12 @@ class TestSerializer(serializers.ModelSerializer):
     records = TestRecordSerializer(many=True, read_only=True)
     class Meta:
         model = Test
+        fields = "__all__"
+
+class AttachmentSerializer(serializers.ModelSerializer):
+    attachment_file = serializers.FileField(required=True)
+    class Meta:
+        model = Attachment
         fields = "__all__"
 
 class VideoSerializer(serializers.ModelSerializer):

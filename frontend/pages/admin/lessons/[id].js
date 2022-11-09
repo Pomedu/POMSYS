@@ -18,6 +18,7 @@ import { fetchLessonAttendances } from "../../../store/modules/attendancesSlice"
 import { fetchLessonVideos } from "../../../store/modules/videosSlice";
 import { fetchLessonTests } from "../../../store/modules/testsSlice";
 import Script from "next/script";
+import { fetchLessonAttachments } from "../../../store/modules/attachmentsSlice";
 
 const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData }) => {
     
@@ -46,11 +47,18 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
         <div className="row">
             <ContentTitle title="일일 수업 관리(상세)" mainTitle="강의 관리" />
             <div className="col-lg-3">
-                <div className="card bg-primary ">
+                {lessonData.done?<div className="card border border-success ">
                     <div className="card-header bg-transparent ">
-                        <div className="text-white font-size-15 fw-semibold">{lessonData.lecture.name}</div>
+                        <span className="badge badge-soft-success me-2">진행완료</span>
+                        <span className="text-success font-size-15 fw-semibold text-truncate">{lessonData.lecture.name}</span>
                     </div>
-                </div>
+                </div>:<div className="card border border-danger ">
+                    <div className="card-header bg-transparent ">
+                        <span className="badge badge-soft-danger me-2">미진행</span>
+                        <span className="text-danger font-size-15 fw-semibold">{lessonData.lecture.name}</span>
+                    </div>
+                </div>}
+                
                 <div className="card">
                     <div className="card-body">
                         <div className="row mb-4 justify-content-between">
@@ -75,7 +83,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
             </div>
             <div className="col-lg-3">
                 <VideoListCard title="강의영상" />
-                <FileListCard title="참고자료"  />
+                <FileListCard title="참고자료"/>
                 <CommentCard title="질문/답변" comments={[]} />
             </div>
             <div className="col-lg-3">
@@ -110,7 +118,6 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                     </div>
                 </div>
             </div>
-            <Script src="../../../libs/dropzone/min/dropzone.min.js" strategy="lazyOnload" />
         </div>
     );
 };
@@ -123,6 +130,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const lessonId = { ...etc }.query.id;
     await store.dispatch(fetchLesson(lessonId));
     await store.dispatch(fetchLessonAttendances(lessonId));
+    await store.dispatch(fetchLessonAttachments(lessonId));
     await store.dispatch(fetchLessonVideos(lessonId));
     await store.dispatch(fetchLessonTests(lessonId));
     const lectureId = store.getState().lessons.lessonData.lecture.id;

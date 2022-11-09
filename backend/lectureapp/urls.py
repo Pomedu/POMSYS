@@ -13,11 +13,13 @@ urlpatterns = [
     path('<int:lecture_pk>/tests', LectureTestList.as_view()),
     path('<int:lecture_pk>/videos', LectureVideoList.as_view()),
     path('<int:lecture_pk>/attendances', LectureAttendanceList.as_view()),
+    path('<int:lecture_pk>/attachments', LectureAttachmentList.as_view()),
     path('lessons/', AllLessonList.as_view()),
     path('lessons/<int:lesson_pk>', LessonDetail.as_view()),
     path('lessons/<int:lesson_pk>/tests', LessonTestList.as_view()),
     path('lessons/<int:lesson_pk>/videos', LessonVideoList.as_view()),
     path('lessons/<int:lesson_pk>/attendances', LessonAttendanceList.as_view()),
+    path('lessons/<int:lesson_pk>/attachments', LessonAttachmentList.as_view()),
     path('enrolls/', AllEnrollList.as_view()),
     path('enrolls/<int:enroll_pk>', EnrollDelete.as_view()),
     path('tests/', AllTestList.as_view()),
@@ -28,6 +30,8 @@ urlpatterns = [
     path('attendances/<int:attendance_pk>',AttendanceDetail.as_view()), 
     path('videos/',AllVideoList.as_view()),
     path('videos/<int:video_pk>',VideoDetail.as_view()), 
+    path('attachments/', AllAttachmentList.as_view()),
+    path('attachments/<int:attachment_pk>',AttachmentDetail.as_view()), 
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

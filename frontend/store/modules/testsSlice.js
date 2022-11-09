@@ -18,10 +18,11 @@ export const fetchLessonTests = createAsyncThunk("GET/LESSON/TEST", async (lesso
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const createTest = createAsyncThunk("CREATE/TEST ", async (_, { rejectWithValue }) => {
+export const createTest = createAsyncThunk("CREATE/TEST ", async (newTest, { rejectWithValue }) => {
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/tests/`,
+        data: newTest,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });

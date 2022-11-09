@@ -157,6 +157,13 @@ class AllTestList(APIView):
         serializer = TestSerializer(tests, many=True)
         return Response(serializer.data)
 
+    def post(self,request):
+        serializer = TestSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # 특정 시험 상세정보 보기 수정하기 삭제하기
 class TestDetail(APIView):
@@ -254,12 +261,20 @@ class LessonTestList(APIView):
         return Response(serializer.data)
 
 
+########################################################## 영상(Video) ###################################################################
 # 강의영상 전체 리스트 가져오기,
 class AllVideoList(APIView):
     def get(self,request):
         videos = Video.objects.all()
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = VideoSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 특정 강의영상 상세정보 보기 수정하기 삭제하기
 class VideoDetail(APIView):
@@ -315,6 +330,7 @@ class LessonVideoList(APIView):
         serializer = VideoSerializer(videos, many=True)
         return Response(serializer.data)
 
+########################################################## 출석(Attendance) ###################################################################
 # 출석 전체 리스트 가져오기,
 class AllAttendanceList(APIView):
     def get(self,request):
@@ -381,4 +397,60 @@ class LessonAttendanceList(APIView):
         lesson = self.get_object(lesson_pk)
         attendances = Attendance.objects.filter(lesson=lesson)
         serializer = AttendanceSerializer(attendances, many=True)
+        return Response(serializer.data)
+
+########################################################## 첨부파일(Attachment) ###################################################################
+# 첨부파일 전체 리스트 가져오기,
+class AllAttachmentList(APIView):
+    def get(self,request):
+        attachments = Attachment.objects.all()
+        serializer = AttachmentSerializer(attachments, many=True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = AttachmentSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 특정 첨부파일 삭제하기
+class AttachmentDetail(APIView):
+    def get_object(self, attachment_pk):
+        try:
+            return Attachment.objects.get(pk=attachment_pk)
+        except Attachment.DoesNotExist:
+            raise Http404
+
+    def delete(self, request, attachment_pk, format=None):
+        attachment = self.get_object(attachment_pk)
+        attachment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# 특정 강의의 첨부파일 리스트 가져오기
+class LectureAttachmentList(APIView):
+    def get_object(self, lecture_pk):
+        try:
+            return Lecture.objects.get(pk=lecture_pk)
+        except Lecture.DoesNotExist:
+            raise Http404
+
+    def get(self, request, lecture_pk, format=None):
+        lecture = self.get_object(lecture_pk)
+        attachments = Attachment.objects.filter(lesson__lecture=lecture)
+        serializer = AttachmentSerializer(attachments, many=True)
+        return Response(serializer.data)
+
+# 특정 수업의 첨부파일 리스트 가져오기
+class LessonAttachmentList(APIView):
+    def get_object(self, lesson_pk):
+        try:
+            return Lesson.objects.get(pk=lesson_pk)
+        except Lesson.DoesNotExist:
+            raise Http404
+
+    def get(self, request, lesson_pk, format=None):
+        lesson = self.get_object(lesson_pk)
+        attachments = Attachment.objects.filter(lesson=lesson)
+        serializer = AttachmentSerializer(attachments, many=True)
         return Response(serializer.data)

@@ -1,8 +1,8 @@
 import pandas as pd
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from datetime import datetime, timedelta
-from lectureapp.models import Lesson, Lecture, Attendance
+from lectureapp.models import Lesson, Lecture, Attendance, Attachment
 
 # 강의=>일일수업 오브젝트 자동생성
 @receiver(post_save, sender=Lecture)
@@ -47,3 +47,15 @@ def create_lessons(sender, instance, created, **kwargs):
                     end_time=datetime.strptime(day_end_time[date.weekday()], '%H%M').time(),
                     done=False if date > datetime.today() else True
                 )
+
+# 첨부파일 모델삭제 => 실제 모델 삭제
+@receiver(post_delete, sender=Attachment)
+def file_delete_action(sender, instance, **kwargs):
+    instance.attachment_file.delete(False)
+
+# 출석 모델 생성 => 레슨 진행완료 변경
+@receiver(post_save, sender=Attendance)
+def lesson_status_change(sender, instance, **kwargs):
+    lesson = instance.lesson
+    lesson.done = True
+    lesson.save()

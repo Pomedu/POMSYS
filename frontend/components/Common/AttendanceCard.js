@@ -76,7 +76,7 @@ const AttendanceCard = () => {
                     </div>
                     <div className="col-3 text-center">
                         <div className="font-size-14 mb-2 no-line-break">총원</div>
-                        <h3 className="text-success">{enrollsData.length}</h3>
+                        <h3>{enrollsData.length}</h3>
                     </div>
                     <div className="col-3 text-center">
                         <div className="text-warning font-size-14 mb-2 no-line-break">미기입</div>

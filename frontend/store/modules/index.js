@@ -1,5 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
+import { attachmentsSlice } from "./attachmentsSlice";
 import { attendancesSlice } from "./attendancesSlice";
 import { enrollsSlice } from "./enrollsSlice";
 import { lecturesSlice } from "./lecturesSlice";
@@ -22,6 +23,7 @@ const rootReducer = (state, action) => {
             enrolls: enrollsSlice.reducer,
             lessons: lessonsSlice.reducer,
             attendances: attendancesSlice.reducer,
+            attachments: attachmentsSlice.reducer,
             videos: videosSlice.reducer,
             tests: testsSlice.reducer,
             modal: modalSlice.reducer,
