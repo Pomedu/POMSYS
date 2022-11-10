@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { BiEdit } from 'react-icons/bi'
+import { BiEdit, BiError } from 'react-icons/bi'
 import { useDispatch, useSelector } from 'react-redux';
 import { createAttendance, fetchLessonAttendances, updateAttendance } from '../../store/modules/attendancesSlice';
+import { fetchLectureLessons, fetchLesson } from '../../store/modules/lessonsSlice';
 
 const AttendanceCard = () => {
     const lessonData = useSelector(state => state.lessons.lessonData);
@@ -105,10 +106,13 @@ const AttendanceCard = () => {
                                     </td>
                                     <td>
                                         <div className='dropdown-toggle dropstart'>
-                                            <a className='badge badge-soft-success me-1 font-size-12' onClick={() => { dropdownClickHandler(enroll.student.id) }} >
+                                            <a className='badge badge-soft-success me-1 font-size-12' 
+                                                onClick={() => {dropdownClickHandler(enroll.student.id)}} >
                                                 <BiEdit />
                                             </a>
                                             <div className={enroll.student.id == newAttend.student ? "dropdown-menu show" : "dropdown-menu"}>
+                                                {lessonData.done?
+                                                <>
                                                 <div className='dropdown-item'>
                                                     <div className="form-radio-success text-success mb-2" >출석
                                                         <input className="form-check-input float-end" type="radio" name="attend" value="true"
@@ -122,6 +126,12 @@ const AttendanceCard = () => {
                                                 <div className='dropdown-item'>
                                                     <button className='btn btn-sm btn-primary mt-2 float-end' onClick={attendCreateHandler}>변경</button>
                                                 </div>
+                                                </>
+                                                :
+                                                <div className='dropdown-item'>
+                                                    <span className='text-danger'><BiError/> 수업 진행 완료 상태에서만 수정이 가능합니다.</span>
+                                                </div>
+                                                }                                            
                                             </div>
                                         </div>
 

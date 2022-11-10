@@ -5,7 +5,7 @@ import { createAttachment } from '../../store/modules/attachmentsSlice';
 import { modalClose, setModalId } from '../../store/modules/modalSlice';
 
 
-const AddFileModal = (props) => {
+const AddAttachmentModal = (props) => {
     const dispatch = useDispatch();
     const lessonData = useSelector(state => state.lessons.lessonData);
     const [inputFields, setInputFields] = useState(
@@ -70,4 +70,4 @@ const AddFileModal = (props) => {
     )
 }
 
-export default AddFileModal;
+export default AddAttachmentModal;

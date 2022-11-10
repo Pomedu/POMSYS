@@ -3,19 +3,19 @@ import { BiDownload, BiClipboard, BiPlus, BiTrashAlt, BiTrash } from "react-icon
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAttachment, fetchLessonAttachments } from "../../store/modules/attachmentsSlice";
 import { modalOpen } from "../../store/modules/modalSlice";
-import AddFileModal from "../Modals/AddFileModal";
-import DeleteModal from "../../components/Modals/DeleteModal";
+import AddAttachmentModal from "../Modals/AddAttachmentModal";
+import DeleteModal from "../Modals/DeleteModal";
 
-const FileListCard = (props) => {
-    const files = useSelector(state=>state.attachments.attachmentsData);
+const AttachmentListCard = (props) => {
+    const attachments = useSelector(state=>state.attachments.attachmentsData);
     const attachmentData = useSelector(state => state.attachments.attachmentData);
     const lessonData = useSelector(state=>state.lessons.lessonData);
     const dispatch = useDispatch();
 
     // Data Upload
-    const addFileModalOpen = useSelector((state)=>state.modal.show);
+    const addAttachmentModalOpen = useSelector((state)=>state.modal.show);
     const ModalOpenHandler = () =>{
-        dispatch(modalOpen('addFileModal'));
+        dispatch(modalOpen('addAttachmentModal'));
     };
 
     // Data Delete
@@ -29,9 +29,9 @@ const FileListCard = (props) => {
         dispatch(modalOpen('attachmentDeleteModal'));
     }
 
-    const onDelete = (e, fileId) => {
+    const onDelete = (e, attachmentId) => {
         e.preventDefault();
-        dispatch(deleteAttachment(fileId)).unwrap().then(response => console.log("삭제되었습니다"))
+        dispatch(deleteAttachment(attachmentId)).unwrap().then(response => console.log("삭제되었습니다"))
             .catch(error => {
                 console.log("### error: ", error);
             });
@@ -42,13 +42,13 @@ const FileListCard = (props) => {
     },[attachmentData]);
 
     // Data Download
-    const fileDownloadHandler = (e, file) => {
+    const attachmentDownloadHandler = (e, attachment) => {
         e.preventDefault();
-        downloadFile(file);
+        downloadAttachment(attachment);
     };
     
-    function downloadFile(file) {
-        const downloadUrl = "http://127.0.0.1:8000" + file.attachment_file
+    function downloadAttachment(attachment) {
+        const downloadUrl = "http://127.0.0.1:8000" + attachment.attachment_file
         fetch(downloadUrl, { method: 'GET' })
             .then((res) => {
                 return res.blob();
@@ -57,7 +57,7 @@ const FileListCard = (props) => {
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = file.name;
+                link.download = attachment.name;
                 document.body.appendChild(link);
                 link.click();
                 setTimeout((_) => {
@@ -72,7 +72,7 @@ const FileListCard = (props) => {
     };
 
     return (<>
-        {files.length == 0 ?
+        {attachments.length == 0 ?
             <div className="card border border-secondary">
                 <div className="card-body">
                     <h4 className="card-title mb-4">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button></h4>
@@ -83,9 +83,9 @@ const FileListCard = (props) => {
             <div className="card">
                 <div className="card-body">
                     <h4 className="card-title">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button></h4>
-                    {files.map((file) => {
+                    {attachments.map((attachment) => {
                         return (
-                            <div key={file.name} className="d-flex mt-4 align-items-center" >
+                            <div key={attachment.name} className="d-flex mt-4 align-items-center" >
                                 <div className="flex-shrink-0 me-3">
                                     <div className="avatar-xs ">
                                         <span className="avatar-title rounded-circle bg-primary bg-soft text-primary font-size-18">
@@ -94,21 +94,21 @@ const FileListCard = (props) => {
                                     </div>
                                 </div>
                                 <div className="flex-grow-1 align-middle">
-                                    <h5 className="font-size-14 mb-1 w-75 text-omit"><a className="text-dark">{file.name}</a></h5>
-                                    <small>Size : {(file.size/1024 ** 2).toFixed(2)} MB</small>
+                                    <h5 className="font-size-14 mb-1 w-75 text-omit"><a className="text-dark">{attachment.name}</a></h5>
+                                    <small>Size : {(attachment.size/1024 ** 2).toFixed(2)} MB</small>
                                 </div>
                                 <div>
-                                    <a className="text-dark clickable" onClick={(e) => fileDownloadHandler(e, file)}><i className="h3 me-2 "><BiDownload/></i></a>
-                                    <a className="text-danger clickable" onClick={(e) => deleteButtonHandler(file.id, file.name)}><i className="h3 m-0 text-danger"><BiTrash/></i></a>
+                                    <a className="text-dark clickable" onClick={(e) => attachmentDownloadHandler(e, attachment)}><i className="h3 me-2 "><BiDownload/></i></a>
+                                    <a className="text-danger clickable" onClick={(e) => deleteButtonHandler(attachment.id, attachment.name)}><i className="h3 m-0 text-danger"><BiTrash/></i></a>
                                 </div>
                             </div>)
                     })}
                 </div>
             </div>}
-            <AddFileModal
-            ModalOpen={addFileModalOpen}
+            <AddAttachmentModal
+            ModalOpen={addAttachmentModalOpen}
             // onChange={onCreate}
-            modalId={'addFileModal'}
+            modalId={'addAttachmentModal'}
             />
             <DeleteModal 
                 Id={deleteId}
@@ -121,4 +121,4 @@ const FileListCard = (props) => {
     );
 };
 
-export default FileListCard
+export default AttachmentListCard

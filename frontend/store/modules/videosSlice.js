@@ -18,10 +18,11 @@ export const fetchLessonVideos = createAsyncThunk("GET/LESSON/VIDEO", async (les
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const createVideo = createAsyncThunk("CREATE/VIDEO ", async (_, { rejectWithValue }) => {
+export const createVideo = createAsyncThunk("CREATE/VIDEO ", async (newVideo, { rejectWithValue }) => {
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/videos/`,
+        data: newVideo,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -78,6 +79,7 @@ export const videosSlice = createSlice({
             })
             .addCase(createVideo.fulfilled, (state, { payload }) => {
                 state.loading = false;
+                state.videoData = payload;
             })
             .addCase(createVideo.rejected, (state, { payload }) => {
                 state.error = payload;
