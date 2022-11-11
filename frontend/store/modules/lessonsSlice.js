@@ -2,6 +2,14 @@ import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import moment from "moment";
 
+export const fetchLessons = createAsyncThunk("GET/LESSONS", async (lessonId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/lectures/lessons`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const fetchLectureLessons = createAsyncThunk("GET/LECTURE/LESSON", async (lectureId, { rejectWithValue }) => {
     return axios({
         method: "get",
@@ -43,6 +51,14 @@ export const updateLesson = createAsyncThunk("UPDATE/LESSON", async ({ editedLes
         .catch(error => console.log(error.response.data));
 });
 
+export const fetchTeacherLessons = createAsyncThunk("GET/TEACHER/LESSON", async (teacherId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/teachers/${teacherId}/lessons`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 const initialState = {
     lessonsData: [],
     upcomingLessonsData: [],
@@ -62,6 +78,20 @@ export const lessonsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchLessons.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchLessons.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.lessonsData = payload;
+                state.upcomingLessonsData = payload.filter((item)=>item.done == false);
+                state.completedLessonsData = payload.filter((item)=>item.done == true);
+            })
+            .addCase(fetchLessons.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
             .addCase(fetchLectureLessons.pending, (state) => {
                 state.error = null;
                 state.loading = true;
@@ -124,6 +154,20 @@ export const lessonsSlice = createSlice({
                 state.lessonData = payload;
             })
             .addCase(updateLesson.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchTeacherLessons.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchTeacherLessons.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.lessonsData = payload;
+                state.upcomingLessonsData = payload.filter((item)=>item.done == false);
+                state.completedLessonsData = payload.filter((item)=>item.done == true);
+            })
+            .addCase(fetchTeacherLessons.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             });

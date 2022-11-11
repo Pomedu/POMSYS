@@ -13,7 +13,6 @@ const AdminNavbar = (props) => {
     const router = useRouter();
     const lectureSubmenu = [{url:"/admin/lectures", menuName:"강의 리스트"}, 
                              {url:"/admin/lectures/create", menuName:"신규 강의 등록"},
-                             {url:"/admin/lectures/timetable", menuName:"강의 시간표"},
                              {url:"/admin/enrolls", menuName:"수강 관리"},
                              {url:"/admin/enrolls/create", menuName:"신규 수강 등록"},
                              {url:"/admin/lessons", menuName:"일일 수업 관리"}];
@@ -22,6 +21,7 @@ const AdminNavbar = (props) => {
                             ];
     const teacherSubmenu = [{url:"/admin/teachers", menuName:"강사 리스트"}, 
                              {url:"/admin/teachers/create", menuName:"신규 강사 등록"}, 
+                             {url:"/admin/teachers/timetable", menuName:"강의 시간표"},
                             ];
     return (
         <div className="vertical-menu">

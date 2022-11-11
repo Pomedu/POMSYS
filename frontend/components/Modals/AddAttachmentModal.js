@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiPlus } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAttachment } from '../../store/modules/attachmentsSlice';
@@ -13,6 +13,10 @@ const AddAttachmentModal = (props) => {
             name: null, lesson: lessonData.id, attachment_file: null, size: null
         }
     );
+
+    useEffect(()=>{
+        setInputFields({...inputFields, lesson:lessonData.id});
+    },[lessonData])
 
     const handleFormChange = (e) => {
         if(e.target.name=="attachment_file"){

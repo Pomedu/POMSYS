@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools"
 import "../components/Footers/Footer.css"
 import "../styles/globals.css"
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { Provider } from 'react-redux';
 import wrapper from '../store/configureStore';
 

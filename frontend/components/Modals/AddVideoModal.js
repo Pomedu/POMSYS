@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BiPlus } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import { modalClose, setModalId } from '../../store/modules/modalSlice';
@@ -13,7 +13,11 @@ const AddVideoModal = (props) => {
             name: null, lesson: lessonData.id, link: null
         }
     );
-
+    
+    useEffect(()=>{
+        setInputFields({...inputFields, lesson:lessonData.id});
+    },[lessonData])
+    
     const handleFormChange = (e) => {
         setInputFields({ ...inputFields, [e.target.name]: e.target.value });
     };
@@ -22,6 +26,7 @@ const AddVideoModal = (props) => {
         e.preventDefault();
         if (inputFields) {
             dispatch(createVideo(inputFields));
+            console.log(inputFields);
         } else {
             console.log("생성못함");
         }

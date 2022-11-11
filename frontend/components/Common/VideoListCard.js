@@ -40,7 +40,9 @@ const VideoListCard = (props) => {
     }
 
     useEffect(()=>{
-        dispatch(fetchLessonVideos(lessonData.id));
+        if(lessonData.id){
+            dispatch(fetchLessonVideos(lessonData.id));
+        }
     },[videoData]);
 
     // Video Watch

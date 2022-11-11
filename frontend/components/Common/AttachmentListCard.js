@@ -38,7 +38,9 @@ const AttachmentListCard = (props) => {
     }
 
     useEffect(()=>{
+        if(lessonData.id){
         dispatch(fetchLessonAttachments(lessonData.id));
+        }
     },[attachmentData]);
 
     // Data Download

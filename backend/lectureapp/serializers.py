@@ -30,6 +30,12 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ('lecture',)
 
+class LessonDetailSerializer(serializers.ModelSerializer):
+    lecture = SimpleLectureSerializer(many=False, read_only=True)
+    class Meta:
+        model = Lesson
+        fields = "__all__"
+
 class EnrollSerializer(serializers.ModelSerializer):
     from studentapp.serializers import SimpleStudentSerializer
     student = SimpleStudentSerializer(many=False, read_only=True)
@@ -77,8 +83,3 @@ class AttendanceSerializer(serializers.ModelSerializer):
         model = Attendance
         fields = "__all__"
 
-class LessonDetailSerializer(serializers.ModelSerializer):
-    lecture = SimpleLectureSerializer(many=False, read_only=True)
-    class Meta:
-        model = Lesson
-        fields = "__all__"

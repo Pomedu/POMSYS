@@ -99,7 +99,7 @@ class LectureEnrollList(APIView):
 class AllLessonList(APIView):
     def get(self,request):
         lessons = Lesson.objects.all()
-        serializer = LessonSerializer(lessons, many=True)
+        serializer = LessonDetailSerializer(lessons, many=True)
         return Response(serializer.data)
     
     def post(self,request):

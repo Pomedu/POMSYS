@@ -44,15 +44,15 @@ const ChangeLessonTimeModal = (props) => {
                     <div className="modal-body">
                         <div className="mb-3">
                             <label className="col-form-label">수업일자<span className='text-danger'>*</span></label>
-                            <input type="date" className="form-control" name="date" id="date" value={inputFields.date} onChange={(e)=>handleFormChange(e)}/>
+                            <input type="date" className="form-control" name="date" id="date" value={inputFields.date||''} onChange={(e)=>handleFormChange(e)}/>
                         </div>
                         <div className="mb-3">
                             <label className="col-form-label">수업 시작시간<span className='text-danger'>*</span></label>
-                            <input type="time" className="form-control" name="start_time" id="start_time" value={moment(inputFields.start_time, 'HHmm').format("HH:mm")} onChange={(e)=>handleFormChange(e)}/>
+                            <input type="time" className="form-control" name="start_time" id="start_time" value={moment(inputFields.start_time, 'HHmm').format("HH:mm")||''} onChange={(e)=>handleFormChange(e)}/>
                         </div>
                         <div className="mb-3">
                             <label className="col-form-label">수업 종료시간<span className='text-danger'>*</span></label>
-                            <input type="time" className="form-control" name="end_time" id="end_time" value={moment(inputFields.end_time, 'HHmm').format("HH:mm")} onChange={(e)=>handleFormChange(e)}/>
+                            <input type="time" className="form-control" name="end_time" id="end_time" value={moment(inputFields.end_time, 'HHmm').format("HH:mm")||''} onChange={(e)=>handleFormChange(e)}/>
                         </div>
                     </div>
                     <div className="modal-footer">

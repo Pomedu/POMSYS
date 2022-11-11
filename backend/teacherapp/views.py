@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture
-from lectureapp.serializers import SimpleLectureSerializer
+from lectureapp.models import Lecture, Lesson
+from lectureapp.serializers import SimpleLectureSerializer, LessonSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
@@ -80,5 +80,18 @@ class TeacherStudentList(APIView):
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 
+# 특정 강사의 강의 리스트
+class TeacherLessonList(APIView):
+    def get_object(self, teacher_pk):
+        try:
+            return Teacher.objects.get(pk=teacher_pk)
+        except Teacher.DoesNotExist:
+            raise Http404
+
+    def get(self, request, teacher_pk, format=None):
+        teacher = self.get_object(teacher_pk)
+        lessons = Lesson.objects.filter(lecture__teacher=teacher)
+        serializer = LessonSerializer(lessons, many=True)
+        return Response(serializer.data)
 
 

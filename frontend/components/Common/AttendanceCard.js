@@ -58,7 +58,9 @@ const AttendanceCard = () => {
     }
 
     useEffect(()=>{
+        if(lessonData.id){
         dispatch(fetchLessonAttendances(lessonData.id));
+        }
     },[attendanceData]);
 
     const newAttendData = {}
