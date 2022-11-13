@@ -1,33 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { useSelector, useDispatch } from 'react-redux';
 import { fetchTeachers } from "../../../store/modules/teachersSlice";
 import "moment/locale/ko"
 import ContentTitle from "../../../components/Common/ContentTitle";
-import { useRouter } from "next/router";
-import { fetchLectureLessons, fetchLessons, fetchTeacherLessons } from "../../../store/modules/lessonsSlice";
-import { BiUser, BiChevronDown, BiChevronUp, BiChalkboard, BiChevronLeft, BiChevronRight, BiCalendar, BiCircle, BiBoltCircle } from 'react-icons/bi'
+import { fetchLessons,} from "../../../store/modules/lessonsSlice";
+import { BiUser, BiChevronDown,BiChevronLeft, BiChevronRight, BiCalendar } from 'react-icons/bi'
 import dynamic from 'next/dynamic'
 import moment from "moment";
-import { fetchLessonTests } from "../../../store/modules/testsSlice";
 import wrapper from "../../../store/configureStore";
-
-const TuiCalendar = dynamic(() => import('../../../components/Common/TuiCalendar'), {
-    ssr: false
-});
-const CalendarComponent = React.forwardRef((props, ref) => <TuiCalendar {...props} forwardedRef={ref} />);
-
-
-const AdminLectureTimeTablePage = ({ teachersData, lessonsData, upcomingLessonsData, completedLessonsData, colors }) => {
-
-    const [selectedTeacher, setSelectedTeacher] = useState({ id: null, name: null });
-    const selectedTeacherHandler = (teacher) => {
-        if (selectedTeacher.id == teacher.id) {
-            setSelectedTeacher({ id: null, name: null });
-        } else {
-            setSelectedTeacher({ id: teacher.id, name: teacher.name });
-        }
-    }
+import TimeTable from "../../../components/Common/TimeTable";
+const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
 
     // 시간표
     const cal = useRef(null);
@@ -110,46 +91,104 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, upcomingLessonsD
     const calendars = [];
     const initialEvents = [];
 
-    teachersData.map((teacher, teacher_index)=>{
+    teachersData.map((teacher, teacher_index) => {
         calendars.push({
-            id: teacher.name,
+            id: teacher.id,
             name: teacher.name,
-            bgColor: colors[teacher_index],
+            backgroundColor: colors[teacher_index],
             borderColor: colors[teacher_index]
         });
     })
 
-
-    lessonsData.map((lesson)=>{
+    lessonsData.map((lesson) => {
         initialEvents.push({
             id: lesson.id,
             calendarId: lesson.lecture.teacher,
             title: lesson.lecture.name,
-            start: lesson.date+"T"+lesson.start_time,
-            end: lesson.date+"T"+lesson.end_time,
+            start: lesson.date + "T" + lesson.start_time,
+            end: lesson.date + "T" + lesson.end_time,
+            state: null,
+            attendees: null,
         });
     })
 
+     // 시간표 필터링
+    const idArray = [];
+    teachersData.forEach((el) => idArray.push(el.id));
+    const [checkItems, setCheckItems] = useState(idArray);
+
+    const handleSingleCheck = (checked, id) => {
+        if (checked) {
+        setCheckItems(prev => [...prev, id]);
+        calendarInst = cal.current.getInstance();
+        calendarInst.setCalendarVisibility(id, true);
+        } else {
+        setCheckItems(checkItems.filter((el) => el !== id));
+        calendarInst = cal.current.getInstance();
+        calendarInst.setCalendarVisibility(id, false);
+        }
+    };
+
+    const handleAllCheck = (checked) => {
+        if(checked) {
+        idArray = [];
+        teachersData.forEach((el) => idArray.push(el.id));
+        setCheckItems(idArray);
+        calendarInst = cal.current.getInstance();
+        calendarInst.setCalendarVisibility(idArray, true);
+        }
+        else {
+        setCheckItems([]);
+        calendarInst = cal.current.getInstance();
+        calendarInst.setCalendarVisibility(idArray, false);
+        }
+    }
+
+    //일정 변경하기
+    const beforeUpdateSchedule = (ev) => {
+        console.group('onbeforeCreateSchedule');
+        console.log(ev);
+        console.groupEnd();
+    }
+    const beforeCreateSchedule = (ev) => {
+        console.group('onbeforeCreateSchedule');
+        console.log(ev.date);
+        console.groupEnd();
+    }
+    
     return (
         <div>
             <ContentTitle title="강의 시간표" mainTitle="강의 관리" />
             <div className="d-xl-flex">
                 <div className="card filemanager-sidebar me-md-2">
+                    <div className="card-header bg-soft bg-primary">
+                        <div className="justify-content-between d-flex align-items-center">
+                            <h5 className="fw-semibold mt-2">강사 선택</h5>
+                            <div className="form-check form-switch form-switch-sm" >
+                                <label className="form-check-label" htmlFor="SwitchCheckSizemd" >전체 선택</label>
+                                <input className="form-check-input me-2" type="checkbox" id="SwitchCheckSizemd" 
+                                checked={checkItems.length === teachersData.length ? true : false} 
+                                onChange={(e) => handleAllCheck(e.target.checked)}/>
+                            </div>
+                        </div>
+                    </div>
                     <div className="card-body">
-                        <div className="d-flex flex-column h-100">
+                        <div className="d-flex flex-column h-100">                         
                             <ul className="list-unstyled categories-list">
                                 {teachersData.map((teacher, teacher_index) => {
                                     return (<li key={teacher_index} className="mb-1" >
                                         <div className="custom-accordion">
-                                            <a className="text-body fw-medium py-1 d-flex align-items-center"
-                                                onClick={() => selectedTeacherHandler(teacher)}>
+                                            <a className="text-body fw-medium py-1 d-flex align-items-center">
                                                 <i className="font-size-15 text-warning me-2">
-                                                    <BiUser color={selectedTeacher.id == teacher.id ? "#2A3042" : "#CDCDCD"} />
+                                                    <BiUser color={colors[teacher_index]} />
                                                 </i>
                                                 {teacher.name}({teacher.subject})
-                                                <i className="font-size-15 text-warning me-2">
-                                                    <BiBoltCircle color={colors[teacher_index]} />
-                                                </i>
+                                                <input type="checkbox" className="form-check-input ms-2"
+                                                    style={{ backgroundColor: colors[teacher_index], borderColor: colors[teacher_index] }}                                                
+                                                    name={`select-${teacher.id}`}
+                                                    onChange={(e) => handleSingleCheck(e.target.checked, teacher.id)}
+                                                    // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
+                                                    checked={checkItems.includes(teacher.id) ? true : false} />
                                             </a>
                                         </div>
                                     </li>)
@@ -159,14 +198,7 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, upcomingLessonsD
                     </div>
                 </div>
                 <div className="w-100">
-                    <div className={selectedTeacher.id !== null ? "card border border-success mb-2" : "card border border-danger mb-2"}>
-                        <div className="card-header bg-transparent border-danger">
-                            <h5 className={selectedTeacher.id !== null ? "my-0 text-success" : "my-0 text-danger"}>
-                                {selectedTeacher.id !== null ? selectedTeacher.name : "강사를 선택해주세요"}
-                            </h5>
-                        </div>
-                    </div>
-                    <div className="card mb-2">
+                    <div className="card mb-2 position-static">
                         <div className="card-body">
                             <div>
                                 <div id="menu" className="mb-3">
@@ -216,24 +248,30 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, upcomingLessonsD
 
                                 </div>
                             </div>
-                            <div className="h-100">
-                                <CalendarComponent
+                            <div>
+                                <div id="calendar">                                  
+                                    <TimeTable
                                     ref={cal}
                                     view={view}
                                     month={{
                                         startDayOfWeek: 1,
                                         dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+                                        isAlways6Weeks: false,
                                     }}
                                     week={{
                                         taskView: false,
                                         dayNames: ['일', '월', '화', '수', '목', '금', '토'],
                                     }}
                                     useDetailPopup={true}
+                                    useFormPopup={true}
                                     calendars={calendars}
                                     events={initialEvents}
-                                    onAfterRenderEvent={onAfterRenderEvent}
+                                    onAfterRenderEvent={onAfterRenderEvent}                                    
                                     usageStatistics={false}
-                                />
+                                    onBeforeUpdateEvent={beforeUpdateSchedule}
+                                    onBeforeCreateEvent={beforeCreateSchedule}
+                                    />
+                                </div>                           
                             </div>
                         </div>
                     </div>
@@ -259,7 +297,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const completedLessonsData = store.getState().lessons.completedLessonsData;
 
     const colors = [];
-    teachersData.map((teacher)=>colors.push('#' + Math.floor(Math.random()*16777215).toString(16)))
+    teachersData.map((teacher) => colors.push('#' + Math.round(Math.random() * 0xffffff).toString(16)))
 
     return { props: { teachersData, lessonsData, upcomingLessonsData, completedLessonsData, colors }, };
 

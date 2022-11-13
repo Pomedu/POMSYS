@@ -13,7 +13,7 @@ class LectureSerializer(serializers.ModelSerializer):
 
 class SimpleLectureSerializer(serializers.ModelSerializer):
     students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
-    teacher = serializers.StringRelatedField(many=False)
+    teacher = serializers.PrimaryKeyRelatedField(many=False,read_only=True)
     class Meta:
         model = Lecture
         fields = ('id','name','teacher','students')
