@@ -30,6 +30,11 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ('lecture',)
 
+class LessonCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = "__all__"
+
 class LessonDetailSerializer(serializers.ModelSerializer):
     lecture = SimpleLectureSerializer(many=False, read_only=True)
     class Meta:

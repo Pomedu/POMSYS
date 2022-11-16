@@ -26,10 +26,11 @@ export const fetchLesson = createAsyncThunk("GET/LESSON", async (lessonId, { rej
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const createLesson = createAsyncThunk("CREATE/LESSON", async (_, { rejectWithValue }) => {
+export const createLesson = createAsyncThunk("CREATE/LESSON", async (newLesson, { rejectWithValue }) => {
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/lessons/`,
+        data: newLesson,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
