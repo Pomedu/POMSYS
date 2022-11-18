@@ -63,7 +63,7 @@ const AdminStudentListPage = () => {
                 <div className="card-body">
                     <div className="card-title">진행 수업</div>
                     <div className="card-title-desc">{data.lectures.map((lecture, index) => {
-                        return <p key={index}>{lecture.name}</p>
+                        return <p key={index}>{lecture.name}({lecture.teacher})</p>
                     })}
                     </div>
                 </div>

@@ -187,14 +187,16 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
         setSelectedDate(moment(startr).format("YYYY-MM-DD"));
         dispatch(modalOpen("addCalendarEventModal"));
     }
-
-    function refreshScheduleVisibility() {
+    const clearBox = ()=>{
         calendarInst = cal.current.getInstance();
-        calendarInst.setCalendarVisibility(checkItems, false);
+        calendarInst.clearGridSelections();
+    }
+    function createNewEvent(newEvent){
         calendarInst = cal.current.getInstance();
-        calendarInst.setCalendarVisibility(checkItems, true);
+        calendarInst.createEvents([newEvent]);
     }
     
+
     return (
         <div>
             <ContentTitle title="강의 시간표" mainTitle="강의 관리" />
@@ -320,7 +322,9 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
                 modalId={"addCalendarEventModal"}
                 ModalOpen={addCalendarEventModalOpen}
                 date={selectedDate}
-                cal={cal}/>
+                clear={clearBox}
+                onCreate={createNewEvent}
+                />
         </div>
     )
 

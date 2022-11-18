@@ -54,7 +54,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
     const timeChangeHandler = () => {
         dispatch(modalOpen('lessonTimeUpdateModal'));
     }
-
+    // 진행여부
     return (
         <>
             <div className="row">
@@ -66,7 +66,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                                 <div className="justify-content-between d-flex align-items-center">
                                     <div className="badge badge-soft-success me-2 mb-2">진행완료</div>
                                     <div className="form-switch form-check">
-                                        <input type="checkbox" className="form-check-input bg-success" defaultChecked={lessonData.done} onClick={statusChangeHandler} />
+                                        <input type="checkbox" className="form-check-input bg-success" checked={lessonData.done} onChange={statusChangeHandler} />
                                     </div>
                                 </div>
                                 <div className="text-success font-size-15 fw-semibold text-truncate">{lessonData.lecture.name}</div>
@@ -78,7 +78,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                                 <div className="justify-content-between d-flex align-items-center">
                                     <div className="badge badge-soft-danger me-2 mb-2">미진행</div>
                                     <div className="form-switch form-check">
-                                        <input type="checkbox" className="form-check-input bg-danger" defaultChecked={lessonData.done} onClick={statusChangeHandler} />
+                                        <input type="checkbox" className="form-check-input bg-danger" checked={lessonData.done} onChange={statusChangeHandler} />
                                     </div>
                                 </div>
                                 <div className="text-danger font-size-15 fw-semibold text-truncate">{lessonData.lecture.name}</div>
@@ -89,7 +89,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                         <div className="card-header bg-transparent">
                             <div className="justify-content-between d-flex align-items-center">
                                 <div className="font-size-15 fw-semibold">{lessonData.date} 일자 수업</div>
-                                <button className="btn btn-sm btn-success float-end" onClick={timeChangeHandler}><BiEdit/> 정보 수정</button>
+                                <button className="btn btn-sm btn-success text-nowrap float-end" onClick={timeChangeHandler}><BiEdit/> 정보 수정</button>
                             </div>
                         </div>
                         <div className="card-body">                            
