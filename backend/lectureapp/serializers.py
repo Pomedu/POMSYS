@@ -13,6 +13,13 @@ class LectureSerializer(serializers.ModelSerializer):
 
 class SimpleLectureSerializer(serializers.ModelSerializer):
     students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+    teacher = serializers.StringRelatedField(many=False)
+    class Meta:
+        model = Lecture
+        fields = ('id','name','teacher','students')
+
+class PrimaryKeyLectureSerializer(serializers.ModelSerializer):
+    students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     teacher = serializers.PrimaryKeyRelatedField(many=False,read_only=True)
     class Meta:
         model = Lecture
@@ -36,7 +43,7 @@ class LessonCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class LessonDetailSerializer(serializers.ModelSerializer):
-    lecture = SimpleLectureSerializer(many=False, read_only=True)
+    lecture = PrimaryKeyLectureSerializer(many=False, read_only=True)
     class Meta:
         model = Lesson
         fields = "__all__"
@@ -83,7 +90,6 @@ class VideoWatchRecordSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class AttendanceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Attendance
         fields = "__all__"

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #DRF
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt',
 
     #APP
     'accountapp',
@@ -142,7 +143,10 @@ MEDIA_ROOT_URL = '.'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 CORS_ALLOWED_ORIGINS  = [

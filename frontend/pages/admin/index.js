@@ -5,7 +5,7 @@ const AdminPage = () => {
    
     return (
         <div>
-            잉
+            
         </div>
     )
 

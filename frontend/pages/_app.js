@@ -9,11 +9,13 @@ import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 import { Provider } from 'react-redux';
 import wrapper from '../store/configureStore';
+import NoneLayout from '../components/Layouts/NoneLayout';
 
 const queryClient = new QueryClient();
 const layouts = {
     L1: AdminLayout,
     L2: ClientLayout,
+    L3: NoneLayout
 };
 
 

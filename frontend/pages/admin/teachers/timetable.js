@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { fetchTeachers } from "../../../store/modules/teachersSlice";
 import "moment/locale/ko"
 import ContentTitle from "../../../components/Common/ContentTitle";
-import { fetchLessons, updateLesson,} from "../../../store/modules/lessonsSlice";
+import { deleteLesson, fetchLesson, fetchLessons, updateLesson,} from "../../../store/modules/lessonsSlice";
 import { BiUser, BiChevronDown,BiChevronLeft, BiChevronRight, BiCalendar } from 'react-icons/bi'
 import dynamic from 'next/dynamic'
 import moment from "moment";
@@ -10,10 +10,16 @@ import wrapper from "../../../store/configureStore";
 import TimeTable from "../../../components/Common/TimeTable";
 import { useDispatch, useSelector } from "react-redux";
 import AddCalendarEventModal from "../../../components/Modals/AddCalendarEventModal";
-import { modalOpen } from "../../../store/modules/modalSlice";
+import { modalClose, modalOpen } from "../../../store/modules/modalSlice";
 import { fetchLectures } from "../../../store/modules/lecturesSlice";
+import CalendarEventDetailModal from "../../../components/Modals/CalendarEventDetailModal";
+import {randomColor} from "randomcolor"
+import CalendarEventUpdateModal from "../../../components/Modals/CalendarEventUpdateModal";
 
 const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
+    const dispatch = useDispatch();    
+    const modalOpenState = useSelector((state)=>state.modal.show);
+    const lessonData = useSelector((state)=>state.lessons.lessonData);
 
     // 시간표
     const cal = useRef(null);
@@ -161,9 +167,20 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
         }
     }
 
+    // 이벤트 상세
+    const calendarEventDetailModalOpen = useSelector((state)=>state.modal.show);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const clickEvent = (ev) => {
+        setSelectedEvent(ev.event);
+        dispatch(fetchLesson(ev.event.id));
+        dispatch(modalClose("addCalendarEventModal"));
+        dispatch(modalOpen("calendarEventDetailModal"));
+    }
+ 
     //일정 변경하기
-    const dispatch = useDispatch();
+    
     const beforeUpdateEvent = (ev) => {
+        console.log(ev);
         var event = ev.event;
         var changes = ev.changes;
         const startr=new Date(changes.start);
@@ -174,17 +191,29 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
         const editedLesson = {date: moment(startr).format("YYYY-MM-DD"), 
                             start_time:moment(startr).format("HH:mm"), 
                             end_time: moment(endr).format("HH:mm")};
-        dispatch(updateLesson({editedLesson:editedLesson,lessonId:event.id}))
+        dispatch(updateLesson({editedLesson:editedLesson,lessonId:event.id}));
         calendarInst = cal.current.getInstance();
         calendarInst.updateEvent(event.id, event.calendarId, changes);
     }
 
+    const onUpdate = ( {lessonId, calendarId, changes}) => {
+        calendarInst = cal.current.getInstance();
+        calendarInst.updateEvent(lessonId, calendarId, changes);
+    }
+
+    // 일정 삭제하기
+    const onDelete = (event) => {
+        dispatch(deleteLesson(event.id));
+        calendarInst = cal.current.getInstance();
+        calendarInst.deleteEvent(event.id, event.calendarId);        
+    }
+
     //일정 생성 모달 popup
     const [selectedDate, setSelectedDate] = useState(null);
-    const addCalendarEventModalOpen = useSelector((state)=>state.modal.show);
     const openFormPopup = (ev) => {       
         const startr=new Date(ev.start);        
         setSelectedDate(moment(startr).format("YYYY-MM-DD"));
+        dispatch(modalClose("calendarEventDetailModal"));
         dispatch(modalOpen("addCalendarEventModal"));
     }
     const clearBox = ()=>{
@@ -311,6 +340,7 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
                                     usageStatistics={false}
                                     onBeforeUpdateEvent={beforeUpdateEvent} 
                                     onSelectDateTime ={openFormPopup}
+                                    onClickEvent = {clickEvent}
                                     />
                                 </div>                           
                             </div>
@@ -320,11 +350,24 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
             </div>
             <AddCalendarEventModal
                 modalId={"addCalendarEventModal"}
-                ModalOpen={addCalendarEventModalOpen}
+                ModalOpen={modalOpenState}
                 date={selectedDate}
                 clear={clearBox}
                 onCreate={createNewEvent}
                 />
+            <CalendarEventDetailModal
+                modalId={"calendarEventDetailModal"}
+                ModalOpen={modalOpenState}
+                event={selectedEvent}        
+                onDelete={onDelete}    
+                colors={colors}
+                />
+            <CalendarEventUpdateModal
+                modalId={"calendarEventUpdateModal"}
+                ModalOpen={modalOpenState}
+                event={selectedEvent} 
+                onUpdate={onUpdate}
+            />
         </div>
     )
 
@@ -345,8 +388,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0, 3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;
 
-    const colors = [];
-    teachersData.map((teacher) => colors.push('#' + Math.round(Math.random() * 0xffffff).toString(16)))
+    const colors = randomColor({count: teachersData.length, seed:0});
 
     return { props: { teachersData, lessonsData, upcomingLessonsData, completedLessonsData, colors }, };
 
