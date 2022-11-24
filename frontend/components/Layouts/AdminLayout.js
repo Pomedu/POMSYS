@@ -3,6 +3,7 @@ import AdminNavbar from '../Navbars/AdminNavbar';
 import AdminTopbar from '../Navbars/AdminTopbar';
 import Script from 'next/script'
 
+
 const AdminLayout = ({ children }) => {
     // 모바일,PC 확인
     function useWindowSize() {
