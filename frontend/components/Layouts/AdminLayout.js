@@ -2,9 +2,20 @@ import React, { useEffect, useState } from 'react';
 import AdminNavbar from '../Navbars/AdminNavbar';
 import AdminTopbar from '../Navbars/AdminTopbar';
 import Script from 'next/script'
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getAccessToken } from '../../store/modules/accountsSlice';
+import { Router, useRouter } from 'next/router';
 
 const AdminLayout = ({ children }) => {
+    // token 확인    
+    const router = useRouter();    
+    useEffect(() => {
+        const token = localStorage.getItem('access_token') || "";
+        if(token==""){
+            router.push('/admin/login')
+        }
+    }, [children]);
+
     // 모바일,PC 확인
     function useWindowSize() {
 
@@ -51,14 +62,14 @@ const AdminLayout = ({ children }) => {
         }
 
     }, [sidebarisOpen, isMobile]);
-
+    
     return (
         <div>
             <AdminTopbar
                 sidebarisOpen={sidebarisOpen}
                 onChange={(isOpen) => setSidebar(isOpen)}
             />
-            <AdminNavbar setSidebar={setSidebar} isMobile={isMobile}/>
+            <AdminNavbar setSidebar={setSidebar} isMobile={isMobile} />
             <div className="main-content">
                 <div className="page-content">
                     <div className="container-fluid h-100">
@@ -69,7 +80,7 @@ const AdminLayout = ({ children }) => {
             <Script src="../../libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
             <Script src="../../libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
         </div>
-    );
+    );      
 };
 
 export default AdminLayout

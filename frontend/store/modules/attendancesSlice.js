@@ -6,6 +6,10 @@ export const fetchLectureAttendances = createAsyncThunk("GET/LECTURE/ATTENDANCE"
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/attendances`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -14,6 +18,10 @@ export const fetchLessonAttendances = createAsyncThunk("GET/LESSON/ATTENDANCE", 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}/attendances`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -22,6 +30,10 @@ export const createAttendance = createAsyncThunk("CREATE/ATTENDANCE ", async (ne
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/attendances/`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: newAttendance,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -31,6 +43,10 @@ export const deleteAttendance = createAsyncThunk("DELETE/ATTENDANCE", async (att
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/attendances/${attendanceId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -39,6 +55,10 @@ export const updateAttendance = createAsyncThunk("UPDATE/ATTENDANCE", async ({ e
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/attendances/${attendanceId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: editedAttendance,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));

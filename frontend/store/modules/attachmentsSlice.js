@@ -6,6 +6,10 @@ export const fetchLectureAttachments = createAsyncThunk("GET/LECTURE/ATTACHMENT"
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/attachments`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -14,6 +18,10 @@ export const fetchLessonAttachments = createAsyncThunk("GET/LESSON/ATTACHMENT", 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}/attachments`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -22,6 +30,10 @@ export const createAttachment = createAsyncThunk("CREATE/ATTACHMENT ", async (ne
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/attachments/`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: newAttachment,
         headers: {
             "Content-Type": "multipart/form-data",
@@ -34,6 +46,10 @@ export const deleteAttachment = createAsyncThunk("DELETE/ATTACHMENT", async (att
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/attachments/${attachmentId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });

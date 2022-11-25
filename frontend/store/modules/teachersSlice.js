@@ -4,7 +4,11 @@ import axios from 'axios';
 export const fetchTeachers = createAsyncThunk("GET/TEACHERS", async (_, { rejectWithValue }) => {
     return axios({
         method: "get",
-        url: 'http://127.0.0.1:8000/api/teachers/'
+        url: 'http://127.0.0.1:8000/api/teachers/',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 })
@@ -13,6 +17,10 @@ export const fetchTeacher = createAsyncThunk("GET/TEACHER", async (teacherId, { 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/teachers/${teacherId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -21,6 +29,10 @@ export const createTeacher = createAsyncThunk("POST/TEACHER", async (newTeacher,
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/teachers/',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: newTeacher,
     }).then(response => { return response })
         .catch(error => console.log(error.response.data));
@@ -30,6 +42,10 @@ export const deleteTeacher = createAsyncThunk("DELETE/TEACHER", async (teacherId
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/teachers/${teacherId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -38,6 +54,10 @@ export const updateTeacher = createAsyncThunk("UPDATE/TEACHER", async ({ editedT
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/teachers/${teacherId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: editedTeacher,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));

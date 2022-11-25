@@ -29,7 +29,8 @@ const RegistrationForm = () => {
                 router.push("/admin/login");
             } else {
                 console.log(res);
-                alert("회원가입에 실패하였습니다");
+                alert("회원가입에 실패하였습니다");                
+                setTimeout(()=>{dispatch(resetErrors())},3000);
             }            
             })
     };

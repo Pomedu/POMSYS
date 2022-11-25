@@ -6,6 +6,10 @@ export const fetchLessons = createAsyncThunk("GET/LESSONS", async (lessonId, { r
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -14,6 +18,10 @@ export const fetchLectureLessons = createAsyncThunk("GET/LECTURE/LESSON", async 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/lessons`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -22,6 +30,10 @@ export const fetchLesson = createAsyncThunk("GET/LESSON", async (lessonId, { rej
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -30,6 +42,10 @@ export const createLesson = createAsyncThunk("CREATE/LESSON", async (newLesson, 
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/lessons/`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: newLesson,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -39,6 +55,10 @@ export const deleteLesson = createAsyncThunk("DELETE/LESSON", async (lessonId, {
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -47,6 +67,10 @@ export const updateLesson = createAsyncThunk("UPDATE/LESSON", async ({ editedLes
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: editedLesson,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -56,6 +80,10 @@ export const fetchTeacherLessons = createAsyncThunk("GET/TEACHER/LESSON", async 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/teachers/${teacherId}/lessons`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });

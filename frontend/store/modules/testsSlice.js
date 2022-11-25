@@ -6,6 +6,10 @@ export const fetchLectureTests = createAsyncThunk("GET/LECTURE/TEST", async (lec
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/tests`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -14,6 +18,10 @@ export const fetchLessonTests = createAsyncThunk("GET/LESSON/TEST", async (lesso
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}/tests`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -22,6 +30,10 @@ export const createTest = createAsyncThunk("CREATE/TEST ", async (newTest, { rej
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/tests/`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: newTest,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -31,6 +43,10 @@ export const deleteTest = createAsyncThunk("DELETE/TEST", async (testId, { rejec
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/tests/${testId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -39,6 +55,10 @@ export const updateTest = createAsyncThunk("UPDATE/TEST", async ({ editedTest, t
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/tests/${testId}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
         data: editedTest,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));

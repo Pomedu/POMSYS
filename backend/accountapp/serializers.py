@@ -51,10 +51,10 @@ class CustomLoginSerializer(LoginSerializer):
                 password=password,
             )
             if not user:
-                msg = "Incorrect credentials."
+                msg = "계정정보가 존재하지 않습니다."
                 raise serializers.ValidationError(msg, code="authorization")
         else:
-            msg = "No phone number provided."
+            msg = "아이디(번호)를 입력해주세요."
             raise exceptions.ValidationError(msg)
         attrs["user"] = user
         return attrs

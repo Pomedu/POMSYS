@@ -11,7 +11,7 @@ const AdminRegistrationPage = () => {
             justifyContent: "center",
             alignItems: "center",
             minHeight: "100vh"
-            }}>
+        }}>
             <div className="container" >
                 <div className="row justify-content-center">
                     <div className="col-md-8 col-lg-6 col-xl-5">
@@ -30,8 +30,13 @@ const AdminRegistrationPage = () => {
                             </div>
                             <div className="card-body pt-0">
                                 <div className="p-2">
-                                <RegistrationForm/> 
-                                </div>      
+                                    <RegistrationForm />
+                                </div>
+                                <div className="mt-4 text-center">
+                                    <div>
+                                        <p>계정이 있으신가요? <Link href={"/admin/login"}><a className="fw-medium text-primary"> 로그인하기 </a></Link></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

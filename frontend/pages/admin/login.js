@@ -29,22 +29,21 @@ const AdminLoginPage = () => {
                             </div>
                             <div className="card-body pt-0">
                                 <div className="p-2">
-                                <LoginForm/>                                        
-                                <div>
-                                        </div>
-                                        <div className="mt-4 text-center">
-                                            <a className="text-muted"><i className="mdi mdi-lock me-1"></i> 비밀번호를 잊으셨나요?</a>
-                                        </div>
+                                    <LoginForm />
+                                    <div>
+                                    </div>
+                                    <div className="mt-4 text-center">
+                                        <a className="text-muted"><i className="mdi mdi-lock me-1"></i> 비밀번호를 잊으셨나요?</a>
+                                    </div>
                                 </div>
 
                             </div>
                         </div>
-                        <div className="mt-4 text-center">\
+                        <div className="mt-4 text-center">
                             <div>
                                 <p>계정이 없으신가요? <Link href={"/admin/registration"}><a className="fw-medium text-primary"> 가입하기 </a></Link></p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

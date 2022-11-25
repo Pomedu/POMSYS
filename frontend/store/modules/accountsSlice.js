@@ -19,13 +19,14 @@ export const loginAccount = createAsyncThunk("LOGIN", async (loginData, { reject
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const logoutAccount = createAsyncThunk("LOGOUT", async (access_token, { rejectWithValue }) => {
+export const logoutAccount = createAsyncThunk("LOGOUT", async (_, { rejectWithValue }) => {
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/accounts/logout',
         headers: {
-            Authorization: `Bearer ${access_token}`
-        }
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
+          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -33,6 +34,8 @@ export const logoutAccount = createAsyncThunk("LOGOUT", async (access_token, { r
 
 const initialState = {
     userData: [],
+    access_token: null,
+    refresh_token: null,
     loading: false,
     error: null,
 };
@@ -43,6 +46,11 @@ export const accountsSlice = createSlice({
     reducers: {
         resetErrors: (state) => {
             state.error = null;
+        },
+        getAccessToken: (state) =>{            
+            state.access_token=localStorage.getItem('access_token')
+            ? localStorage.getItem('access_token')
+            : null
         }
     },
     extraReducers: (builder) => {
@@ -58,7 +66,6 @@ export const accountsSlice = createSlice({
             .addCase(registerAccount.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
-                setTimeout(()=>state.error=null,3000);
             })
             .addCase(loginAccount.pending, (state) => {
                 state.error = null;
@@ -66,13 +73,12 @@ export const accountsSlice = createSlice({
             })
             .addCase(loginAccount.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.userData = payload;
+                state.userData = payload;                
             })
             .addCase(loginAccount.rejected, (state, { payload }) => {
                 state.error = payload;
-                state.loading = false;
-                setTimeout(()=>state.error=null,3000);
+                state.loading = false;            
             })
     }
 })
-export const { resetErrors } = accountsSlice.actions;
+export const { resetErrors,getAccessToken } = accountsSlice.actions;
