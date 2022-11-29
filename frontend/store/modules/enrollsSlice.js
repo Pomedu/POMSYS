@@ -5,10 +5,6 @@ export const fetchEnrolls = createAsyncThunk("GET/ENROLLS", async (lectureId, { 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/enrolls`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -17,10 +13,6 @@ export const createEnroll = createAsyncThunk("POST/ENROLL", async (newEnroll, { 
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/lectures/enrolls/',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: newEnroll,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -30,10 +22,6 @@ export const deleteEnroll = createAsyncThunk("DELETE/ENROLL", async (enrollId, {
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/enrolls/${enrollId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });

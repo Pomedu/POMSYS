@@ -1,15 +1,11 @@
 import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
-import Cookie
+import { useCookies } from 'react-cookie';
 
 export const fetchLectures = createAsyncThunk("GET/LECTURES", async (_, { rejectWithValue }) => {
     return axios({
         method: "get",
         url: 'http://127.0.0.1:8000/api/lectures/',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -18,10 +14,6 @@ export const fetchLecture = createAsyncThunk("GET/LECTURE", async (lectureId, { 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+,
-          },
     }).then(response => { return response.data })
         .catch(error => {rejectWithValue(error.response.data);
             });
@@ -31,10 +23,6 @@ export const fetchTeacherLectures = createAsyncThunk("GET/TEACHER/LECTURE", asyn
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/teachers/${teacherId}/lectures`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -43,10 +31,6 @@ export const createLecture = createAsyncThunk("POST/LECTURE", async (newLecture,
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/lectures/',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: newLecture,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -56,10 +40,6 @@ export const deleteLecture = createAsyncThunk("DELETE/LECTURE", async (lectureId
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -68,10 +48,6 @@ export const updateLecture = createAsyncThunk("UPDATE/LECTURE", async ({ editedL
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: editedLecture,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -150,7 +126,7 @@ export const lecturesSlice = createSlice({
                 state.lectureData = payload;
             })
             .addCase(fetchLecture.rejected, (state, { payload }) => {
-                // state.error = payload;
+                state.error = payload;
                 state.loading = false;
             })
             .addCase(updateLecture.pending, (state) => {

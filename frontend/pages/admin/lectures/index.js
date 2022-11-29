@@ -11,16 +11,18 @@ import { FaTrashAlt, FaEdit } from 'react-icons/fa';
 import { useRouter } from "next/router";
 import DeleteModal from "../../../components/Modals/DeleteModal";
 import { modalOpen, setModalId } from "../../../store/modules/modalSlice";
+import { useCookies } from 'react-cookie';
 
 const AdminLectureListPage = () => {
     const lecturesList = useSelector(state => state.lectures.lecturesData);
     const filteredLecturesList = useSelector(state => state.lectures.filteredLecturesData);
     const router = useRouter()
     const dispatch = useDispatch();
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
 
     // Data Fetch (Lectures)
     useEffect(() => {
-        dispatch(fetchLectures())
+        dispatch(fetchLectures(cookies.accessToken))
             .unwrap()
             .catch(error => {
                 console.log("### error: ", error);
@@ -114,7 +116,7 @@ const AdminLectureListPage = () => {
 
     const onDelete = (e, lectureId) => {
         e.preventDefault();
-        dispatch(deleteLecture(lectureId)).unwrap().then(response => console.log("삭제되었습니다"))
+        dispatch(deleteLecture({lectureId:lectureId, accessToken:cookies.accessToken})).unwrap().then(response => console.log("삭제되었습니다"))
             .catch(error => {
                 console.log("### error: ", error);
             });

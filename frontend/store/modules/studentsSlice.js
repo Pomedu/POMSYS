@@ -5,10 +5,6 @@ export const fetchStudents = createAsyncThunk("GET/STUDENTS", async (_, { reject
     return axios({
         method: "get",
         url: 'http://127.0.0.1:8000/api/students/',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -17,10 +13,6 @@ export const fetchStudent = createAsyncThunk("GET/STUDENT", async (studentId, { 
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/students/${studentId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -29,10 +21,6 @@ export const createStudent = createAsyncThunk("POST/STUDENT", async (newStudent,
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/students/',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: newStudent,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -42,10 +30,6 @@ export const deleteStudent = createAsyncThunk("DELETE/STUDENT", async (studentId
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/students/${studentId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -54,10 +38,6 @@ export const updateStudent = createAsyncThunk("UPDATE/STUDENT", async ({ editedS
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/students/${studentId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: editedStudent,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));

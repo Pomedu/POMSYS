@@ -161,6 +161,8 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 AUTH_USER_MODEL = 'accountapp.User'
 REST_AUTH_TOKEN_MODEL = None
 REST_USE_JWT = True
+JWT_AUTH_COOKIE = 'pomsysAccessToken'
+JWT_AUTH_REFRESH_COOKIE = 'pomsysRefreshToken'
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'phone_number'
@@ -169,11 +171,8 @@ ACCOUNT_ADAPTER = 'accountapp.adapters.CustomAccountAdapter'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    )
 }
 
 SIMPLE_JWT = {

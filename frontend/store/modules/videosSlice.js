@@ -6,10 +6,6 @@ export const fetchLectureVideos = createAsyncThunk("GET/LECTURE/VIDEO", async (l
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/${lectureId}/videos`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -18,10 +14,6 @@ export const fetchLessonVideos = createAsyncThunk("GET/LESSON/VIDEO", async (les
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/lectures/lessons/${lessonId}/videos`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -30,10 +22,6 @@ export const createVideo = createAsyncThunk("CREATE/VIDEO ", async (newVideo, { 
     return axios({
         method: "post",
         url: `http://127.0.0.1:8000/api/lectures/videos/`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: newVideo,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
@@ -43,10 +31,6 @@ export const deleteVideo = createAsyncThunk("DELETE/VIDEO", async (videoId, { re
     return axios({
         method: "delete",
         url: `http://127.0.0.1:8000/api/lectures/videos/${videoId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -55,10 +39,6 @@ export const updateVideo = createAsyncThunk("UPDATE/VIDEO", async ({ editedVideo
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/videos/${videoId}`,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
         data: editedVideo,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));

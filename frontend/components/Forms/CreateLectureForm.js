@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchTeachers } from "../../store/modules/teachersSlice";
 import { createLecture } from "../../store/modules/lecturesSlice";
 import router from "next/router";
+import { useCookies } from 'react-cookie';
 
 const CreateLectureForm = () => {
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
     const [inputFields, setInputFields] = useState(
         {
             name: '', teacher: '', status: '', description: '',
@@ -42,7 +44,7 @@ const CreateLectureForm = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchTeachers())
+        dispatch(fetchTeachers(cookies.accessToken))
             .unwrap()
             .catch(error => {
                 console.log("### error: ", error);
@@ -54,7 +56,7 @@ const CreateLectureForm = () => {
         e.preventDefault();
         if (inputFields) {
             const newLecture = inputFields;
-            dispatch(createLecture(newLecture))
+            dispatch(createLecture({newLecture:newLecture,accessToken:cookies.accessToken}))
                 .then(router.push("/admin/lectures"));
         } else {
             console.log("생성못함");

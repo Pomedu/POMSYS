@@ -21,20 +21,14 @@ const LoginForm = () => {
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
 
-    const [accessToken, setAccessToken] = useCookies(['accessToken']);
-    const [refreshToken, setRefreshToken] = useCookies(['refreshToken']);
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
 
     const onLogin = (e) => {
         e.preventDefault();
         dispatch(loginAccount(inputFields))
         .then((res)=>{
             if(res.type=='LOGIN/fulfilled'){
-                setAccessToken("accessToken", res.payload.access_token, {
-                    path: "/",
-                  });
-                  setRefreshToken("refreshToken", res.payload.refresh_token, {
-                    path: "/",
-                  });
+                console.log(res);
                 router.push("/admin");                
             } else {
                 alert("로그인에 실패하였습니다");

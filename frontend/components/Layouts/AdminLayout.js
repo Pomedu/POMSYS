@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import AdminNavbar from '../Navbars/AdminNavbar';
 import AdminTopbar from '../Navbars/AdminTopbar';
 import Script from 'next/script'
-import { useDispatch, useSelector } from 'react-redux';
-import { getAccessToken } from '../../store/modules/accountsSlice';
 import { Router, useRouter } from 'next/router';
+import { useCookies } from 'react-cookie';
 
 const AdminLayout = ({ children }) => {
     // token 확인    
     const router = useRouter();    
-    useEffect(() => {
-        const token = localStorage.getItem('access_token') || "";
-        if(token==""){
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
+    useEffect(() => {        
+        if(!cookies.accessToken){
             router.push('/admin/login')
         }
     }, [children]);
