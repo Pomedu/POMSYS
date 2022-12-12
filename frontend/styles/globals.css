@@ -1132,7 +1132,7 @@ body[data-layout="horizontal"][data-layout-size="boxed"] .container-fluid, body[
   font-weight: 500; }
 
 .fw-semibold {
-  font-weight: 600; }
+  font-weight: 600 !important; }
 
 .social-list-item {
   height: 2rem;
