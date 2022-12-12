@@ -1,9 +1,8 @@
 .client-background {
-background: linear-gradient(180deg, 
-rgba(255, 156, 156, 0.1) 0%, 
-rgba(36, 31, 87, 0) 100%),
-url('../public/images/Client_background.jpg'),
-linear-gradient(180deg, #F2F2F2 0%, #EEEEEE 100%);
+background: linear-gradient(
+#FFE1E1 20%, 
+rgba(42, 48, 66) 60%,
+black 100%);
 background-size: cover;
 }
 
@@ -56,7 +55,7 @@ background-size: cover;
 
 .client-card {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
+
     transition: 1s;
 }
 

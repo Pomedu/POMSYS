@@ -1,5 +1,6 @@
 import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
+import { useDispatch } from "react-redux";
 
 export const registerAccount = createAsyncThunk("REGISTER", async (registerData, { rejectWithValue }) => {
     return axios({
@@ -19,23 +20,32 @@ export const loginAccount = createAsyncThunk("LOGIN", async (loginData, { reject
         .catch(error => rejectWithValue(error.response.data));
 });
 
-export const logoutAccount = createAsyncThunk("LOGOUT", async (_, { rejectWithValue }) => {
+export const refreshAccount = createAsyncThunk("REFRESH", async (refreshToken, { rejectWithValue })=>{
     return axios({
         method: "post",
-        url: 'http://127.0.0.1:8000/api/accounts/logout',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+localStorage.getItem('access_token'),
-          },
+        url: 'http://127.0.0.1:8000/api/accounts/token/refresh/',
+        data: refreshToken
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
 
+export const verifyAccount = createAsyncThunk("VERIFY", async ({accessToken, refreshToken}, { rejectWithValue })=>{
+    return axios({
+        method: "post",
+        url: 'http://127.0.0.1:8000/api/accounts/token/verify/',
+        data: accessToken
+    }).then(response => { return response.data })
+        .catch(error => { 
+            console.log(error);
+        });
+});
+
+
 
 const initialState = {
     userData: [],
-    access_token: null,
-    refresh_token: null,
+    isAccess: false,
+    isRefresh: false,
     loading: false,
     error: null,
 };
@@ -76,6 +86,18 @@ export const accountsSlice = createSlice({
                 state.userData = payload;                
             })
             .addCase(loginAccount.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;            
+            })
+            .addCase(verifyAccount.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(verifyAccount.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.userData = payload;                
+            })
+            .addCase(verifyAccount.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;            
             })

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import router from "next/router";
 import { loginAccount, resetErrors } from "../../store/modules/accountsSlice";
 import { useCookies } from 'react-cookie';
+import moment from "moment";
 
 const LoginForm = () => {
     const errors = useSelector(state=>state.accounts.error);    
@@ -21,7 +22,7 @@ const LoginForm = () => {
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
 
-    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
+    const [cookies, setCookies] = useCookies(['accessToken','refreshToken']);
 
     const onLogin = (e) => {
         e.preventDefault();
@@ -29,6 +30,11 @@ const LoginForm = () => {
         .then((res)=>{
             if(res.type=='LOGIN/fulfilled'){
                 console.log(res);
+                const accessTokenExpires =  moment().add('1','minutes').toDate()
+                const refreshTokenExpires =  moment().add('7','days').toDate()
+                console.log(accessTokenExpires);
+                setCookies('accessToken',res.payload.access_token,{expires:accessTokenExpires})                
+                setCookies('refreshToken',res.payload.refresh_token,{expires:refreshTokenExpires})
                 router.push("/admin");                
             } else {
                 alert("로그인에 실패하였습니다");

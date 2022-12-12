@@ -1,8 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import LoginForm from "../../components/Forms/LoginForm";
+import { useCookies } from 'react-cookie';
+import router from "next/router";
+import { useDispatch } from "react-redux";
+import { refreshAccount, verifyAccount } from "../../store/modules/accountsSlice";
+import moment from "moment";
 
 const AdminLoginPage = () => {
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
+    const dispatch = useDispatch();
+    const [isAccess, setIsAccess] = useState(false);
+    const [isRefresh, setIsRefresh] = useState(false);
+
+    useEffect(() => {   
+        if(cookies.accessToken){
+            setIsAccess(true);
+        }
+        if(cookies.refreshToken){
+            setIsRefresh(true);
+        }
+    }, []);
+
+    useEffect(()=>{
+        if(isAccess==true){
+            dispatch(verifyAccount({accessToken:{token: cookies.accessToken}, refreshToken:{refresh: cookies.refreshToken }}))
+                .then((res)=>{
+                    console.log(res);
+                });
+                alert("이미 로그인되어 있습니다");
+                router.push('/admin');
+            
+            if(cookies.accessToken && cookies.refreshToken){
+                
+            } else if(cookies.refreshToken){
+                dispatch(refreshAccount({refresh:cookies.refreshToken})).
+                then((res)=>{
+                    const accessTokenExpires =  moment().add('1','minutes').toDate()
+                    setCookies('accessToken',res.payload.access,{expires:accessTokenExpires});   
+                });
+                dispatch(verifyAccount({accessToken:{token: cookies.accessToken}, refreshToken:{refresh: cookies.refreshToken }}))
+                .then((res)=>{
+                    console.log(res);
+                });
+            }
+        }
+    },[isAccess])
 
     return (
         <div style={{
