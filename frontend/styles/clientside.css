@@ -1,0 +1,70 @@
+.client-background {
+background: linear-gradient(180deg, 
+rgba(255, 156, 156, 0.1) 0%, 
+rgba(36, 31, 87, 0) 100%),
+url('../public/images/Client_background.jpg'),
+linear-gradient(180deg, #F2F2F2 0%, #EEEEEE 100%);
+background-size: cover;
+}
+
+.client-login-logo {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.client-login-box {
+    background: rgba(44, 44, 44, 0.4);
+    position: absolute; 
+    width: 100%;
+    min-height: 75%; 
+    bottom: 0%;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    padding: 2rem 2rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    max-width: 500px;
+}
+
+.client-input-form {
+    background: rgba(217, 217, 217, 0.5);
+    border-radius: 30px;   
+    height: 40px; 
+    border: none;
+}   
+
+.client-login-button {
+    background: white;
+    border-radius: 30px;   
+    height: 50px;
+}
+
+.client-main-logo {
+    text-align: left;
+    margin: 20px 0 0 30px;
+}
+
+.client-greeting {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.client-date {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.client-card {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    transition: 1s;
+}
+
+@media (min-width: 576px) {
+.client-card-row {
+    display: flex;
+}
+.client-card{
+    flex: auto;
+}
+}

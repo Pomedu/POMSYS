@@ -9,11 +9,11 @@ const AdminLayout = ({ children }) => {
     // token 확인    
     const router = useRouter();    
     const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
-    useEffect(() => {        
-        if(!cookies.accessToken){
-            router.push('/admin/login')
-        }
-    }, [children]);
+    // useEffect(() => {        
+    //     if(!cookies.accessToken){
+    //         router.push('/admin/login')
+    //     }
+    // }, [children]);
 
     // 모바일,PC 확인
     function useWindowSize() {

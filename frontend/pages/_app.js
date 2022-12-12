@@ -7,6 +7,8 @@ import "../styles/globals.css";
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
+import "../styles/clientside.css";
+import 'swiper/css'; 
 import { Provider } from 'react-redux';
 import wrapper from '../store/configureStore';
 import NoneLayout from '../components/Layouts/NoneLayout';
