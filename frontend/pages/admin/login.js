@@ -58,7 +58,7 @@ const AdminLoginPage = () => {
                 <div className="row justify-content-center">
                     <div className="col-md-8 col-lg-6 col-xl-5">
                         <div className="card overflow-hidden ">
-                            <div style={{ backgroundColor: "#2a3042" }}>
+                            <div style={{ backgroundColor: "rgba(162, 162, 162)" }}>
                                 <div className="row">
                                     <div className="col-7">
                                         <div className="text-white p-4">
@@ -82,7 +82,7 @@ const AdminLoginPage = () => {
 
                             </div>
                         </div>
-                        <div className="mt-4 text-center">
+                        <div className="mt-4 text-center text-white">
                             <div>
                                 <p>계정이 없으신가요? <Link href={"/admin/registration"}><a className="fw-medium text-primary"> 가입하기 </a></Link></p>
                             </div>

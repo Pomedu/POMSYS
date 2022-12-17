@@ -16,7 +16,7 @@ const AdminRegistrationPage = () => {
                 <div className="row justify-content-center">
                     <div className="col-md-8 col-lg-6 col-xl-5">
                         <div className="card overflow-hidden ">
-                            <div style={{ backgroundColor: "#2a3042" }}>
+                            <div style={{ backgroundColor: "rgba(162, 162, 162)" }}>
                                 <div className="row">
                                     <div className="col-7">
                                         <div className="text-white p-4">

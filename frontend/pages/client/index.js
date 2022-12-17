@@ -3,17 +3,15 @@ import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FaYoutube, FaCalendar } from "react-icons/fa";
 import AChart from '../../components/Common/AChart';
+import moment from "moment";
 
 const ClientPage = () => {
 
     return (
         <div>
-            <div className="client-main-logo">
-                <img src="../images/Client_logo.png"/>
-            </div> 
             <div> 
-                <div className="client-greeting ms-4 mt-2">안녕하세요, 길동님</div> 
-                <div className="client-date ms-4">08 December, 2022</div>
+                <div className="client-greeting ms-4 mt-2 text-white">안녕하세요, 길동님</div> 
+                <div className="client-date ms-4 text-white">{moment().format('YYYY년 MM월 DD일')}</div>
             </div>
             <div className="m-4">
                 <Swiper
@@ -168,65 +166,163 @@ const ClientPage = () => {
                 <div className="card mt-3 client-card bg-dark"> 
                 <div className="card-body">
                     <div className="row"> 
-                        <div className='mb-1 col-lg-3'>
-                            <div className="fw-semibold font-size-14" style={{color:"#FFD058"}}>출석현황</div>
-                            <AChart options={{  
-                                legend: {
-                                    show: false
-                                    },
-                                fill:{
-                                    colors: ['#EEEEEE','#38E54D']
-                                },  
-                                dataLabels: {
-                                    enabled: true,
-                                    formatter: function (val,{ seriesIndex, dataPointIndex, w }) {
-                                      return w.config.series[seriesIndex]
-                                    }
-                                },       
-                                labels: ["결석","출석"],                 
+                        <div className='mb-5 col-lg-4'>
+                            <div className="fw-semibold font-size-14 mb-2" style={{color:"#FFD058"}}>출석현황</div>
+                            <AChart options= {{
+                                colors: ["#20E647"],
                                 plotOptions: {
-                                    pie: {
-                                      expandOnClick: false,
-                                      donut: {
-                                        labels: {
-                                            show: true,
-                                            formatter: function (val) {                                            
-                                                return val
-                                            },
-                                            total: {
-                                                show: true,
-                                                label: '출석률',
-                                                color: 'white',
-                                                fontFamily: 'Pretendard Variable',
-                                                fontWeight: 500,
-                                                formatter: function (val) {
-                                                    const sum = val.globals.seriesTotals.reduce((a, b) => {
-                                                        return a + b;
-                                                  }, 0);
-                                                return Math.round(val.globals.series[1]/sum*1000)/10 + "%"
-                                              },
-                                            },
-                                            fontFamily: 'Pretendard Variable',
-                                            value: {
-                                                fontSize: '22px',
-                                                show: true,
-                                                color: '#38E54D',
-                                            },                                            
-                                      }
+                                    radialBar: {
+                                    hollow: {
+                                        margin: 0,
+                                        size: "70%",
+                                        background: "#293450"
+                                    },
+                                    track: {
+                                        dropShadow: {
+                                        enabled: true,
+                                        top: 2,
+                                        left: 0,
+                                        blur: 4,
+                                        opacity: 0.15
+                                        }
+                                    },
+                                    dataLabels: {
+                                        name: {
+                                        offsetY: -10,
+                                        color: "#fff",
+                                        fontSize: "13px"
+                                        },
+                                        value: {
+                                        color: "#fff",
+                                        fontSize: "30px",
+                                        show: true
+                                        }
                                     }
-                                  }
-                                }}}
-                                series={[10,80]}                                                                                       
-                                type="donut"
-                                width='280px' />
+                                    }
+                                },                              
+                                fill: {
+                                    type: "gradient",
+                                    gradient: {
+                                      shade: "dark",
+                                      type: "vertical",
+                                      gradientToColors: ["#87D4F9"],
+                                      stops: [0, 100]
+                                    }
+                                },
+                                labels: ["출석률"]
+                              }}
+                              series= {[67]}
+                              type='radialBar'/>  
                         </div>
-                        <div className='mb-1 col-lg-3'>
-                            <div className="fw-semibold font-size-14" style={{color:"#5CB8E4"}}>테스트 점수</div>
-                            
+                        <div className='mb-5 col-lg-4'>
+                            <div className="fw-semibold font-size-14 mb-2" style={{color:"#5CB8E4"}}>테스트 점수</div>
+                            <AChart
+                            options= {{
+                                plotOptions: {
+                                  bar: {
+                                    horizontal: true,
+                                  }
+                                },
+                                colors: ['#00E396'],
+                                dataLabels: {
+                                  formatter: function(val, opt) {
+                                    const goals =
+                                      opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
+                                        .goals
+                                
+                                    if (goals && goals.length) {
+                                      return `${val} / ${goals[0].value}`
+                                    }
+                                    return val
+                                  }
+                                },
+                                legend: {
+                                  show: true,
+                                  showForSingleSeries: true,
+                                  customLegendItems: ['실제점수', '평균'],
+                                  markers: {
+                                    fillColors: ['#00E396', '#775DD0']
+                                  }
+                                },
+                              }}
+                              series= {[{
+                                name: "실제점수",
+                                data: [
+                                    {
+                                        x: '2011',
+                                        y: 12,
+                                        goals: [{
+                                            name:'평균',
+                                            value: 14,
+                                            strokeWidth: 5,
+                                            strokeHeight: 10,
+                                            strokeColor: '#775DD0'
+                                        }]
+                                    },
+                                    {
+                                        x: '2012',
+                                        y: 44,
+                                        goals: [{
+                                            name:'평균',
+                                            value: 54,
+                                            strokeWidth: 5,
+                                            strokeHeight: 10,
+                                            strokeColor: '#775DD0'
+                                    }]
+                                    }
+                                ]
+                                }]}
+                              type='bar'/>
                         </div>
 
-                        <div className='mb-1 col-lg-3'>
-                            <div className="fw-semibold font-size-14" style={{color:"#A555EC"}}>영상복습 현황</div>
+                        <div className='mb-5 col-lg-4'>
+                            <div className="fw-semibold font-size-14 mb-2" style={{color:"#A555EC"}}>영상복습 현황</div>
+                            <AChart
+                            options= {{
+                                colors: ["#20E647"],
+                                plotOptions: {
+                                    radialBar: {
+                                    hollow: {
+                                        margin: 0,
+                                        size: "70%",
+                                        background: "#293450"
+                                    },
+                                    track: {
+                                        dropShadow: {
+                                        enabled: true,
+                                        top: 2,
+                                        left: 0,
+                                        blur: 4,
+                                        opacity: 0.15
+                                        }
+                                    },
+                                    dataLabels: {
+                                        name: {
+                                        offsetY: -10,
+                                        color: "#fff",
+                                        fontSize: "13px"
+                                        },
+                                        value: {
+                                        color: "#fff",
+                                        fontSize: "30px",
+                                        show: true
+                                        }
+                                    }
+                                    }
+                                },                              
+                                fill: {
+                                    type: "gradient",
+                                    gradient: {
+                                      shade: "dark",
+                                      type: "vertical",
+                                      gradientToColors: ["#87D4F9"],
+                                      stops: [0, 100]
+                                    }
+                                },
+                                labels: ["복습률"]
+                              }}
+                              series= {[67]}
+                              type='radialBar'/>
                         </div>
                 
                     </div>
