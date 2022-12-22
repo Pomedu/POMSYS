@@ -39,7 +39,7 @@ const ClientPage = () => {
                 >
                 <SwiperSlide>
                 {({isActive})=>(
-                    <div className="card mt-3 client-card" style={
+                    <div className="card mt-3" style={
                         {opacity:isActive?"1":"0.5"}}>
                         <div className="card-header bg-soft font-size-12" style={{color:'#8758FF'}}>
                             <FaYoutube/> Latest Video
@@ -54,7 +54,7 @@ const ClientPage = () => {
                 </SwiperSlide>
                 <SwiperSlide>
                 {({isActive})=>(
-                    <div className="card mt-3 client-card" style={
+                    <div className="card mt-3" style={
                         {opacity:isActive?"1":"0.5"}}>
                         <div className="card-header bg-soft font-size-12" style={{color:'#8758FF'}}>
                             <FaYoutube/> Latest Video
@@ -69,7 +69,7 @@ const ClientPage = () => {
                 </SwiperSlide>
                 <SwiperSlide>
                 {({isActive})=>(
-                    <div className="card mt-3 client-card" style={
+                    <div className="card mt-3" style={
                         {opacity:isActive?"1":"0.5"}}>
                         <div className="card-header bg-soft font-size-12" style={{color:'#8758FF'}}>
                             <FaYoutube/> Latest Video
@@ -84,7 +84,7 @@ const ClientPage = () => {
                 </SwiperSlide>
                 </Swiper>
             </div>
-            <div className="card mt-3 m-4 client-card"> 
+            <div className="card mt-3 m-4"> 
                 <div className="card-header bg-soft font-size-12" style={{color:'#8758FF'}}> 
                     <div className="justify-content-between" style={{display:'flex'}}>
                         <div><FaCalendar/> My Calendar</div>
@@ -143,7 +143,7 @@ const ClientPage = () => {
                 slideToClickedSlide={true}
                 >
                 <SwiperSlide>
-                    <div className="card mt-3 client-card bg-secondary">                        
+                    <div className="card mt-3 bg-secondary">                        
                         <div className="card-body">
                             <div className="text-white justify-content-between align-middle" style={{display:'flex'}}>
                                 <div>
@@ -163,10 +163,10 @@ const ClientPage = () => {
 
             <div className="m-4">
                 <div className="font-size-20 text-white fw-semibold"> 나의 학습현황 </div>
-                <div className="card mt-3 client-card bg-dark"> 
+                <div className="card mt-3 bg-dark"> 
                 <div className="card-body">
                     <div className="row"> 
-                        <div className='mb-5 col-lg-4'>
+                        <div className='mb-3 col-lg-4'>
                             <div className="fw-semibold font-size-14 mb-2" style={{color:"#FFD058"}}>출석현황</div>
                             <AChart options= {{
                                 colors: ["#20E647"],
@@ -214,7 +214,7 @@ const ClientPage = () => {
                               series= {[67]}
                               type='radialBar'/>  
                         </div>
-                        <div className='mb-5 col-lg-4'>
+                        <div className='mb-3 col-lg-4'>
                             <div className="fw-semibold font-size-14 mb-2" style={{color:"#5CB8E4"}}>테스트 점수</div>
                             <AChart
                             options= {{
@@ -275,7 +275,7 @@ const ClientPage = () => {
                               type='bar'/>
                         </div>
 
-                        <div className='mb-5 col-lg-4'>
+                        <div className='mb-3 col-lg-4'>
                             <div className="fw-semibold font-size-14 mb-2" style={{color:"#A555EC"}}>영상복습 현황</div>
                             <AChart
                             options= {{
