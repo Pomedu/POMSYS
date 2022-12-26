@@ -9,7 +9,7 @@ const ClientRegistrationForm = () => {
     const dispatch = useDispatch();
     const [inputFields, setInputFields] = useState(
         {
-            phone_number: '', password1: '', password2: '', name: '', role: 'A'
+            phone_number: '', password1: '', password2: '', name: '', role: 'S'
         }
     );
 
@@ -26,9 +26,8 @@ const ClientRegistrationForm = () => {
         .then((res)=>{
             if(res.type=='REGISTER/fulfilled'){
                 alert("회원가입이 완료되었습니다");
-                router.push("/admin/login");
+                router.push("/client/login");
             } else {
-                console.log(res);
                 alert("회원가입에 실패하였습니다");                
                 setTimeout(()=>{dispatch(resetErrors())},3000);
             }            

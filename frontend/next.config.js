@@ -8,6 +8,11 @@ const nextConfig = {
         source: "/admin",
         destination: "/admin/lectures",
         permanent: false
+      },
+      {
+        source: "/",
+        destination: "/client",
+        permanent: false
       }
     ]
   }

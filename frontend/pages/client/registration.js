@@ -16,9 +16,9 @@ const ClientRegistrationPage = () => {
                     <div>
                         <ClientRegistrationForm />
                     </div>
-                    <div className="mt-3 text-center">
+                    <div className="mt-3 text-center text-white">
                         <div>
-                            <p>계정이 있으신가요? <Link href={"/admin/login"}><a className="fw-medium text-primary"> 로그인하기 </a></Link></p>
+                            <p>이미 계정이 있으신가요? <Link href={"/client/login"}><a className="fw-semibold text-info"> 로그인하기 </a></Link></p>
                         </div>
                     </div>
                 </div>

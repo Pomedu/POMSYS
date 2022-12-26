@@ -4,16 +4,48 @@ import AdminTopbar from '../Navbars/AdminTopbar';
 import Script from 'next/script'
 import { Router, useRouter } from 'next/router';
 import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getuserAccount, refreshAccount, verifyAccount } from '../../store/modules/accountsSlice';
+import moment from 'moment';
 
 const AdminLayout = ({ children }) => {
     // token 확인    
-    const router = useRouter();    
+    const router = useRouter();
     const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
-    useEffect(() => {        
-        if(!cookies.accessToken){
-            router.push('/admin/login')
+    const dispatch = useDispatch();
+    const userData = useSelector(state => state.accounts.userData);
+
+    useEffect(() => {
+        if (!cookies.accessToken) {
+            if (!cookies.refreshToken) {
+                router.push('/admin/login');
+            } else {
+                dispatch(verifyAccount({ token: cookies.refreshToken }))
+                .then((res) => {
+                    dispatch(refreshAccount({ refresh: cookies.refreshToken }))
+                    .then((res) => {
+                        const accessTokenExpires = moment().add('10', 'minutes').toDate();
+                        setCookies('accessToken', res.payload.access, { expires: accessTokenExpires });
+                        dispatch(getuserAccount(cookies.accessToken));
+                    });
+                })                
+            }
+        } else {
+            dispatch(verifyAccount({ token: cookies.accessToken }))
+                .then((res) => {
+                    dispatch(getuserAccount(cookies.accessToken));      
+                });
         }
     }, [children]);
+
+    useEffect(()=>{
+        if(userData.role){
+            if(userData.role=='S'){
+                alert('관리자/강사 계정이 아닙니다. 관리자/강사 페이지로 이동합니다');
+                router.push('/client');
+            } 
+        }
+    },[userData])
 
     // 모바일,PC 확인
     function useWindowSize() {

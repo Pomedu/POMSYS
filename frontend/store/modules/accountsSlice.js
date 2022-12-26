@@ -1,6 +1,7 @@
 import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import { useDispatch } from "react-redux";
+import router from "next/router";
 
 export const registerAccount = createAsyncThunk("REGISTER", async (registerData, { rejectWithValue }) => {
     return axios({
@@ -20,24 +21,30 @@ export const loginAccount = createAsyncThunk("LOGIN", async (loginData, { reject
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const getuserAccount = createAsyncThunk("GETUSER", async (accessToken, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/accounts/user/`,
+        headers: { 
+            'Content-Type': "application/json",
+            'Authorization': 'Bearer '+ accessToken }
+    }).then(response => { return response.data });
+});
+
 export const refreshAccount = createAsyncThunk("REFRESH", async (refreshToken, { rejectWithValue })=>{
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/accounts/token/refresh/',
         data: refreshToken
-    }).then(response => { return response.data })
-        .catch(error => console.log(error.response.data));
+    }).then(response => { return response.data });
 });
 
-export const verifyAccount = createAsyncThunk("VERIFY", async ({accessToken, refreshToken}, { rejectWithValue })=>{
+export const verifyAccount = createAsyncThunk("VERIFY", async (accessToken, { rejectWithValue })=>{
     return axios({
         method: "post",
         url: 'http://127.0.0.1:8000/api/accounts/token/verify/',
         data: accessToken
-    }).then(response => { return response.data })
-        .catch(error => { 
-            console.log(error);
-        });
+    }).then(response => { return response.data });
 });
 
 
@@ -56,11 +63,6 @@ export const accountsSlice = createSlice({
     reducers: {
         resetErrors: (state) => {
             state.error = null;
-        },
-        getAccessToken: (state) =>{            
-            state.access_token=localStorage.getItem('access_token')
-            ? localStorage.getItem('access_token')
-            : null
         }
     },
     extraReducers: (builder) => {
@@ -83,24 +85,51 @@ export const accountsSlice = createSlice({
             })
             .addCase(loginAccount.fulfilled, (state, { payload }) => {
                 state.loading = false;
-                state.userData = payload;                
+                state.userData = payload.user;                            
             })
             .addCase(loginAccount.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;            
+            })
+            .addCase(getuserAccount.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(getuserAccount.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.userData = payload; 
+            })
+            .addCase(getuserAccount.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;   
             })
             .addCase(verifyAccount.pending, (state) => {
                 state.error = null;
                 state.loading = true;
             })
             .addCase(verifyAccount.fulfilled, (state, { payload }) => {
-                state.loading = false;
-                state.userData = payload;                
+                state.loading = false;         
             })
             .addCase(verifyAccount.rejected, (state, { payload }) => {
                 state.error = payload;
-                state.loading = false;            
+                state.loading = false;  
+                alert("인증 정보가 틀립니다. 다시 로그인해주세요");
+                router.push('/client/login');            
+            })
+            .addCase(refreshAccount.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(refreshAccount.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.userData = payload;       
+            })
+            .addCase(refreshAccount.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;                  
+                alert("인증 정보가 틀립니다. 다시 로그인해주세요");
+                router.push('/client/login');          
             })
     }
 })
-export const { resetErrors,getAccessToken } = accountsSlice.actions;
+export const { resetErrors } = accountsSlice.actions;

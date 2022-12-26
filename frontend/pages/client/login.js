@@ -22,7 +22,7 @@ const ClientLoginPage = () => {
                     </div>
                     <div className="mt-3 text-center">
                         <div>
-                            <p className="text-light">계정이 없으신가요? <Link href={"/client/registration"}><a className="fw-medium text-primary"> 가입하기 </a></Link></p>
+                            <p className="text-light">계정이 없으신가요? <Link href={"/client/registration"}><a className="fw-medium text-info"> 가입하기 </a></Link></p>
                         </div>
                     </div>
                 </div>
