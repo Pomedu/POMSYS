@@ -1,6 +1,7 @@
 import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 import moment from "moment";
+import "moment/locale/ko";
 
 export const fetchLectureVideos = createAsyncThunk("GET/LECTURE/VIDEO", async (lectureId, { rejectWithValue }) => {
     return axios({

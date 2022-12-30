@@ -4,6 +4,7 @@ import router from "next/router";
 import { loginAccount, resetErrors } from "../../store/modules/accountsSlice";
 import { useCookies } from 'react-cookie';
 import moment from "moment";
+import "moment/locale/ko"
 
 const ClientLoginForm = () => {
     const errors = useSelector(state=>state.accounts.error);    
@@ -32,9 +33,16 @@ const ClientLoginForm = () => {
                 const accessTokenExpires =  moment().add('10','minutes').toDate();
                 const refreshTokenExpires =  moment().add('7','days').toDate();
                 removeCookies('refreshToken');
-                setCookies('accessToken',res.payload.access_token,{expires:accessTokenExpires});                
-                setCookies('refreshToken',res.payload.refresh_token,{expires:refreshTokenExpires});
-                router.push("/client");                
+                if(res.payload.user.role!="S"){
+                    setCookies('accessToken',res.payload.access_token,{path:'/admin', expires:accessTokenExpires});                
+                    setCookies('refreshToken',res.payload.refresh_token,{path:'/admin', expires:refreshTokenExpires});
+                    alert('학생계정이 아닙니다. 관리자/강사 페이지로 이동합니다');
+                    router.push('/admin');
+                } else {
+                    setCookies('accessToken',res.payload.access_token,{path:'/client', expires:accessTokenExpires});                
+                    setCookies('refreshToken',res.payload.refresh_token,{path:'/client', expires:refreshTokenExpires});
+                    router.push("/client");
+                }                                
             } else {
                 alert("로그인에 실패하였습니다");
                 setTimeout(()=>{dispatch(resetErrors())},3000);

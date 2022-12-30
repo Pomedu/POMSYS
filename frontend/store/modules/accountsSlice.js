@@ -51,8 +51,6 @@ export const verifyAccount = createAsyncThunk("VERIFY", async (accessToken, { re
 
 const initialState = {
     userData: [],
-    isAccess: false,
-    isRefresh: false,
     loading: false,
     error: null,
 };
@@ -63,6 +61,9 @@ export const accountsSlice = createSlice({
     reducers: {
         resetErrors: (state) => {
             state.error = null;
+        },
+        logoutAccount: (state) => {
+            state.userData = [];
         }
     },
     extraReducers: (builder) => {
@@ -132,4 +133,4 @@ export const accountsSlice = createSlice({
             })
     }
 })
-export const { resetErrors } = accountsSlice.actions;
+export const { resetErrors, logoutAccount } = accountsSlice.actions;

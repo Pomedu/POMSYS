@@ -4,16 +4,20 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { FaYoutube, FaCalendar } from "react-icons/fa";
 import AChart from '../../components/Common/AChart';
 import moment from "moment";
+import "moment/locale/ko"
+import { useSelector } from "react-redux";
 
 const ClientPage = () => {
+    const userData = useSelector(state => state.accounts.userData);
 
     return (
         <div>
             <div> 
-                <div className="client-greeting ms-4 mt-2 text-white">안녕하세요, 길동님</div> 
+                <div className="client-greeting ms-4 mt-2 text-white">안녕하세요, <span className="text-info">{userData.name}</span>님</div> 
                 <div className="client-date ms-4 text-white">{moment().format('YYYY년 MM월 DD일')}</div>
             </div>
             <div className="m-4">
+            <div>
                 <Swiper
                 breakpoints={{
                 200: {
@@ -45,9 +49,17 @@ const ClientPage = () => {
                             <FaYoutube/> Latest Video
                         </div> 
                         <div className="card-body">
-                            <div className="fw-semibold">
-                                중등 G1 CLASS 8월 18일 복습영상
+                            <div className="justify-content-between d-flex">
+                            <div className="flex-grow-1 align-middle">
+                                <div className="fw-semibold">
+                                    중등 G1 CLASS 8월 18일 복습영상
+                                </div>
+                                <div>[이런영상 저런영상]</div>
                             </div>
+                            <div>
+                                <a className="text-dark clickable" ><i className="h1 me-2 text-danger"><FaYoutube/></i></a>                                    
+                            </div> 
+                            </div>                           
                         </div>
                     </div>
                     )}
@@ -84,7 +96,7 @@ const ClientPage = () => {
                 </SwiperSlide>
                 </Swiper>
             </div>
-            <div className="card mt-3 m-4"> 
+            <div className="card mt-3"> 
                 <div className="card-header bg-soft font-size-12" style={{color:'#8758FF'}}> 
                     <div className="justify-content-between" style={{display:'flex'}}>
                         <div><FaCalendar/> My Calendar</div>
@@ -118,7 +130,7 @@ const ClientPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="m-4">
+            <div>
                 <div className="font-size-20 text-white fw-semibold"> 내가 수강중인 강의 </div>
                 <Swiper
                 breakpoints={{
@@ -161,7 +173,7 @@ const ClientPage = () => {
                 </Swiper>
             </div>
 
-            <div className="m-4">
+            <div>
                 <div className="font-size-20 text-white fw-semibold"> 나의 학습현황 </div>
                 <div className="card mt-3 bg-dark"> 
                 <div className="card-body">
@@ -327,6 +339,7 @@ const ClientPage = () => {
                 
                     </div>
                 </div>
+            </div>
             </div>
             </div>
         </div>

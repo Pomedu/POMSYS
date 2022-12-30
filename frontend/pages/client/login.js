@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
-import LoginForm from "../../components/Forms/LoginForm";
 import ClientLoginForm from "../../components/Forms/ClientLoginForm";
+import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
+import { verifyAccount } from "../../store/modules/accountsSlice";
+import router from "next/router";
 
 const ClientLoginPage = () => {
-
+    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        if(cookies.accessToken){
+            dispatch(verifyAccount({ token: cookies.accessToken }))
+                .then((res)=>{
+                    alert("이미 로그인되어 있습니다");
+                    router.push('/client');
+                });
+        }
+    },[])
     return (
         <div className="m-0">
             <div className="client-login-logo">

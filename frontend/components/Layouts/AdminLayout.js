@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { getuserAccount, refreshAccount, verifyAccount } from '../../store/modules/accountsSlice';
 import moment from 'moment';
+import "moment/locale/ko"
 
 const AdminLayout = ({ children }) => {
     // token 확인    
@@ -41,7 +42,7 @@ const AdminLayout = ({ children }) => {
     useEffect(()=>{
         if(userData.role){
             if(userData.role=='S'){
-                alert('관리자/강사 계정이 아닙니다. 관리자/강사 페이지로 이동합니다');
+                alert('관리자/강사 계정이 아닙니다. 학생 페이지로 이동합니다');
                 router.push('/client');
             } 
         }

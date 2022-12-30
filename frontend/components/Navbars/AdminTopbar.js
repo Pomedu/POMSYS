@@ -1,13 +1,30 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaSignOutAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
+import "moment/locale/ko"
+import { useCookies } from 'react-cookie';
+import router from "next/router";
+import { logoutAccount } from "../../store/modules/accountsSlice";
 
 export default function AdminTopbar(props) {
   const showMenu = () => {
     props.onChange(sidebarisOpen => !sidebarisOpen);
   }
 
+  const userData = useSelector(state => state.accounts.userData);
+  const [cookies, setCookies, removeCookies] = useCookies(['accessToken, refreshToken']);
+  const dispatch = useDispatch();
+  const onLogout = (e) => {
+    e.preventDefault();
+    removeCookies('refreshToken',{path:'/admin'});
+    removeCookies('accessToken',{path:'/admin'});
+    dispatch(logoutAccount());
+    router.push('/admin/login')
+   //
+  };
 
   return (
     <header id="page-topbar">
@@ -31,7 +48,8 @@ export default function AdminTopbar(props) {
         </div>
 
         <div className="d-flex">
-          Admin님 환영합니다
+          <span>{userData.name}님 환영합니다</span>
+          <a className="ms-3 fw-semibold text-primary clickable" onClick={onLogout}> 로그아웃 <FaSignOutAlt/></a>
         </div>
       </div>
     </header>

@@ -5,6 +5,7 @@ import { fetchTeachers } from "../../store/modules/teachersSlice";
 import { updateLecture } from "../../store/modules/lecturesSlice";
 import router from "next/router";
 import moment from "moment";
+import "moment/locale/ko"
 
 const UpdateLectureForm = () => {
     const lectureData = useSelector(state=>state.lectures.lectureData);

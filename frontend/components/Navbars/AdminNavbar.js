@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import AdminNavbarMenu from './AdminNavebarMenu';
 import AdminNavbarMenuCollapse from './AdminNavbarMenuCollapse';
 import { BiHome } from "react-icons/bi";
+import router from "next/router";
 
 function MoveToHomePage() {
     window.location.replace("student/");

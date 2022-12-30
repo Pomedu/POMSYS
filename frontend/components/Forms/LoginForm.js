@@ -4,6 +4,7 @@ import router from "next/router";
 import { loginAccount, resetErrors } from "../../store/modules/accountsSlice";
 import { useCookies } from 'react-cookie';
 import moment from "moment";
+import "moment/locale/ko"
 
 const LoginForm = () => {
     const errors = useSelector(state=>state.accounts.error);    
@@ -22,20 +23,26 @@ const LoginForm = () => {
         setInputFields({ ...inputFields, [event.target.name]: event.target.value });
     };
 
-    const [cookies, setCookies] = useCookies(['accessToken','refreshToken']);
+    const [cookies, setCookies, removeCookies] = useCookies(['accessToken','refreshToken']);
 
     const onLogin = (e) => {
         e.preventDefault();
         dispatch(loginAccount(inputFields))
         .then((res)=>{
             if(res.type=='LOGIN/fulfilled'){
-                console.log(res);
                 const accessTokenExpires =  moment().add('1','minutes').toDate()
                 const refreshTokenExpires =  moment().add('7','days').toDate()
-                console.log(accessTokenExpires);
-                setCookies('accessToken',res.payload.access_token,{expires:accessTokenExpires})                
-                setCookies('refreshToken',res.payload.refresh_token,{expires:refreshTokenExpires})
-                router.push("/admin");                
+                removeCookies('refreshToken');
+                if(res.payload.user.role=="S"){
+                    setCookies('accessToken',res.payload.access_token,{path:'/client', expires:accessTokenExpires});                
+                    setCookies('refreshToken',res.payload.refresh_token,{path:'/client', expires:refreshTokenExpires});
+                    alert('관리자/강사계정이 아닙니다. 학생 페이지로 이동합니다');
+                    router.push('/client');
+                } else {
+                    setCookies('accessToken',res.payload.access_token,{path:'/admin', expires:accessTokenExpires});                
+                    setCookies('refreshToken',res.payload.refresh_token,{path:'/admin', expires:refreshTokenExpires});
+                    router.push("/admin");
+                }                      
             } else {
                 alert("로그인에 실패하였습니다");
                 setTimeout(()=>{dispatch(resetErrors())},3000);
