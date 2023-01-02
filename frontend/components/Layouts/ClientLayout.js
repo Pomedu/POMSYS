@@ -21,24 +21,33 @@ const ClientLayout = ({ children }) => {
             if (!cookies.refreshToken) {
                 router.push('/client/login');
             } else {
+                console.log('refreshtoken으로 인증합니다');
                 dispatch(verifyAccount({ token: cookies.refreshToken }))
                 .then((res) => {
                     dispatch(refreshAccount({ refresh: cookies.refreshToken }))
                     .then((res) => {
                         const accessTokenExpires = moment().add('10', 'minutes').toDate();
                         setCookies('accessToken', res.payload.access, { expires: accessTokenExpires });
-                        dispatch(getuserAccount(cookies.accessToken));
+                        dispatch(getuserAccount(res.payload.access));
                     });
+                })
+                .catch((error)=>{                    
+                    alert("인증 정보가 틀립니다. 다시 로그인해주세요");
+                    router.push('/client/login');         
                 })                
             }
-        } else {
+        } else {        
+            console.log('accesstoken으로 인증합니다');
             dispatch(verifyAccount({ token: cookies.accessToken }))
                 .then((res) => {
                     dispatch(getuserAccount(cookies.accessToken));      
+                })
+                .catch((error)=>{                    
+                    alert("인증 정보가 틀립니다. 다시 로그인해주세요");
+                    router.push('/client/login');         
                 });
         }
     }, [children]);
-
     useEffect(()=>{
         if(userData.role){
             console.log(userData);

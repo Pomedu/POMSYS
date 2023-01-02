@@ -44,7 +44,7 @@ const CreateLectureForm = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchTeachers(cookies.accessToken))
+        dispatch(fetchTeachers())
             .unwrap()
             .catch(error => {
                 console.log("### error: ", error);
@@ -56,7 +56,7 @@ const CreateLectureForm = () => {
         e.preventDefault();
         if (inputFields) {
             const newLecture = inputFields;
-            dispatch(createLecture({newLecture:newLecture,accessToken:cookies.accessToken}))
+            dispatch(createLecture(newLecture))
                 .then(router.push("/admin/lectures"));
         } else {
             console.log("생성못함");

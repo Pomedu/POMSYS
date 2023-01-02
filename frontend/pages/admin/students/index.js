@@ -33,6 +33,11 @@ const AdminStudentListPage = () => {
             sortable: true,
         },
         {
+            name: '지점',
+            selector: row => row.branch,
+            sortable: true,
+        },
+        {
             name: '학교',
             selector: row => row.school,
             sortable: true,

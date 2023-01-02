@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import router from "next/router";
 import { updateStudent } from "../../store/modules/studentsSlice";
+import SelectBox from "../Common/SelectBox";
 
 
 const UpdateStudentForm = () => {
@@ -32,6 +33,11 @@ const UpdateStudentForm = () => {
             console.log("생성못함");
         }
     };
+
+    const branchOptions = [
+        { value: "지곡", name: "지곡" },
+        { value: "센텀", name: "센텀" },        
+    ];
 
     if (inputFields) {
         return (
@@ -80,6 +86,12 @@ const UpdateStudentForm = () => {
                             value={inputFields.school}
                             onChange={event => handleFormChange(event)}
                         />
+                    </div>
+                </div>
+                <div className="row mb-4">
+                    <label className="col-form-label col-lg-2">지점</label>
+                    <div className="col-lg-10">
+                        <SelectBox name="branch" options={branchOptions} value={inputFields.branch} onChange={handleFormChange} />
                     </div>
                 </div>
                 <div className="row">

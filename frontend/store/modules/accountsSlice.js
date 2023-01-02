@@ -113,9 +113,7 @@ export const accountsSlice = createSlice({
             })
             .addCase(verifyAccount.rejected, (state, { payload }) => {
                 state.error = payload;
-                state.loading = false;  
-                alert("인증 정보가 틀립니다. 다시 로그인해주세요");
-                router.push('/client/login');            
+                state.loading = false;     
             })
             .addCase(refreshAccount.pending, (state) => {
                 state.error = null;
@@ -127,9 +125,7 @@ export const accountsSlice = createSlice({
             })
             .addCase(refreshAccount.rejected, (state, { payload }) => {
                 state.error = payload;
-                state.loading = false;                  
-                alert("인증 정보가 틀립니다. 다시 로그인해주세요");
-                router.push('/client/login');          
+                state.loading = false;               
             })
     }
 })

@@ -9,7 +9,7 @@ const CreateStudentForm = () => {
     const dispatch = useDispatch();
     const [inputFields, setInputFields] = useState(
         {
-            name: '', phone_number: '', school: '', phone_number_P: '',
+            name: '', phone_number: '', school: '', phone_number_P: '', branch: ''
         }
     );
 
@@ -30,6 +30,11 @@ const CreateStudentForm = () => {
             console.log("생성못함");
         }
     };
+
+    const branchOptions = [
+        { value: "지곡", name: "지곡" },
+        { value: "센텀", name: "센텀" },        
+    ];
 
 
     return (
@@ -78,6 +83,12 @@ const CreateStudentForm = () => {
                         value={inputFields.school}
                         onChange={event => handleFormChange(event)}
                     />
+                </div>
+            </div>
+            <div className="row mb-4">
+                <label className="col-form-label col-lg-2">지점</label>
+                <div className="col-lg-10">
+                    <SelectBox name="branch" options={branchOptions} onChange={handleFormChange} />
                 </div>
             </div>
             <div className="row">

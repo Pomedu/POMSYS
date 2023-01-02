@@ -1,6 +1,15 @@
 import { createAsyncThunk, createReducer, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 
+
+export const fetchAllEnrolls = createAsyncThunk("GET/ALLENROLLS", async (_, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/lectures/enrolls`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const fetchEnrolls = createAsyncThunk("GET/ENROLLS", async (lectureId, { rejectWithValue }) => {
     return axios({
         method: "get",
@@ -49,6 +58,19 @@ export const enrollsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchAllEnrolls.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchAllEnrolls.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.enrollsData = payload;
+                state.filteredEnrollsData = payload;
+            })
+            .addCase(fetchAllEnrolls.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
             .addCase(fetchEnrolls.pending, (state) => {
                 state.error = null;
                 state.loading = true;
