@@ -27,7 +27,7 @@ const AdminLayout = ({ children }) => {
                     dispatch(refreshAccount({ refresh: cookies.refreshToken }))
                     .then((res) => {
                         const accessTokenExpires = moment().add('10', 'minutes').toDate();
-                        setCookies('accessToken', res.payload.access, { expires: accessTokenExpires });
+                        setCookies('accessToken', res.payload.access, {path:'/admin', expires:accessTokenExpires});
                         dispatch(getuserAccount(res.payload.access));
                     });
                 })
@@ -37,7 +37,7 @@ const AdminLayout = ({ children }) => {
                 })                
             }
         } else {
-            console.log('accesstoken으로 인증합니다', cookies.accessToken);
+            console.log('accesstoken으로 인증합니다');
             dispatch(verifyAccount({ token: cookies.accessToken }))
                 .then((res) => {
                     dispatch(getuserAccount(cookies.accessToken));  

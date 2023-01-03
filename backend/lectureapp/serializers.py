@@ -16,7 +16,7 @@ class SimpleLectureSerializer(serializers.ModelSerializer):
     teacher = serializers.StringRelatedField(many=False)
     class Meta:
         model = Lecture
-        fields = ('id','name','teacher','students')
+        fields = ('id','name','teacher','students','cost','start_date','end_date')
 
 class PrimaryKeyLectureSerializer(serializers.ModelSerializer):
     students = serializers.PrimaryKeyRelatedField(many=True,read_only=True)

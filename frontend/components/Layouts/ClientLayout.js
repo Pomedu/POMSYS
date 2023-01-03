@@ -27,7 +27,7 @@ const ClientLayout = ({ children }) => {
                     dispatch(refreshAccount({ refresh: cookies.refreshToken }))
                     .then((res) => {
                         const accessTokenExpires = moment().add('10', 'minutes').toDate();
-                        setCookies('accessToken', res.payload.access, { expires: accessTokenExpires });
+                        setCookies('accessToken', res.payload.access, {path:'/client', expires:accessTokenExpires});
                         dispatch(getuserAccount(res.payload.access));
                     });
                 })

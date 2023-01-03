@@ -10,12 +10,33 @@ import { FaEllipsisV, FaUserCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { BiMale, BiRegistered, BiUser } from "react-icons/bi";
 import AChart from "../../components/Common/AChart";
+import moment from "moment";
 
 const AdminPage = ({ lecturesData, teachersData, studentsData, enrollsData }) => {
     
-    const userData = useSelector(state=>state.accounts.userData);   
-
+    const userData = useSelector(state=>state.accounts.userData);  
     
+    const monthList = [];
+    const salesList = [];
+    const subjectsList = [];
+    for(var i=11; i>-2; i-- ){
+        monthList.push(moment().subtract(i,"M").format('yyyy-MM'));
+        salesList.push(0);
+        subjectsList.push(0);
+    }
+    
+    for(var i=0; i<monthList.length; i++ ){
+        for(var j=0; j<enrollsData.length;j++){
+            if(moment(enrollsData[j].joined_at).format('yyyy-MM')<=monthList[i]&&monthList[i]<=moment(enrollsData[j].lecture.end_date).format('yyyy-MM')){
+                salesList[i] += enrollsData[j].lecture.cost;
+                subjectsList[i] += 1;
+            }
+        }
+    }
+
+    const increased_rate = Math.round((salesList[11]-salesList[10])/salesList[10]*1000)/10;
+ 
+
     return (
         <div className="row">
             <ContentTitle title="대시보드" mainTitle="홈" />
@@ -101,9 +122,9 @@ const AdminPage = ({ lecturesData, teachersData, studentsData, enrollsData }) =>
                                     <h5 className="font-size-14 mb-0">전체 수강등록</h5>
                                 </div>
                                 <div className="text-muted mt-4">
-                                    <h4>{enrollsData.length} 과목</h4>
+                                    <h4>{subjectsList[11]} 과목</h4>
                                     <span className="font-size-12 me-1"> 수강생 1명당  
-                                        <span className="fw-semibold text-primary"> 평균 {Math.round(enrollsData.length/studentsData.length*10)/10} 과목 </span>
+                                        <span className="fw-semibold text-primary"> 평균 {Math.round(subjectsList[11]/studentsData.length*10)/10} 과목 </span>
                                         수강
                                     </span> 
                                 </div>  
@@ -122,59 +143,122 @@ const AdminPage = ({ lecturesData, teachersData, studentsData, enrollsData }) =>
                                 <div className="card">
                                     <div className="card-body">
                                         <div className="clearfix">                                            
-                                            <h4 className="card-title mb-4">매출</h4>
+                                            <h4 className="card-title mb-4">매출 및 수강과목 추이</h4>
                                         </div>
 
                                         <div className="row">
                                             <div className="col-lg-4">
                                                 <div className="text-muted">
                                                     <div className="mb-4">
-                                                        <p>이번달(예상)</p>
-                                                        <h4>$2453.35</h4>
-                                                        {lecturesData.map((lecture)=>(
-                                                            <div>[{lecture.name}]의 수강료: {lecture.cost}, 수강생:{enrollsData.filter(enroll=>enroll.lecture.id==lecture.id).length}</div>
-                                                        ))}
-                                                        <div><span className="badge badge-soft-success font-size-12 me-1"> + 0.2% </span> From previous period</div>
-                                                    </div>
-
-                                                    <div>
-                                                        <a href="javascript: void(0);" className="btn btn-primary waves-effect waves-light btn-sm">View Details <i className="mdi mdi-chevron-right ms-1"></i></a>
+                                                        <h5>이번달 매출</h5>
+                                                        <h4>{Math.round(salesList[11]/10000)}만원</h4>                                                
+                                                        <div>
+                                                        {salesList[11]-salesList[10]>0?
+                                                        <span className="badge badge-soft-success font-size-12 me-1">+{increased_rate}%</span>:
+                                                        <span className="badge badge-soft-danger font-size-12 me-1">{increased_rate}%</span>}
+                                                          
+                                                         지난달 대비</div>
                                                     </div>
                                                     
                                                     <div className="mt-4">
-                                                        <p className="mb-2">Last month</p>
-                                                        <h5>$2281.04</h5>
+                                                        <p className="mb-2">지난달 매출</p>
+                                                        <h5>{Math.round(salesList[10]/10000)}만원</h5>
+                                                    </div> 
+                                                    <div className="mb-4 mt-4">
+                                                        <p>현재 등록된 수강과목 수</p>
+                                                        <h4>{subjectsList[11]}과목</h4>                                                
+                                                        <div>
+                                                        {subjectsList[11]-subjectsList[10]>0?
+                                                        <span className="badge badge-soft-success font-size-12 me-1">+{subjectsList[11]-subjectsList[10]}</span>:
+                                                        <span className="badge badge-soft-danger font-size-12 me-1">{subjectsList[11]-subjectsList[10]}</span>}                                                          
+                                                         지난달 대비</div>
                                                     </div>
                                                     
+                                                                                                          
                                                 </div>
                                             </div>
-
-                                            <AChart 
-                                            options= {{                                              
-                                                colors: ['#00E396'],                                                
-                                                legend: {
-                                                  show: true,
-                                                  showForSingleSeries: true,
-                                                  customLegendItems: ['실제점수', '평균'],
-                                                  markers: {
-                                                    fillColors: ['#00E396', '#775DD0']
-                                                  }
-                                                },
-                                              }}
-                                              series= {[{
-                                                name: "실제점수",
-                                                data: [
-                                                    {
-                                                        x: '2011',
-                                                        y: 12,                                                       
+                                            <div className="col-lg-8">
+                                                <AChart 
+                                                    options= {{                                              
+                                                    xaxis: {
+                                                        categories: monthList,
+                                                        labels: {
+                                                            formatter: function (value) {
+                                                              return moment(value).format('yyyy-MM');
+                                                            }
+                                                        }
+                                                        },                                                    
+                                                    yaxis: [
+                                                        {
+                                                          title: {
+                                                            text: "매출"
+                                                          },
+                                                        },
+                                                        {
+                                                          opposite: true,
+                                                          title: {
+                                                            text: "수강과목 수"
+                                                          }
+                                                        }
+                                                      ],
+                                                      annotations: {   
+                                                        points: [{
+                                                            x:  moment().format('yyyy-MM'),
+                                                            y: salesList[11],
+                                                            marker: {
+                                                              size: 6,
+                                                              fillColor: '#fff',
+                                                              strokeColor: 'red',
+                                                              radius: 2,
+                                                            },
+                                                            label: {
+                                                              borderColor: '#FF4560',
+                                                              offsetY: 0,
+                                                              style: {
+                                                                color: '#fff',
+                                                                background: '#FF4560',
+                                                              },
+                                                        
+                                                              text: '이번달',
+                                                            }
+                                                          },
+                                                          {
+                                                            x:  moment().add(1,'M').format('yyyy-MM'),
+                                                            y: salesList[12],
+                                                            marker: {
+                                                              size: 6,
+                                                              fillColor: '#fff',
+                                                              strokeColor: 'green',
+                                                              radius: 2,
+                                                            },
+                                                            label: {
+                                                              borderColor: 'green',
+                                                              offsetY: 0,
+                                                              style: {
+                                                                color: '#fff',
+                                                                background: 'green',
+                                                              },                                                        
+                                                              text: '다음달',
+                                                            }
+                                                          }]},   
+                                                    markers: {
+                                                        size: 4,
                                                     },
-                                                    {
-                                                        x: '2012',
-                                                        y: 44,                                                       
-                                                    }
-                                                ]
-                                                }]}
-                                              type='line'/>
+                                                    }}
+                                                    series= {[
+                                                        {
+                                                            name: "예상매출",
+                                                            data:salesList,
+                                                            type: 'line'    
+                                                        },
+                                                        {
+                                                            name: "수강과목 수",
+                                                            type: 'column',
+                                                            data:subjectsList
+                                                        }]}
+                                                    />
+                                            </div>                       
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +267,7 @@ const AdminPage = ({ lecturesData, teachersData, studentsData, enrollsData }) =>
                             <div className="col-xl-4">
                                 <div className="card">
                                     <div className="card-body">
-                                        <h4 className="card-title mb-4">Sales Analytics</h4>
+                                        <h4 className="card-title mb-4">과목별 매출비중</h4>
 
                                         <div>
                                             <div id="donut-chart" data-colors='["--bs-primary", "--bs-success", "--bs-danger"]' className="apex-charts"></div>
