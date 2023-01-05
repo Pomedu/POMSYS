@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { fetchTeachers } from "../../../store/modules/teachersSlice";
+import { fetchTeacher, fetchTeachers } from "../../../store/modules/teachersSlice";
 import "moment/locale/ko"
 import ContentTitle from "../../../components/Common/ContentTitle";
-import { deleteLesson, fetchLesson, fetchLessons, updateLesson,} from "../../../store/modules/lessonsSlice";
+import { deleteLesson, fetchLesson, fetchLessons, fetchTeacherLessons, updateLesson,} from "../../../store/modules/lessonsSlice";
 import { BiUser, BiChevronDown,BiChevronLeft, BiChevronRight, BiCalendar } from 'react-icons/bi'
 import dynamic from 'next/dynamic'
 import moment from "moment";
@@ -16,11 +16,25 @@ import CalendarEventDetailModal from "../../../components/Modals/CalendarEventDe
 import {randomColor} from "randomcolor"
 import CalendarEventUpdateModal from "../../../components/Modals/CalendarEventUpdateModal";
 
-const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
+const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
     const dispatch = useDispatch();    
     const modalOpenState = useSelector((state)=>state.modal.show);
+    const lessonsData = useSelector((state)=>state.lessons.lessonsData);
     const lessonData = useSelector((state)=>state.lessons.lessonData);
-
+    const userData = useSelector(state=>state.accounts.userData);
+    const teacherData = useSelector(state => state.teachers.teacherData); // 강사계정용 구분을 위한 데이터
+    const teacher_pk = 0;
+    // Data Fetch (Lessons)
+    useEffect(() => {
+        if(userData.role){
+            if(userData.role=='T'){
+                teacher_pk = teachersData.find(teacher=>teacher.name==userData.name&&teacher.phone_number==userData.phone_number).id;
+                dispatch(fetchTeacher(teacher_pk));
+                dispatch(fetchTeacherLessons(teacher_pk));
+                console.log(lessonsData)
+            } 
+        } 
+    }, []);
     // 시간표
     const cal = useRef(null);
     const calendarInst = null;
@@ -111,33 +125,43 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
         calendarInst["today"]();
         setRenderRangeText();
     }
-    const calendars = [];
-    const initialEvents = [];
 
-    teachersData.map((teacher, teacher_index) => {
-        calendars.push({
-            id: teacher.id,
-            name: teacher.name,
-            backgroundColor: colors[teacher_index],
-            borderColor: colors[teacher_index]
-        });
-    })
+    let calendars = [];
+    let initialEvents = [];
+    useEffect(()=>{
+        if(teacherData.lectures){
+            teacherData.lectures.map((lecture, lecture_index) => {
+                calendars.push({
+                    id: lecture.id,
+                    name: lecture.name,
+                    backgroundColor: colors[lecture_index],
+                    borderColor: colors[lecture_index]
+                });
+            })}        
+        console.log(calendars);
+    },[teacherData])
 
-    lessonsData.map((lesson) => {
-        initialEvents.push({
-            id: lesson.id,
-            calendarId: lesson.lecture.teacher,
-            title: lesson.lecture.name,
-            start: lesson.date + "T" + lesson.start_time,
-            end: lesson.date + "T" + lesson.end_time,
-            state: null,
-            attendees: null,
-        });
-    })
+    useEffect(()=>{
+    if(lessonsData){        
+        lessonsData.map((lesson) => {
+            initialEvents.push({
+                id: lesson.id,
+                calendarId: lesson.lecture.id,
+                title: lesson.lecture.name,
+                start: lesson.date + "T" + lesson.start_time,
+                end: lesson.date + "T" + lesson.end_time,
+                state: null,
+                attendees: null,
+            });
+        })}
+    console.log(initialEvents);
+    },[lessonsData])
 
      // 시간표 필터링
     const idArray = [];
-    teachersData.forEach((el) => idArray.push(el.id));
+    if(teacherData.lectures){
+    teacherData.lectures.forEach((el) => idArray.push(el.id));
+    }   
     const [checkItems, setCheckItems] = useState(idArray);
 
     const handleSingleCheck = (checked, id) => {
@@ -155,7 +179,9 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
     const handleAllCheck = (checked) => {
         if(checked) {
         idArray = [];
-        teachersData.forEach((el) => idArray.push(el.id));
+        if(teacherData.lectures){
+        teacherData.lectures.forEach((el) => idArray.push(el.id));
+        }
         setCheckItems(idArray);
         calendarInst = cal.current.getInstance();
         calendarInst.setCalendarVisibility(idArray, true);
@@ -228,12 +254,12 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
 
     return (
         <div>
-            <ContentTitle title="강의 시간표" mainTitle="강의 관리" />
+            <ContentTitle title="강의 시간표" mainTitle="My Space" />
             <div className="d-xl-flex">
                 <div className="card filemanager-sidebar me-md-2">
                     <div className="card-header bg-soft bg-primary">
                         <div className="justify-content-between d-flex align-items-center">
-                            <h5 className="fw-semibold mt-2">강사 선택</h5>
+                            <h5 className="fw-semibold mt-2">강의 선택</h5>
                             <div className="form-check form-switch form-switch-sm" >
                                 <label className="form-check-label" htmlFor="SwitchCheckSizemd" >전체 선택</label>
                                 <input className="form-check-input me-2" type="checkbox" id="SwitchCheckSizemd" 
@@ -245,24 +271,24 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
                     <div className="card-body">
                         <div className="d-flex flex-column h-100">                         
                             <ul className="list-unstyled categories-list">
-                                {teachersData.map((teacher, teacher_index) => {
-                                    return (<li key={teacher_index} className="mb-1" >
+                                {teacherData.lectures?teacherData.lectures.map((lecture, lecture_index) => {
+                                    return (<li key={lecture_index} className="mb-1" >
                                         <div className="custom-accordion">
                                             <a className="text-body fw-medium py-1 d-flex align-items-center">
                                                 <i className="font-size-15 text-warning me-2">
-                                                    <BiUser color={colors[teacher_index]} />
+                                                    <BiUser color={colors[lecture_index]} />
                                                 </i>
-                                                {teacher.name}({teacher.subject})
+                                                {lecture.name}
                                                 <input type="checkbox" className="form-check-input ms-2"
-                                                    style={{ backgroundColor: colors[teacher_index], borderColor: colors[teacher_index] }}                                                
-                                                    name={`select-${teacher.id}`}
-                                                    onChange={(e) => handleSingleCheck(e.target.checked, teacher.id)}
+                                                    style={{ backgroundColor: colors[lecture_index], borderColor: colors[lecture_index] }}                                                
+                                                    name={`select-${lecture.id}`}
+                                                    onChange={(e) => handleSingleCheck(e.target.checked, lecture.id)}
                                                     // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-                                                    checked={checkItems.includes(teacher.id) ? true : false} />
+                                                    checked={checkItems.includes(lecture.id) ? true : false} />
                                             </a>
                                         </div>
                                     </li>)
-                                })}
+                                }):<></>}
                             </ul>
                         </div>
                     </div>
@@ -373,20 +399,18 @@ const AdminLectureTimeTablePage = ({ teachersData, lessonsData, colors }) => {
 
 }
 
-AdminLectureTimeTablePage.layout = "L1";
+TeacherLectureTimeTablePage.layout = "L1";
 
-export default AdminLectureTimeTablePage
+export default TeacherLectureTimeTablePage
 
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
     await store.dispatch(fetchTeachers());
-    await store.dispatch(fetchLessons());
     await store.dispatch(fetchLectures());
 
     const teachersData = store.getState().teachers.teachersData;
-    const lessonsData = store.getState().lessons.lessonsData;
     const colors = randomColor({count: teachersData.length, seed:0});
 
-    return { props: { teachersData, lessonsData, colors }, };
+    return { props: { teachersData, colors }, };
 
 });

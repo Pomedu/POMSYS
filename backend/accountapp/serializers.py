@@ -63,4 +63,4 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
 
     class Meta(UserDetailsSerializer.Meta):
         fields = UserDetailsSerializer.Meta.fields + \
-            ('role', 'is_admin', 'name')
+            ('role', 'is_admin', 'name','account_linked')

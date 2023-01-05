@@ -7,23 +7,26 @@ import SearchBox from "../../components/Common/SearchBox";
 import { createEnroll, resetEnrolls } from "../../store/modules/enrollsSlice";
 import { fetchLecture, fetchTeacherLectures, resetLectures, searchLectures } from "../../store/modules/lecturesSlice";
 import { fetchStudents, searchStudents } from "../../store/modules/studentsSlice";
-import { fetchTeachers, resetTeachers, searchTeachers } from "../../store/modules/teachersSlice";
+import { fetchTeacher, fetchTeachers, resetTeachers, searchTeachers } from "../../store/modules/teachersSlice";
 
-const CreateEnrollForm = () => {
+const CreateEnrollForm = (props) => {
     // 강사 목록 가져오기
-    const teachersList = useSelector(state => state.teachers.teachersData);
     const filteredTeachersList = useSelector(state => state.teachers.filteredTeachersData);
     const router = useRouter()
     const dispatch = useDispatch();
-
-    // Data Fetch (Teachers)
+    const userData = useSelector(state => state.accounts.userData);
+    const teacherData = useSelector(state => state.teachers.teacherData); // 강사계정용 구분을 위한 데이터
+    const teacher_pk = 0;
+    // Data Fetch (Enrolls)
     useEffect(() => {
-        dispatch(fetchTeachers())
-            .unwrap()
-            .catch(error => {
-                console.log("### error: ", error);
-            });
+        if (userData.role) {
+            if (userData.role == 'T') {
+                teacher_pk = props.teachersData.find(teacher => teacher.name == userData.name && teacher.phone_number == userData.phone_number).id;
+                dispatch(fetchTeacher(teacher_pk));
+            }
+        }
     }, []);
+    
     // 강사 Filtering
     const [filterText, setFilterText] = useState('');
 
@@ -180,7 +183,7 @@ const CreateEnrollForm = () => {
                         </div>
                     </div>
                     <div className="row" style={selectedTeacher !== "" ? { display: "none" } : {}}>
-                        {filteredTeachersList.map((teacher) => {
+                        {userData.role=='A'?filteredTeachersList.map((teacher) => {
                             return (
                                 <div className="col-xl-2 col-sm-6" key={teacher.id}>
                                     <FileManagerCard icon="BiUser"
@@ -192,7 +195,16 @@ const CreateEnrollForm = () => {
                                         onClick={setSelectedTeacher} />
                                 </div>
                             )
-                        })}
+                        }):
+                        <div className="col-xl-2 col-sm-6" >
+                            {teacherData.lectures?<FileManagerCard icon="BiUser"
+                                iconColor="#34c38f"
+                                id={teacherData.id}
+                                title={teacherData.name}
+                                subtitle={"강의: " + teacherData.lectures.length}
+                                caption={teacherData.subject}
+                                onClick={setSelectedTeacher} />:<></>}
+                        </div>}
                     </div>
 
                     <div className="row" style={selectedTeacher !== "" ? {} : { display: "none" }}>

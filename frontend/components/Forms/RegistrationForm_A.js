@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import router from "next/router";
 import { registerAccount, resetErrors } from "../../store/modules/accountsSlice";
 
-const RegistrationForm = () => {
+const RegistrationForm_A = () => {
     const errors = useSelector(state=>state.accounts.error);
 
     const dispatch = useDispatch();
     const [inputFields, setInputFields] = useState(
         {
-            phone_number: '', password1: '', password2: '', name: '', role: 'T'
+            phone_number: '', password1: '', password2: '', name: '', role: 'A'
         }
     );
 
@@ -99,4 +99,4 @@ const RegistrationForm = () => {
     )
 }
 
-export default RegistrationForm
+export default RegistrationForm_A

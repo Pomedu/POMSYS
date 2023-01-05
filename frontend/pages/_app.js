@@ -12,16 +12,15 @@ import 'swiper/css';
 import { Provider } from 'react-redux';
 import wrapper from '../store/configureStore';
 import NoneLayout from '../components/Layouts/NoneLayout';
-
-const queryClient = new QueryClient();
-const layouts = {
-    L1: AdminLayout,
-    L2: ClientLayout,
-    L3: NoneLayout
-};
-
+import { useRouter } from 'next/router';
 
 const MyApp = ({ Component, pageProps }) => {
+    const queryClient = new QueryClient();
+    const layouts = {
+        L1: AdminLayout,
+        L2: ClientLayout,
+        L3: NoneLayout
+    };
     const Layout = layouts[Component.layout] || ((children) => <>{children}</>);
     const { store, props } = wrapper.useWrappedStore(pageProps);
     return (

@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import LoginForm from "../../components/Forms/LoginForm";
-import RegistrationForm from "../../components/Forms/RegistrationForm";
+import RegistrationForm_A from "../../components/Forms/RegistrationForm_A";
 
 const AdminRegistrationPage = () => {
 
@@ -21,7 +20,7 @@ const AdminRegistrationPage = () => {
                                     <div className="col-7">
                                         <div className="text-white p-4">
                                             <h5 className="text-white">회원가입</h5>
-                                            <p>POMSYS 강사 회원가입</p>
+                                            <p>POMSYS 관리자 회원가입</p>
                                         </div>
                                     </div>
                                     <div className="col-5 align-self-end">
@@ -30,7 +29,7 @@ const AdminRegistrationPage = () => {
                             </div>
                             <div className="card-body pt-0">
                                 <div className="p-2">
-                                    <RegistrationForm />
+                                    <RegistrationForm_A />
                                 </div>
                                 <div className="mt-4 text-center">
                                     <div>

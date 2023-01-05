@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTeachers } from "../../../store/modules/teachersSlice";
+import { fetchTeacher, fetchTeachers } from "../../../store/modules/teachersSlice";
 import DataTable from "react-data-table-component";
 import "moment/locale/ko"
 import moment from "moment/moment";
@@ -10,21 +10,27 @@ import ContentTitle from "../../../components/Common/ContentTitle";
 import { useRouter } from "next/router";
 import { fetchLectureLessons } from "../../../store/modules/lessonsSlice";
 import { BiUser, BiChevronDown, BiChevronUp, BiChalkboard } from 'react-icons/bi'
+import wrapper from "../../../store/configureStore";
 
-const AdminLessonListPage = () => {
+const AdminLessonListPage = ({teachersData}) => {
     const upcomingLessonsList = useSelector(state => state.lessons.upcomingLessonsData.slice(0,3));
     const completedLessonsList = useSelector(state => state.lessons.completedLessonsData);
-    const teachersList = useSelector(state => state.teachers.teachersData);
     const [selectedTeacher, setSelectedTeacher] = useState([]);
     const [selectedLecture, setSelectedLecture] = useState("");
     const router = useRouter()
     const dispatch = useDispatch();
-
+    const userData = useSelector(state=>state.accounts.userData);
+    const teacherData = useSelector(state => state.teachers.teacherData); // 강사계정용 구분을 위한 데이터
+    const teacher_pk = 0;
     // Data Fetch (Lessons)
     useEffect(() => {
-        dispatch(fetchTeachers());
+        if(userData.role){
+            if(userData.role=='T'){
+                teacher_pk = teachersData.find(teacher=>teacher.name==userData.name&&teacher.phone_number==userData.phone_number).id;
+                dispatch(fetchTeacher(teacher_pk));
+            } 
+        } 
     }, []);
-
     const selectedTeacherHandler = (teacherId) => {
         if (selectedTeacher.includes(teacherId)) {
             setSelectedTeacher(selectedTeacher.filter(function (teacher) { return teacher !== teacherId }));
@@ -83,7 +89,7 @@ const AdminLessonListPage = () => {
                                 </div>
                             </div>
                             <ul className="list-unstyled categories-list">
-                                {teachersList.map((teacher, teacher_index) => {
+                                {userData.role=='A'?teachersData.map((teacher, teacher_index) => {
                                     return (<li key={teacher_index} className="mb-1" >
                                         <div className="custom-accordion">
                                             <a className="text-body fw-medium py-1 d-flex align-items-center"
@@ -115,7 +121,37 @@ const AdminLessonListPage = () => {
                                             </div>
                                         </div>
                                     </li>)
-                                })}
+                                }):<li className="mb-1" >
+                                <div className="custom-accordion">
+                                    <a className="text-body fw-medium py-1 d-flex align-items-center"
+                                        onClick={() => selectedTeacherHandler(teacherData.id)}>
+                                        <i className="font-size-15 text-warning me-2">
+                                            <BiUser color={selectedTeacher.includes(teacherData.id) ? "#2A3042" : "#CDCDCD"} />
+                                        </i>
+                                        {teacherData.name}({teacherData.subject})
+                                        <i className="ms-auto font-size-15">
+                                            {selectedTeacher.includes(teacherData.id) ?<BiChevronDown />:<BiChevronUp/>}
+                                        </i>
+                                    </a>
+                                    <div className={selectedTeacher.includes(teacherData.id) ? "collapse show mt-2 mb-1" : "collapse"}>
+                                        <div className="card border-0 shadow-none ps-2 mb-0">
+                                            <ul className="list-unstyled mb-0">
+                                            {teacherData.lectures?teacherData.lectures.map((lecture, lecture_index) => {
+                                                    return (<li key={lecture_index} className="mb-2">
+                                                        <a onClick={() => selectedLectureHandler(lecture.name, lecture.id)}>
+                                                            <i className="font-size-15 text-warning me-2">
+                                                                <BiChalkboard
+                                                                    color={lecture.name == selectedLecture ? "#2A3042" : "#CDCDCD"} />
+                                                            </i>
+                                                            {lecture.name}
+                                                        </a>
+                                                    </li>)})
+                                                :<></>}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>}
                             </ul>
                         </div>
                     </div>
@@ -172,3 +208,12 @@ const AdminLessonListPage = () => {
 AdminLessonListPage.layout = "L1";
 
 export default AdminLessonListPage
+
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
+
+    await store.dispatch(fetchTeachers());
+    
+    const teachersData = store.getState().teachers.teachersData;
+    return { props: { teachersData }, };
+
+});

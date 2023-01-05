@@ -105,24 +105,51 @@ const AdminLayout = ({ children }) => {
 
     }, [sidebarisOpen, isMobile]);
     
-    return (
-        <div>
-            <AdminTopbar
-                sidebarisOpen={sidebarisOpen}
-                onChange={(isOpen) => setSidebar(isOpen)}
-            />
-            <AdminNavbar setSidebar={setSidebar} isMobile={isMobile} />
-            <div className="main-content">
-                <div className="page-content">
-                    <div className="container-fluid h-100">
-                        {children}
+    if(userData.account_linked){
+        return (
+            <div>
+                <AdminTopbar
+                    sidebarisOpen={sidebarisOpen}
+                    onChange={(isOpen) => setSidebar(isOpen)}
+                />
+                <AdminNavbar setSidebar={setSidebar} isMobile={isMobile} />
+                <div className="main-content">
+                    <div className="page-content">
+                        <div className="container-fluid h-100">
+                            {children}
+                        </div>
                     </div>
                 </div>
+                <Script src="../../libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
+                <Script src="../../libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
             </div>
-            <Script src="../../libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
-            <Script src="../../libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
-        </div>
-    );      
+        );      
+    } else {
+        return(
+            <div>
+                <AdminTopbar
+                    sidebarisOpen={sidebarisOpen}
+                    onChange={(isOpen) => setSidebar(isOpen)}
+                />
+                <AdminNavbar setSidebar={setSidebar} isMobile={isMobile} />
+                <div className="main-content">
+                    <div className="page-content">
+                        <div className="container-fluid h-100">
+                        <div style={{textAlign:'center', marginTop:'200px'}}>
+                                <h5 className='text-info align-middle'>등록되지 않은 강사입니다.</h5>
+                                <h5 className='text-info align-middle mb-4'>학원에 문의하세요.</h5>        
+                                <p> 지곡점) 054-273-9779</p>   
+                                <p> 센텀점) 051-747-3922</p>    
+                            
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+                <Script src="../../libs/simplebar/dist/simplebar.min.js" strategy="lazyOnload" />
+                <Script src="../../libs/node-waves/dist/waves.min.js" strategy="lazyOnload" />
+            </div>
+        )
+    }
 };
 
 export default AdminLayout

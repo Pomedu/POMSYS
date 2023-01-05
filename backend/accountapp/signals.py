@@ -14,18 +14,19 @@ def account_link(sender, instance, created, **kwargs):
         if user.role == "T":
             try:
                 teacher = Teacher.objects.get(name=user.name, phone_number=user.phone_number)
-                teacher.account_linked = True
-                teacher.save()
+                user.account_linked = True
+                user.save()
             except Teacher.DoesNotExist:
                 pass
         elif user.role == "S":
             try:
                 student = Student.objects.get(name=user.name, phone_number=user.phone_number)
-                student.account_linked = True
-                student.save()
+                user.account_linked = True
+                user.save()
             except Student.DoesNotExist:
                 pass
         elif user.role == "A": 
             user.is_admin = True
+            user.account_linked= True
             user.save()
 

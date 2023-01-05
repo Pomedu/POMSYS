@@ -18,7 +18,6 @@ class Teacher(models.Model):
     subject = models.CharField(max_length = 5 ,choices=subject_choices, null=False)
     created_at = models.DateField(auto_now_add=True, null=False)
     is_active = models.BooleanField(default=True)
-    account_linked = models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

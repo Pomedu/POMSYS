@@ -38,7 +38,7 @@ const AdminLoginPage = () => {
                                     <div className="col-7">
                                         <div className="text-white p-4">
                                             <h5 className="text-white">환영합니다</h5>
-                                            <p>POMSYS 관리자 로그인</p>
+                                            <p>POMSYS 강사/관리자 로그인</p>
                                         </div>
                                     </div>
                                     <div className="col-5 align-self-end">

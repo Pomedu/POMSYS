@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteLecture, fetchLectures, searchLectures } from "../../../store/modules/lecturesSlice";
+import { deleteLecture, fetchLectures, fetchTeacherLectures, searchLectures } from "../../../store/modules/lecturesSlice";
 import DataTable from "react-data-table-component";
 import "moment/locale/ko"
 import moment from "moment/moment";
@@ -12,21 +12,34 @@ import { useRouter } from "next/router";
 import DeleteModal from "../../../components/Modals/DeleteModal";
 import { modalOpen, setModalId } from "../../../store/modules/modalSlice";
 import { useCookies } from 'react-cookie';
+import { fetchTeachers } from "../../../store/modules/teachersSlice";
+import wrapper from "../../../store/configureStore";
 
-const AdminLectureListPage = () => {
-    const lecturesList = useSelector(state => state.lectures.lecturesData);
-    const filteredLecturesList = useSelector(state => state.lectures.filteredLecturesData);
+const AdminLectureListPage = ({teachersData}) => {
+    const lecturesData = useSelector(state => state.lectures.lecturesData);
+    const filteredLecturesData = useSelector(state => state.lectures.filteredLecturesData);
     const router = useRouter()
     const dispatch = useDispatch();
-    const [cookies, setCookies] = useCookies(['accessToken, refreshToken']);
-
+    const userData = useSelector(state=>state.accounts.userData);
+    const teacher_pk = 0;
     // Data Fetch (Lectures)
     useEffect(() => {
-        dispatch(fetchLectures(cookies.accessToken))
-            .unwrap()
-            .catch(error => {
-                console.log("### error: ", error);
-            });
+        if(userData.role){
+            if(userData.role=='A'){
+                dispatch(fetchLectures())
+                .unwrap()
+                .catch(error => {
+                    console.log("### error: ", error);
+                });
+            } else {
+                teacher_pk = teachersData.find(teacher=>teacher.name==userData.name&&teacher.phone_number==userData.phone_number).id;
+                dispatch(fetchTeacherLectures(teacher_pk))
+                .unwrap()
+                .catch(error => {
+                    console.log("### error: ", error);
+                });
+            }
+        }        
     }, []);
 
     // Set Columns 
@@ -64,7 +77,7 @@ const AdminLectureListPage = () => {
         {
             name: '동작',
             cell: (row) => (<span style={{ display: 'flex' }}>
-                <a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FaTrashAlt/></a>
+                {userData.role=='A'?<a className="badge badge-soft-danger me-1 font-size-12 " onClick={(e) => deleteButtonHandler(row.id, row.name)}><FaTrashAlt/></a>:<></>}
                 <a className="badge badge-soft-success me-1 font-size-12" onClick={() => router.push(`lectures/${row.id}`)}><FaEdit/></a>
             </span>)
         },
@@ -116,7 +129,7 @@ const AdminLectureListPage = () => {
 
     const onDelete = (e, lectureId) => {
         e.preventDefault();
-        dispatch(deleteLecture({lectureId:lectureId, accessToken:cookies.accessToken})).unwrap().then(response => console.log("삭제되었습니다"))
+        dispatch(deleteLecture(lectureId)).unwrap().then(response => console.log("삭제되었습니다"))
             .catch(error => {
                 console.log("### error: ", error);
             });
@@ -127,6 +140,7 @@ const AdminLectureListPage = () => {
             <ContentTitle title="강의 리스트" mainTitle="강의 관리" />
             <div className="card">
                 <div className="card-body">
+                {userData.role=='T'?<div className="text-info">강사계정은 제공하는 강의만 보여집니다.</div>:<></>}
                     <div className="row mt-3">
                         <div className="col-4">
                             <Link href={'/admin/lectures/create/'}>
@@ -144,7 +158,7 @@ const AdminLectureListPage = () => {
                     <div className="mt-3">
                         <DataTable
                             columns={columns}
-                            data={filteredLecturesList}
+                            data={filteredLecturesData}
                             pagination
                             expandableRows
                             expandableRowsComponent={ExpandedComponent}
@@ -168,3 +182,12 @@ const AdminLectureListPage = () => {
 AdminLectureListPage.layout = "L1";
 
 export default AdminLectureListPage
+
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
+
+    await store.dispatch(fetchTeachers());
+    const teachersData = store.getState().teachers.teachersData;
+    
+    return { props: { teachersData }, };
+
+});

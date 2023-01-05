@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture, Lesson
-from lectureapp.serializers import SimpleLectureSerializer, LessonSerializer
+from lectureapp.models import Lecture, Lesson, Enroll
+from lectureapp.serializers import SimpleLectureSerializer, LessonSerializer, LectureSerializer, EnrollSerializer, LessonDetailSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
@@ -36,7 +36,7 @@ class TeacherDetail(APIView):
 
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
-        serializer = TeacherCreateSerializer(teacher)
+        serializer = TeacherSerializer(teacher)
         return Response(serializer.data)
 
     def put(self, request, teacher_pk, format=None):
@@ -63,7 +63,21 @@ class TeacherLectureList(APIView):
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
         lectures = Lecture.objects.filter(teacher=teacher)
-        serializer = SimpleLectureSerializer(lectures, many=True)
+        serializer = LectureSerializer(lectures, many=True)
+        return Response(serializer.data)
+
+# 특정 강사의 수강등록 리스트
+class TeacherEnrollList(APIView):
+    def get_object(self, teacher_pk):
+        try:
+            return Teacher.objects.get(pk=teacher_pk)
+        except Teacher.DoesNotExist:
+            raise Http404
+
+    def get(self, request, teacher_pk, format=None):
+        teacher = self.get_object(teacher_pk)
+        enrolls = Enroll.objects.filter(lecture__teacher=teacher)
+        serializer = EnrollSerializer(enrolls, many=True)
         return Response(serializer.data)
 
 # 특정 강사의 학생 리스트
@@ -76,7 +90,7 @@ class TeacherStudentList(APIView):
 
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
-        students = Student.objects.filter(course__lecture__teacher=teacher)
+        students = Student.objects.filter(enrolls__lecture__teacher=teacher)
         serializer = StudentSerializer(students, many=True)
         return Response(serializer.data)
 
@@ -91,7 +105,7 @@ class TeacherLessonList(APIView):
     def get(self, request, teacher_pk, format=None):
         teacher = self.get_object(teacher_pk)
         lessons = Lesson.objects.filter(lecture__teacher=teacher)
-        serializer = LessonSerializer(lessons, many=True)
+        serializer = LessonDetailSerializer(lessons, many=True)
         return Response(serializer.data)
 
 

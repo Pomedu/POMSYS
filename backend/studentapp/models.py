@@ -16,8 +16,7 @@ class Student(models.Model):
     phone_number_P =  models.CharField(validators=[phoneNumberRegex], max_length=20, null=True, blank=True)
     school = models.CharField(max_length=20, null=False)
     branch = models.CharField(max_length = 5 ,choices=branch_choices, null=False)
-    created_at = models.DateField(auto_now_add=True, null=False)
-    account_linked = models.BooleanField(default=False)
+    created_at = models.DateField(auto_now_add=True, null=False)    
     def __str__(self):
         return self.name
 

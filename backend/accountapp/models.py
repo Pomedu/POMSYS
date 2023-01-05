@@ -58,6 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     phone_number = models.CharField(validators=[phoneNumberRegex], max_length=11, null=False, blank=False, unique=True)
+    account_linked = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['name','role']

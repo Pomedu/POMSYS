@@ -17,6 +17,14 @@ export const fetchStudent = createAsyncThunk("GET/STUDENT", async (studentId, { 
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchTeacherStudents = createAsyncThunk("GET/TEACHER/STUDENT", async (teacherId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/teachers/${teacherId}/students`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const createStudent = createAsyncThunk("POST/STUDENT", async (newStudent, { rejectWithValue }) => {
     return axios({
         method: "post",
@@ -74,6 +82,19 @@ export const studentsSlice = createSlice({
                 state.filteredStudentsData = payload;
             })
             .addCase(fetchStudents.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchTeacherStudents.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchTeacherStudents.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.studentsData = payload;
+                state.filteredStudentsData = payload;
+            })
+            .addCase(fetchTeacherStudents.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
