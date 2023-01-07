@@ -19,6 +19,14 @@ export const fetchLessonVideos = createAsyncThunk("GET/LESSON/VIDEO", async (les
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchStudentVideos = createAsyncThunk("GET/STUDENT/VIDEO", async (studentId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/students/${studentId}/videos`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const createVideo = createAsyncThunk("CREATE/VIDEO ", async (newVideo, { rejectWithValue }) => {
     return axios({
         method: "post",
@@ -45,9 +53,18 @@ export const updateVideo = createAsyncThunk("UPDATE/VIDEO", async ({ editedVideo
         .catch(error => console.log(error.response.data));
 });
 
+export const fetchStudentVideoWatchRecords = createAsyncThunk("GET/STUDENT/VIDEOWATCHRECROD", async (studentId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/students/${studentId}/videowatchrecords`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 const initialState = {
     videosData: [],
     videoData: {},
+    videoWatchRecordsData:[],
     loading: false,
     error: null,
 };
@@ -71,6 +88,30 @@ export const videosSlice = createSlice({
                 state.videosData = payload;
             })
             .addCase(fetchLectureVideos.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchStudentVideos.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchStudentVideos.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.videosData = payload;
+            })
+            .addCase(fetchStudentVideos.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchStudentVideoWatchRecords.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchStudentVideoWatchRecords.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.videoWatchRecordsData = payload;
+            })
+            .addCase(fetchStudentVideoWatchRecords.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })

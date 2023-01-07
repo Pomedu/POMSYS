@@ -80,6 +80,12 @@ class AttachmentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class VideoSerializer(serializers.ModelSerializer):
+    lesson = LessonSerializer(many=False, read_only=True)
+    class Meta:
+        model = Video
+        fields = "__all__"
+
+class VideoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = "__all__"

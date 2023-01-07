@@ -270,7 +270,7 @@ class AllVideoList(APIView):
         return Response(serializer.data)
     
     def post(self,request):
-        serializer = VideoSerializer(data=request.data, many=False)
+        serializer = VideoCreateSerializer(data=request.data, many=False)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTeacherLectures } from '../../store/modules/lecturesSlice';
 import { createLesson } from '../../store/modules/lessonsSlice';
 import { modalClose, setModalId } from '../../store/modules/modalSlice';
+import { fetchTeacher } from '../../store/modules/teachersSlice';
 
 const AddCalendarEventModal = (props) => {
     const dispatch = useDispatch();
@@ -15,7 +16,19 @@ const AddCalendarEventModal = (props) => {
     const [selectedLecture,setSelectedLecture] = useState(null);
     const [inputFields, setInputFields] = useState({lecture: null, date: null, start_time: null, end_time:null});
     const [newEvent, setNewEvent] = useState(null);
-
+    const userData = useSelector(state=>state.accounts.userData);
+    const teacherData = useSelector(state => state.teachers.teacherData); // 강사계정용 구분을 위한 데이터
+    const teacher_pk = 0;
+    // Data Fetch (Lessons)
+    useEffect(() => {
+        if(userData.role){
+            if(userData.role=='T'){
+                teacher_pk = teachersData.find(teacher=>teacher.name==userData.name&&teacher.phone_number==userData.phone_number).id;
+                dispatch(fetchTeacher(teacher_pk));
+            } 
+        } 
+    }, []);
+    
     useEffect(()=>{
         setInputFields({ ...inputFields, ["date"]: props.date });
     },[props.date]);
@@ -28,7 +41,6 @@ const AddCalendarEventModal = (props) => {
         if (inputFields) {
             dispatch(createLesson(inputFields))
             .then(res=>{setDisplay(res);
-                console.log(newEvent);
                 props.onCreate(newEvent); 
                 props.clear();});                    
         } else {
@@ -72,9 +84,9 @@ const AddCalendarEventModal = (props) => {
                             <label className="col-form-label">강사<span className='text-danger'>*</span></label>
                             <select className="form-control form-select" name="teacher" onChange={setTeacherHandler}>
                                 <option defaultValue={true}>======select======</option>
-                                {teachersData.map((teacher, teacher_index)=>{                                    
+                                {userData.role=='A'?teachersData.map((teacher, teacher_index)=>{                                    
                                     return (<option key={teacher.id} value={teacher.id}>{teacher.name}</option>
-                                )})}
+                                )}):<option key={teacherData.id} value={teacherData.id}>{teacherData.name}</option>}
                             </select>
                         </div>
                         <div className="mb-3">

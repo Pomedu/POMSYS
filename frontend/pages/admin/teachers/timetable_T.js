@@ -31,7 +31,6 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
                 teacher_pk = teachersData.find(teacher=>teacher.name==userData.name&&teacher.phone_number==userData.phone_number).id;
                 dispatch(fetchTeacher(teacher_pk));
                 dispatch(fetchTeacherLessons(teacher_pk));
-                console.log(lessonsData)
             } 
         } 
     }, []);
@@ -128,20 +127,17 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
 
     let calendars = [];
     let initialEvents = [];
-    useEffect(()=>{
-        if(teacherData.lectures){
-            teacherData.lectures.map((lecture, lecture_index) => {
-                calendars.push({
-                    id: lecture.id,
-                    name: lecture.name,
-                    backgroundColor: colors[lecture_index],
-                    borderColor: colors[lecture_index]
-                });
-            })}        
-        console.log(calendars);
-    },[teacherData])
+   
+    if(teacherData.lectures){
+        teacherData.lectures.map((lecture, lecture_index) => {
+            calendars.push({
+                id: lecture.id,
+                name: lecture.name,
+                backgroundColor: colors[lecture_index],
+                borderColor: colors[lecture_index]
+            });
+        })}        
 
-    useEffect(()=>{
     if(lessonsData){        
         lessonsData.map((lesson) => {
             initialEvents.push({
@@ -154,8 +150,6 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
                 attendees: null,
             });
         })}
-    console.log(initialEvents);
-    },[lessonsData])
 
      // 시간표 필터링
     const idArray = [];
@@ -163,7 +157,6 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
     teacherData.lectures.forEach((el) => idArray.push(el.id));
     }   
     const [checkItems, setCheckItems] = useState(idArray);
-
     const handleSingleCheck = (checked, id) => {
         if (checked) {
         setCheckItems(prev => [...prev, id]);
@@ -206,7 +199,6 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
     //일정 변경하기
     
     const beforeUpdateEvent = (ev) => {
-        console.log(ev);
         var event = ev.event;
         var changes = ev.changes;
         const startr=new Date(changes.start);
@@ -262,9 +254,9 @@ const TeacherLectureTimeTablePage = ({ teachersData, colors }) => {
                             <h5 className="fw-semibold mt-2">강의 선택</h5>
                             <div className="form-check form-switch form-switch-sm" >
                                 <label className="form-check-label" htmlFor="SwitchCheckSizemd" >전체 선택</label>
-                                <input className="form-check-input me-2" type="checkbox" id="SwitchCheckSizemd" 
-                                checked={checkItems.length === teachersData.length ? true : false} 
-                                onChange={(e) => handleAllCheck(e.target.checked)}/>
+                                {teacherData.lectures?<input className="form-check-input me-2" type="checkbox" id="SwitchCheckSizemd" 
+                                checked={checkItems.length === teacherData.lectures.length ? true : false}
+                                onChange={(e) => handleAllCheck(e.target.checked)}/>:<></> }
                             </div>
                         </div>
                     </div>

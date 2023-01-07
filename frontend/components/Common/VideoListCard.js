@@ -52,7 +52,7 @@ const VideoListCard = (props) => {
     const videoWatchHandler = (e, video) => {
         e.preventDefault();
         setVideoLink(video.link);
-        setLightboxToggler(true);
+        setLightboxToggler(!lightboxToggler);
     };
 
     return (<>

@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture, Test, TestRecord
-from lectureapp.serializers import LectureSerializer, TestSerializer
+from lectureapp.models import Lecture, Test, TestRecord, Video, Lesson, VideoWatchRecord, Attendance
+from lectureapp.serializers import LectureSerializer, TestSerializer, VideoSerializer, LessonDetailSerializer, VideoWatchRecordSerializer, AttendanceSerializer
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
@@ -62,8 +62,22 @@ class StudentLectureList(APIView):
 
     def get(self, request, student_pk, format=None):
         student = self.get_object(student_pk)
-        lectures = Lecture.objects.filter(courses__student=student)
+        lectures = Lecture.objects.filter(enrolls__student=student)
         serializer = LectureSerializer(lectures, many=True)
+        return Response(serializer.data)
+
+# 특정 학생의 수업리스트
+class StudentLessonList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        lessons = Lesson.objects.filter(lecture__enrolls__student=student)
+        serializer = LessonDetailSerializer(lessons, many=True)
         return Response(serializer.data)
 
 # 특정 학생의 강사리스트
@@ -76,7 +90,7 @@ class StudentTeacherList(APIView):
 
     def get(self, request, student_pk, format=None):
         student = self.get_object(student_pk)
-        teachers = Teacher.objects.filter(lectures__courses__student=student)
+        teachers = Teacher.objects.filter(lectures__enrolls__student=student)
         serializer = TeacherSerializer(teachers, many=True)
         return Response(serializer.data)
 
@@ -106,4 +120,47 @@ class StudentTestRecordList(APIView):
         student = self.get_object(student_pk)
         testrecords = student.testrecords.all()
         serializer = TestSerializer(testrecords, many=True)
+        return Response(serializer.data)
+
+
+# 특정 학생이 볼 수 있는 영상 리스트
+class StudentVideoList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        videos = Video.objects.filter(lesson__lecture__enrolls__student=student)
+        serializer = VideoSerializer(videos, many=True)
+        return Response(serializer.data)
+
+# 특정 학생의 영상 수강 기록
+class StudentVideoWatchRecordList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        videowatchrecords = VideoWatchRecord.objects.filter(student=student)
+        serializer = VideoWatchRecordSerializer(videowatchrecords , many=True)
+        return Response(serializer.data)
+
+# 특정 학생의 출석 리스트
+class StudentAttendanceList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        attendances = Attendance.objects.filter(student=student)
+        serializer = AttendanceSerializer(attendances , many=True)
         return Response(serializer.data)

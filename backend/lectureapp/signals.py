@@ -2,7 +2,7 @@ import pandas as pd
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from datetime import datetime, timedelta
-from lectureapp.models import Lesson, Lecture, Attendance, Attachment
+from lectureapp.models import Lesson, Lecture, Attendance, Attachment, Video, VideoWatchRecord
 
 # 강의=>일일수업 오브젝트 자동생성
 @receiver(post_save, sender=Lecture)
@@ -59,3 +59,14 @@ def lesson_status_change(sender, instance, **kwargs):
     lesson = instance.lesson
     lesson.done = True
     lesson.save()
+
+# 영상 생성 => 영상 기록 모델 생성
+@receiver(post_save, sender=Video)
+def create_video_watch_record(sender, instance, created, **kwargs):
+    if created == True:
+        students = instance.lesson.lecture.students.all()
+        for student in students:
+            VideoWatchRecord.objects.create(
+                video = instance,
+                student = student
+            )

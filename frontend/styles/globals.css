@@ -13696,7 +13696,6 @@ a {
   margin-bottom: 24px;
   -webkit-box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
           box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03); }
-
 .card-drop {
   color: #495057; }
 
@@ -13910,3 +13909,23 @@ a {
 .toastui-calendar-popup-container{
   font-weight:500 !important;
 }
+
+.wrap-vertical{
+  height: 150px;
+  overflow: scroll;
+}
+@media (min-width: 600px) {
+.wrap-vertical{
+  display: flex;
+  height: auto;
+}
+}
+
+.wrap-vertical::-webkit-scrollbar{
+   width: 6px;
+   height: 6px;
+}
+/* 스크롤바 막대 설정*/
+.wrap-vertical::-webkit-scrollbar-thumb{
+  background: linear-gradient(#6C00FF, #ffe498);
+  border-radius: 25px;}

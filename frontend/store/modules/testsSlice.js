@@ -19,6 +19,14 @@ export const fetchLessonTests = createAsyncThunk("GET/LESSON/TEST", async (lesso
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchStudentTestRecords = createAsyncThunk("GET/STUDENT/TEST", async (studentId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/students/${studentId}/testrecords`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const createTest = createAsyncThunk("CREATE/TEST ", async (newTest, { rejectWithValue }) => {
     return axios({
         method: "post",
@@ -48,6 +56,7 @@ export const updateTest = createAsyncThunk("UPDATE/TEST", async ({ editedTest, t
 const initialState = {
     testsData: [],
     testData: {},
+    testRecordsData: [],
     loading: false,
     error: null,
 };
@@ -121,6 +130,18 @@ export const testsSlice = createSlice({
                 state.testData = payload;
             })
             .addCase(updateTest.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchStudentTestRecords.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchStudentTestRecords.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.testRecordsData = payload;
+            })
+            .addCase(fetchStudentTestRecords.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             });

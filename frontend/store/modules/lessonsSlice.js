@@ -61,6 +61,14 @@ export const fetchTeacherLessons = createAsyncThunk("GET/TEACHER/LESSON", async 
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchStudentLessons = createAsyncThunk("GET/STUDENT/LESSON", async (studentId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/students/${studentId}/lessons`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 const initialState = {
     lessonsData: [],
     upcomingLessonsData: [],
@@ -170,6 +178,20 @@ export const lessonsSlice = createSlice({
                 state.completedLessonsData = payload.filter((item)=>item.done == true);
             })
             .addCase(fetchTeacherLessons.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchStudentLessons.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchStudentLessons.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.lessonsData = payload;
+                state.upcomingLessonsData = payload.filter((item)=>item.done == false);
+                state.completedLessonsData = payload.filter((item)=>item.done == true);
+            })
+            .addCase(fetchStudentLessons.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             });

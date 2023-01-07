@@ -19,6 +19,14 @@ export const fetchLessonAttendances = createAsyncThunk("GET/LESSON/ATTENDANCE", 
         .catch(error => rejectWithValue(error.response.data));
 });
 
+export const fetchStudentAttendances = createAsyncThunk("GET/STUDENT/ATTENDANCE", async (studentId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/students/${studentId}/attendances`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
 export const createAttendance = createAsyncThunk("CREATE/ATTENDANCE ", async (newAttendance, { rejectWithValue }) => {
     return axios({
         method: "post",
@@ -111,6 +119,18 @@ export const attendancesSlice = createSlice({
                 state.attendancesData = payload;
             })
             .addCase(fetchLessonAttendances.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(fetchStudentAttendances.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchStudentAttendances.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.attendancesData = payload;
+            })
+            .addCase(fetchStudentAttendances.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             })
