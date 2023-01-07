@@ -30,7 +30,7 @@ const ClientLoginForm = () => {
         dispatch(loginAccount(inputFields))
         .then((res)=>{
             if(res.type=='LOGIN/fulfilled'){
-                const accessTokenExpires =  moment().add('10','minutes').toDate();
+                const accessTokenExpires =  moment().add('9','minutes').toDate();
                 const refreshTokenExpires =  moment().add('7','days').toDate();
                 removeCookies('refreshToken');
                 if(res.payload.user.role!="S"){

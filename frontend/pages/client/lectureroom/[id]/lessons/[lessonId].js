@@ -1,33 +1,49 @@
-import React, { useMemo } from "react";
+import React, { useEffect } from "react";
 import wrapper from "/store/configureStore";
-import { fetchLectureLessons } from "/store/modules/lessonsSlice";
-import { fetchLesson } from "../../../../../store/modules/lessonsSlice";
-import { fetchLessonAttendances } from "../../../../../store/modules/attendancesSlice";
-import { fetchLessonAttachments } from "../../../../../store/modules/attachmentsSlice";
-import { fetchLessonVideos } from "../../../../../store/modules/videosSlice";
-import { fetchLessonTests } from "../../../../../store/modules/testsSlice";
-import { fetchEnrolls } from "../../../../../store/modules/enrollsSlice";
+import DataTable from "react-data-table-component";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { modalOpen } from "../../../../../store/modules/modalSlice";
-import { BiEdit } from "react-icons/bi";
-import { FaClock } from "react-icons/fa";
-import AttendanceCard from "../../../../../components/Common/AttendanceCard";
+import { FaClipboard, FaClock } from "react-icons/fa";
+import moment from "moment";
+import "moment/locale/ko";
+import { fetchLecture, fetchStudentLectures } from "../../../../../store/modules/lecturesSlice";
+import { fetchLessonVideos, fetchStudentVideoWatchRecords } from "../../../../../store/modules/videosSlice";
+import { fetchLectureLessons, fetchLesson, fetchStudentLessons } from "../../../../../store/modules/lessonsSlice";
+import { fetchLessonTests, fetchStudentTestRecords } from "../../../../../store/modules/testsSlice";
+import { createAttendance, fetchStudentAttendances } from "../../../../../store/modules/attendancesSlice";
+import { fetchStudentEnrolls } from "../../../../../store/modules/enrollsSlice";
 import VideoListCard from "../../../../../components/Common/VideoListCard";
 import AttachmentListCard from "../../../../../components/Common/AttachmentListCard";
 import CommentCard from "../../../../../components/Common/CommentCard";
-import DataTable from "react-data-table-component";
-import ChangeLessonStatusModal from "../../../../../components/Modals/ChangeLessonStatusModal";
-import ChangeLessonTimeModal from "../../../../../components/Modals/ChangeLessonTimeModal";
-import moment from "moment";
-import "moment/locale/ko"
+import { fetchLessonAttachments } from "../../../../../store/modules/attachmentsSlice";
+import { fetchStudents } from "../../../../../store/modules/studentsSlice";
+import { fetchLessonQuestions } from "../../../../../store/modules/questionsSlice";
 
-const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData }) => {
+const ClientLessonDetailPage = ({ lectureData, studentsData, lessonData, lessonsData,
+    upcomingLessonsData, completedLessonsData, videosData }) => {
+    const userData = useSelector(state => state.accounts.userData);
+    const dispatch = useDispatch();
+    const student_pk = 0;
+    const videoWatchRecordsData = useSelector(state => state.videos.videoWatchRecordsData);
+    const attendancesData = useSelector(state => state.attendances.attendancesData);
+    const days = ['월','화','수','목','금','토','일']
+    const attendanceData = useSelector(state => state.attendances.attendanceData);
+
+    useEffect(() => {
+        if (userData.role == 'S') {
+            student_pk = studentsData.find(student => student.name == userData.name && student.phone_number == userData.phone_number).id;
+            dispatch(fetchStudentTestRecords(student_pk));
+            dispatch(fetchStudentAttendances(student_pk));
+            dispatch(fetchStudentVideoWatchRecords(student_pk));
+        }
+    }, [])
+
     // Set Columns 
     const columnData = [
         {
             name: '수업일',
             selector: row => row.date,
+            width: "120px"
         },
         {
             name: '진행 여부',
@@ -35,24 +51,46 @@ const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLess
                 {row.done ? "진행완료" : "미진행"}
             </div>
         },
-    ]
-
-    const columns = useMemo(() => columnData, []);
+        {
+            name: '출석 여부',
+            cell: (row) => <div className={attendancesData.find(attendance=>attendance.lesson.date==row.date)? 
+            (attendancesData.find(attendance=>attendance.lesson.date==row.date).attend?"badge badge-soft-success":"badge badge-soft-danger") : "badge badge-soft-warning"}>
+                {attendancesData.find(attendance=>attendance.lesson.date==row.date)? 
+                (attendancesData.find(attendance=>attendance.lesson.date==row.date).attend?"출석":"결석"): 
+                "미기입"}
+            </div>
+        },
+    ];
     const router = useRouter();
     const rowClickHandler = (row, event) => {
         event.preventDefault();
-        router.push(`/admin/lessons/${row.id}`)
+        router.push(`/client/lectureroom/${lectureData.id}/lessons/${row.id}`)
     }
 
-    const ModalOpen = useSelector((state) => state.modal.show);
-    const dispatch = useDispatch();
-    const statusChangeHandler = () => {
-        dispatch(modalOpen('lessonStatusUpdateModal'));
+    // 해당 수업 출석 여부
+    const lesson_attended = null;
+    try{ lesson_attended = attendancesData.find(attendance=>attendance.lesson.id==lessonData.id).attend;}
+    catch{ lesson_attended = null; }
+    
+    //출석 가능시간
+    const attendable_time = false;
+    
+    if(moment().format('yyyy-MM-DD HH:mm')>lessonData.date+" "+lessonData.start_time 
+    && moment().format('yyyy-MM-DD HH:mm')<lessonData.date+" "+lessonData.end_time){
+        attendable_time = true;
     }
-    const timeChangeHandler = () => {
-        dispatch(modalOpen('lessonTimeUpdateModal'));
+
+    //출석
+    const attendHandler = () =>{
+        dispatch(createAttendance({"student": studentsData.find(student => student.name == userData.name && student.phone_number == userData.phone_number).id
+        , "attend": true, "lesson": lessonData.id}))
     }
-    // 진행여부
+
+    useEffect(()=>{
+        student_pk=studentsData.find(student => student.name == userData.name && student.phone_number == userData.phone_number).id
+        dispatch(fetchStudentAttendances(student_pk));
+    },[attendanceData]);
+
     return (
         <div>
         <div>
@@ -87,16 +125,35 @@ const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLess
                         </div>                    
                 </div>
                 <div className="col-lg-3">
-                    <div className="card bg-warning">
+                    <div className={lesson_attended==null?(
+                                'card bg-warning'
+                            )
+                            :(lesson_attended?'card bg-success':'card bg-danger')
+                            }>
                         <div className="card-body">
-                            <div className="font-size-16 fw-semibold">출석 입력 시간이 아닙니다.</div>
+                            <div className="font-size-16 fw-semibold text-white">
+                            {lesson_attended==null?(
+                                attendable_time?
+                                <div>
+                                    <button className="btn btn-primary me-2" onClick={attendHandler}>출석하기</button>
+                                    <span className=" font-size-14">출석가능한 시간이 
+                                    <span className="text-primary ms-1 me-1">
+                                    {Math.round(-moment.duration(moment().diff(lessonData.date+" "+lessonData.end_time)).asMinutes())}분
+                                    </span>
+                                    남았습니다</span> 
+                                </div>
+                                :'출석 입력이 되지 않았습니다.'
+                            )
+                            :(lesson_attended?'출석이 완료되었습니다':'결석 처리되었습니다')
+                            }
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div className="col-lg-3">
                     <VideoListCard title="강의영상" lessonData={lessonData}/>
                     <AttachmentListCard title="참고자료" />
-                    <CommentCard title="질문/답변" comments={[]} />
+                    <CommentCard title="질문/답변" lessonData={lessonData} />
                 </div>
                 <div className="col-lg-3">
                     <div className="card">
@@ -107,7 +164,7 @@ const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLess
                             <h4 className="card-title mb-2">미진행 수업</h4>
                             <div>
                                 <DataTable
-                                    columns={columns}
+                                    columns={columnData}
                                     data={upcomingLessonsData}
                                     defaultSortFieldId={1}
                                     highlightOnHover
@@ -117,7 +174,7 @@ const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLess
                                 <h4 className="card-title mb-2 mt-3">완료된 수업</h4>
                                 <div>
                                     <DataTable
-                                        columns={columns}
+                                        columns={columnData}
                                         data={completedLessonsData}
                                         defaultSortFieldId={1}
                                         defaultSortAsc={false}
@@ -131,15 +188,6 @@ const ClientLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLess
                     </div>
                 </div>
             </div>
-            <ChangeLessonStatusModal
-                Name={lessonData.date}
-                ModalOpen={ModalOpen}
-                modalId={'lessonStatusUpdateModal'}
-            />
-            <ChangeLessonTimeModal
-                ModalOpen={ModalOpen}
-                modalId={'lessonTimeUpdateModal'}
-            />
         </div>
         </div>
     );
@@ -151,18 +199,24 @@ export default ClientLessonDetailPage;
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, res, ...etc }) => {
     const lessonId = { ...etc }.query.lessonId;
+    const lectureId = { ...etc }.query.id;
+    await store.dispatch(fetchLecture(lectureId));
+    await store.dispatch(fetchLectureLessons(lectureId));
     await store.dispatch(fetchLesson(lessonId));
-    await store.dispatch(fetchLessonAttendances(lessonId));
     await store.dispatch(fetchLessonAttachments(lessonId));
     await store.dispatch(fetchLessonVideos(lessonId));
-    await store.dispatch(fetchLessonTests(lessonId));
-    const lectureId = store.getState().lessons.lessonData.lecture.id;
-    await store.dispatch(fetchLectureLessons(lectureId));
-    await store.dispatch(fetchEnrolls(lectureId));
-
+    await store.dispatch(fetchLessonTests(lessonId));    
+    await store.dispatch(fetchLessonVideos(lessonId));
+    await store.dispatch(fetchLessonQuestions(lessonId));
+    await store.dispatch(fetchStudents());
+    const studentsData = store.getState().students.studentsData;
+    const lectureData = store.getState().lectures.lectureData;
     const lessonData = store.getState().lessons.lessonData;
+    const lessonsData = store.getState().lessons.lessonsData;
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0, 3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;
+    const videosData = store.getState().videos.videosData;
 
-    return { props: { lessonData, upcomingLessonsData, completedLessonsData }, };
+    return { props: { lectureData, studentsData, lessonData, lessonsData,
+         upcomingLessonsData, completedLessonsData, videosData }, };
 });

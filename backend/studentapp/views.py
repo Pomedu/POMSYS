@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from lectureapp.models import Lecture, Test, TestRecord, Video, Lesson, VideoWatchRecord, Attendance
-from lectureapp.serializers import LectureSerializer, TestSerializer, VideoSerializer, LessonDetailSerializer, VideoWatchRecordSerializer, AttendanceSerializer
+from lectureapp.models import *
+from lectureapp.serializers import *
 from studentapp.models import Student
 from studentapp.serializers import StudentSerializer
 from teacherapp.models import Teacher
@@ -64,6 +64,20 @@ class StudentLectureList(APIView):
         student = self.get_object(student_pk)
         lectures = Lecture.objects.filter(enrolls__student=student)
         serializer = LectureSerializer(lectures, many=True)
+        return Response(serializer.data)
+
+# 특정 학생의 수강정보리스트
+class StudentEnrollList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        enrolls = Enroll.objects.filter(student=student)
+        serializer = EnrollSerializer(enrolls, many=True)
         return Response(serializer.data)
 
 # 특정 학생의 수업리스트
@@ -163,4 +177,18 @@ class StudentAttendanceList(APIView):
         student = self.get_object(student_pk)
         attendances = Attendance.objects.filter(student=student)
         serializer = AttendanceSerializer(attendances , many=True)
+        return Response(serializer.data)
+
+# 특정 학생의 질문답변 가져오기
+class StudentQuestionList(APIView):
+    def get_object(self, student_pk):
+        try:
+            return Student.objects.get(pk=student_pk)
+        except Student.DoesNotExist:
+            raise Http404
+
+    def get(self, request, student_pk, format=None):
+        student = self.get_object(student_pk)
+        questions = Question.objects.filter(student=student)
+        serializer = QuestionSerializer(questions , many=True)
         return Response(serializer.data)

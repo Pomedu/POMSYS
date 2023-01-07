@@ -3,7 +3,7 @@ from django.db import models
 
 from studentapp.models import Student
 from teacherapp.models import Teacher
-
+from accountapp.models import User
 
 class Lecture(models.Model):
     status_choices = (
@@ -79,3 +79,12 @@ class Attendance(models.Model):
     description = models.CharField(max_length=20, blank=True, null=True)
     class Meta:
         unique_together = ('lesson', 'student')
+
+class Question(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='questions')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='questions')
+    question = models.TextField(null=True,blank=True)
+    answer = models.TextField(null=True,blank=True)
+    answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+    created_at = models.DateField(auto_now_add=True, null=False)
+

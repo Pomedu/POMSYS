@@ -9,6 +9,7 @@ import { modalOpen } from '../../store/modules/modalSlice';
 import FsLightbox from 'fslightbox-react';
 
 const VideoListCard = (props) => {
+    const userData = useSelector(state => state.accounts.userData);
     const videos = useSelector(state=>state.videos.videosData);
     const videoData = useSelector(state=>state.videos.videoData);
     const lessonData = useSelector(state=>state.lessons.lessonData);
@@ -59,14 +60,20 @@ const VideoListCard = (props) => {
         {videos.length == 0 ?
             <div className="card border border-secondary">
                 <div className="card-body">
-                    <h4 className="card-title mb-4">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 영상추가</button></h4>
+                    <h4 className="card-title mb-4">{props.title} 
+                    {userData.role=='S'?<></>
+                    :<button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 영상추가</button>}
+                    </h4>
                     <h5 className="text-secondary">등록된 영상이 없습니다</h5>
                 </div>
             </div>
             :
             <div className="card">
                 <div className="card-body">
-                    <h4 className="card-title">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 영상추가</button></h4>
+                    <h4 className="card-title">{props.title} 
+                    {userData.role=='S'?<></>
+                    :<button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 영상추가</button>}
+                    </h4>
                     {videos.map((video) => {
                         return (
                             <div key={video.name} className="d-flex mt-4 align-items-center clickable">
@@ -82,7 +89,9 @@ const VideoListCard = (props) => {
                                 </div>
                                 <div>
                                     <a className="text-dark clickable" onClick={(e) => videoWatchHandler(e, video)}><i className="h3 me-2 text-danger"><FaYoutube/></i></a>
-                                    <a className="text-danger clickable" onClick={(e) => deleteButtonHandler(video.id, video.name)}><i className="h3 m-0 text-danger"><BiTrash/></i></a>
+                                    {userData.role=='S'?<></>
+                                    :<a className="text-danger clickable" onClick={(e) => deleteButtonHandler(video.id, video.name)}>
+                                        <i className="h3 m-0 text-danger"><BiTrash/></i></a>}
                                 </div>
                             </div>)
                     })}

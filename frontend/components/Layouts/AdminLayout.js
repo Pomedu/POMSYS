@@ -26,7 +26,7 @@ const AdminLayout = ({ children }) => {
                 .then((res) => {
                     dispatch(refreshAccount({ refresh: cookies.refreshToken }))
                     .then((res) => {
-                        const accessTokenExpires = moment().add('10', 'minutes').toDate();
+                        const accessTokenExpires = moment().add('9', 'minutes').toDate();
                         setCookies('accessToken', res.payload.access, {path:'/admin', expires:accessTokenExpires});
                         dispatch(getuserAccount(res.payload.access));
                     });

@@ -14,7 +14,9 @@ urlpatterns = [
     path('<int:student_pk>/testrecords', StudentTestRecordList.as_view()),
     path('<int:student_pk>/videos', StudentVideoList.as_view()),
     path('<int:student_pk>/videowatchrecords', StudentVideoWatchRecordList.as_view()),
-    path('<int:student_pk>/attendances', StudentAttendanceList.as_view())
+    path('<int:student_pk>/attendances', StudentAttendanceList.as_view()),
+    path('<int:student_pk>/enrolls', StudentEnrollList.as_view()),
+    path('<int:student_pk>/questions', StudentQuestionList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

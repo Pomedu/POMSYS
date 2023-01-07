@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lectureapp.models import Lecture, Lesson, Enroll, Test, TestRecord, Video, VideoWatchRecord, Attendance, Attachment
+from lectureapp.models import *
 from teacherapp.models import Teacher
 
 class LectureSerializer(serializers.ModelSerializer):
@@ -91,11 +91,43 @@ class VideoCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class VideoWatchRecordSerializer(serializers.ModelSerializer):
+    video = VideoSerializer(many=False, read_only=True)
     class Meta:
         model = VideoWatchRecord
         fields = "__all__"
 
-class AttendanceSerializer(serializers.ModelSerializer):
+class VideoWatchRecordUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoWatchRecord
+        fields = ('id','clicked')
+
+
+class AttendanceCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attendance
         fields = "__all__"
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    lesson = LessonDetailSerializer(many=False, read_only=True)
+    class Meta:
+        model = Attendance
+        fields = "__all__"
+
+class QuestionSerializer(serializers.ModelSerializer):
+    from studentapp.serializers import SimpleStudentSerializer
+    from accountapp.serializers import CustomUserDetailsSerializer
+    answerer = CustomUserDetailsSerializer(many=False, read_only=True)
+    student = SimpleStudentSerializer(many=False, read_only=True)
+    class Meta:
+        model = Question
+        fields = "__all__"
+
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('lesson','student','question')
+
+class QuestionUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ('id','answer','answerer')

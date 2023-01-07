@@ -6,7 +6,8 @@ import { modalOpen } from "../../store/modules/modalSlice";
 import AddAttachmentModal from "../Modals/AddAttachmentModal";
 import DeleteModal from "../Modals/DeleteModal";
 
-const AttachmentListCard = (props) => {
+const AttachmentListCard = (props) => {    
+    const userData = useSelector(state => state.accounts.userData);
     const attachments = useSelector(state=>state.attachments.attachmentsData);
     const attachmentData = useSelector(state => state.attachments.attachmentData);
     const lessonData = useSelector(state=>state.lessons.lessonData);
@@ -77,14 +78,20 @@ const AttachmentListCard = (props) => {
         {attachments.length == 0 ?
             <div className="card border border-secondary">
                 <div className="card-body">
-                    <h4 className="card-title mb-4">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button></h4>
+                    <h4 className="card-title mb-4">{props.title} 
+                    {userData.role=='S'?<></>
+                    :<button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button>}
+                    </h4>
                     <h5 className="text-secondary">등록된 파일이 없습니다</h5>
                 </div>
             </div>
             :
             <div className="card">
                 <div className="card-body">
-                    <h4 className="card-title">{props.title} <button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button></h4>
+                    <h4 className="card-title">{props.title} 
+                    {userData.role=='S'?<></>
+                    :<button className="btn btn-sm btn-primary float-end" onClick={ModalOpenHandler}><BiPlus/> 파일추가</button>}
+                    </h4>
                     {attachments.map((attachment) => {
                         return (
                             <div key={attachment.name} className="d-flex mt-4 align-items-center" >
@@ -101,7 +108,9 @@ const AttachmentListCard = (props) => {
                                 </div>
                                 <div>
                                     <a className="text-dark clickable" onClick={(e) => attachmentDownloadHandler(e, attachment)}><i className="h3 me-2 "><BiDownload/></i></a>
-                                    <a className="text-danger clickable" onClick={(e) => deleteButtonHandler(attachment.id, attachment.name)}><i className="h3 m-0 text-danger"><BiTrash/></i></a>
+                                    {userData.role=='S'?<></>
+                                    :<a className="text-danger clickable" onClick={(e) => deleteButtonHandler(attachment.id, attachment.name)}>
+                                    <i className="h3 m-0 text-danger"><BiTrash/></i></a>}                                    
                                 </div>
                             </div>)
                     })}

@@ -302,6 +302,22 @@ class VideoDetail(APIView):
         video.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# 특정 강의영상 상세정보 수정하기
+class VideoWatchRecordDetail(APIView):
+    def get_object(self, videowatchrecord_pk):
+        try:
+            return VideoWatchRecord.objects.get(pk=videowatchrecord_pk)
+        except VideoWatchRecord.DoesNotExist:
+            raise Http404
+
+    def put(self, request, videowatchrecord_pk, format=None):
+        videowatchrecord = self.get_object(videowatchrecord_pk)
+        serializer = VideoWatchRecordUpdateSerializer(videowatchrecord, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # 특정 강의의 강의영상 리스트 가져오기
 class LectureVideoList(APIView):
     def get_object(self, lecture_pk):
@@ -339,7 +355,7 @@ class AllAttendanceList(APIView):
         return Response(serializer.data)
     
     def post(self,request):
-        serializer = AttendanceSerializer(data=request.data, many=False)
+        serializer = AttendanceCreateSerializer(data=request.data, many=False)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -360,7 +376,7 @@ class AttendanceDetail(APIView):
 
     def put(self, request, attendance_pk, format=None):
         attendance = self.get_object(attendance_pk)
-        serializer = AttendanceSerializer(attendance, data=request.data)
+        serializer = AttendanceCreateSerializer(attendance, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -454,3 +470,55 @@ class LessonAttachmentList(APIView):
         attachments = Attachment.objects.filter(lesson=lesson)
         serializer = AttachmentSerializer(attachments, many=True)
         return Response(serializer.data)
+
+
+########################################################## 질문답변(Question) #################################################################### 첨부파일 전체 리스트 가져오기,
+# 질문답변 전체 리스트 가져오기,
+class AllQuestionList(APIView):
+    def get(self,request):
+        questions = Question.objects.all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+    
+    def post(self,request):
+        serializer = QuestionCreateSerializer(data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# 특정 수업의 질문답변 가져오기
+class LessonQuestionList(APIView):
+    def get_object(self, lesson_pk):
+        try:
+            return Lesson.objects.get(pk=lesson_pk)
+        except Lesson.DoesNotExist:
+            raise Http404
+
+    def get(self, request, lesson_pk, format=None):
+        lesson = self.get_object(lesson_pk)
+        questions = Question.objects.filter(lesson=lesson)
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+
+
+# 질문답변 수정 및 삭제
+class QuestionDetail(APIView):
+    def get_object(self, question_pk):
+        try:
+            return Question.objects.get(pk=question_pk)
+        except Question.DoesNotExist:
+            raise Http404
+    
+    def put(self, request, question_pk, format=None):
+        question = self.get_object(question_pk)
+        serializer = QuestionUpdateSerializer(question, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, question_pk, format=None):
+        question = self.get_object(question_pk)
+        question.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

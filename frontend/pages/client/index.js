@@ -1,8 +1,4 @@
 import React, { useEffect } from "react";
-import Link from "next/link";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { FaCalendar } from "react-icons/fa";
-import AChart from '../../components/Common/AChart';
 import moment from "moment";
 import "moment/locale/ko"
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +12,11 @@ import { fetchStudents } from "../../store/modules/studentsSlice";
 import CalendarCard from "../../components/Dashboards/Clients/Calendar";
 import randomColor from "randomcolor";
 import MyLecturesCard from "../../components/Dashboards/Clients/MyLectures";
-import LearningStatusCard from "../../components/Dashboards/Clients/LearningStatus";
 import { fetchStudentAttendances } from "../../store/modules/attendancesSlice";
+import { fetchStudentEnrolls } from "../../store/modules/enrollsSlice";
+import AttendanceStatusCard from "../../components/Dashboards/Clients/AttendanceStatus";
+import TestScoresStatusCard from "../../components/Dashboards/Clients/TestScoresStatus";
+import VideoWatchStatusCard from "../../components/Dashboards/Clients/VideoWatchStatus";
 
 const ClientPage = ({ studentsData }) => {
     const userData = useSelector(state => state.accounts.userData);
@@ -26,6 +25,7 @@ const ClientPage = ({ studentsData }) => {
     const studentData = useSelector(state => state.students.studentData);
     const lecturesData = useSelector(state => state.lectures.lecturesData);
     const lessonsData = useSelector(state => state.lessons.lessonsData);
+    const enrollsData = useSelector(state => state.enrolls.enrollsData);
     const videosData = useSelector(state => state.videos.videosData);
     const videoWatchRecordsData = useSelector(state => state.videos.videoWatchRecordsData);
     const attendancesData =  useSelector(state => state.attendances.attendancesData);
@@ -40,6 +40,7 @@ const ClientPage = ({ studentsData }) => {
             dispatch(fetchStudentTestRecords(student_pk));
             dispatch(fetchStudentAttendances(student_pk));
             dispatch(fetchStudentVideoWatchRecords(student_pk));
+            dispatch(fetchStudentEnrolls(student_pk));
         }
     },[])
     return (
@@ -49,15 +50,29 @@ const ClientPage = ({ studentsData }) => {
                 <div className="client-date ms-4 text-white">{moment().format('YYYY년 MM월 DD일')}</div>
             </div>
             <div className="m-4">
-                <LatestVideoCard videosData={videosData}/>
+                <LatestVideoCard videosData={videosData} videoWatchRecordsData={videoWatchRecordsData}/>
                 <CalendarCard lessonsData={lessonsData} colors={colors}/>
-                <MyLecturesCard lecturesData={lecturesData}/>
-                <LearningStatusCard 
-                    attendancesData={attendancesData}
-                    lessonsData={lessonsData} 
-                    videoWatchRecordsData={videoWatchRecordsData} 
-                    videosData={videosData}
-                />
+                <div className="font-size-20 text-white fw-semibold"> 내가 수강중인 강의 </div>
+                <MyLecturesCard lecturesData={lecturesData.filter(lecture=>lecture.status=='진행중')}/>
+                <div className="font-size-20 text-white fw-semibold mb-3"> 나의 학습현황 </div>
+                <div className="row">
+                    <div className="col-lg-3">
+                        <AttendanceStatusCard
+                            attendancesData={attendancesData}
+                            lessonsData={lessonsData}                     
+                            enrollsData={enrollsData}/>
+                    </div>
+                    <div className="col-lg-3">
+                        <TestScoresStatusCard/>
+                    </div>
+                    <div className="col-lg-3">
+                        <VideoWatchStatusCard
+                            videoWatchRecordsData={videoWatchRecordsData} 
+                            videosData={videosData}
+                            enrollsData={enrollsData}
+                        />
+                    </div>
+                </div>      
             </div>
         </div>
     )

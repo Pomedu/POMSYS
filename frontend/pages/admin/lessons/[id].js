@@ -21,6 +21,7 @@ import { BiDotsHorizontalRounded, BiEdit } from "react-icons/bi";
 import ChangeLessonStatusModal from "../../../components/Modals/ChangeLessonStatusModal";
 import { modalOpen } from "../../../store/modules/modalSlice";
 import ChangeLessonTimeModal from "../../../components/Modals/ChangeLessonTimeModal";
+import { fetchLessonQuestions } from "../../../store/modules/questionsSlice";
 
 
 const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLessonsData }) => {
@@ -113,7 +114,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                 <div className="col-lg-3">
                     <VideoListCard title="강의영상" lessonData={lessonData}/>
                     <AttachmentListCard title="참고자료" />
-                    <CommentCard title="질문/답변" comments={[]} />
+                    <CommentCard title="질문/답변" />
                 </div>
                 <div className="col-lg-3">
                     <div className="card">
@@ -172,10 +173,11 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
     await store.dispatch(fetchLessonAttachments(lessonId));
     await store.dispatch(fetchLessonVideos(lessonId));
     await store.dispatch(fetchLessonTests(lessonId));
+    await store.dispatch(fetchLessonQuestions(lessonId));
     const lectureId = store.getState().lessons.lessonData.lecture.id;
     await store.dispatch(fetchLectureLessons(lectureId));
     await store.dispatch(fetchEnrolls(lectureId));
-
+    
     const lessonData = store.getState().lessons.lessonData;
     const upcomingLessonsData = store.getState().lessons.upcomingLessonsData.slice(0, 3);
     const completedLessonsData = store.getState().lessons.completedLessonsData;

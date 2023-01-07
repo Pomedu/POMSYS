@@ -63,8 +63,6 @@ const AttendanceCard = () => {
         }
     },[attendanceData]);
 
-    const newAttendData = {}
-
     return (
         <div className="card">
             <div className="card-body">
@@ -86,8 +84,9 @@ const AttendanceCard = () => {
                         <h3 className="text-warning">{enrollsData.length - attendList.length - absentList.length}</h3>
                     </div>
                 </div>
+               
                 <div className="row">
-                    <table className="table table-nowrap align-middle table-hover mb-0 mt-2 text-center">
+                    <table className="table align-middle table-hover mb-0 mt-2 text-center">
                         <tbody>
                             {enrollsData.map((enroll) =>
                                 <tr key={enroll.student.id}>

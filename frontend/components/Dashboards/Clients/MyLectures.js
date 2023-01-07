@@ -8,8 +8,7 @@ import Link from "next/link";
 
 const MyLecturesCard = (props) => {   
     return (
-        <div>
-                <div className="font-size-20 text-white fw-semibold"> 내가 수강중인 강의 </div>
+        <div>                
                 <Swiper
                 breakpoints={{
                 200: {
@@ -32,7 +31,7 @@ const MyLecturesCard = (props) => {
                 spaceBetween={5}
                 slideToClickedSlide={true}
                 >
-                {props.lecturesData.map(lecture=>{return(
+                {props.lecturesData.length>0?props.lecturesData.map(lecture=>{return(
                     <SwiperSlide  key={lecture.id}>
                         <Link href={`/client/lectureroom/${lecture.id}`}>
                         <div className="card mt-3 bg-secondary">                        
@@ -52,7 +51,20 @@ const MyLecturesCard = (props) => {
                         </div>
                         </Link>
                     </SwiperSlide>
-                )})}                
+                )}):<SwiperSlide>
+                    <div className="card mt-3 bg-soft bg-danger">
+                        <div className="card-body">
+                            <div className="text-white justify-content-between align-middle" style={{ display: 'flex' }}>
+                                <div>
+                                    <div className="fw-semibold font-size-16 text-white">
+                                        강의가 없습니다.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </SwiperSlide>
+                }                
                 </Swiper>
             </div>
     );

@@ -53,10 +53,19 @@ export const updateVideo = createAsyncThunk("UPDATE/VIDEO", async ({ editedVideo
         .catch(error => console.log(error.response.data));
 });
 
-export const fetchStudentVideoWatchRecords = createAsyncThunk("GET/STUDENT/VIDEOWATCHRECROD", async (studentId, { rejectWithValue }) => {
+export const fetchStudentVideoWatchRecords = createAsyncThunk("GET/STUDENT/VIDEOWATCHRECORD", async (studentId, { rejectWithValue }) => {
     return axios({
         method: "get",
         url: `http://127.0.0.1:8000/api/students/${studentId}/videowatchrecords`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
+
+export const updateVideoWatchRecord = createAsyncThunk("UPDATE/VIDEOWATCHRECORD", async ({clicked, videoWatchRecordId}, { rejectWithValue }) => {
+    return axios({
+        method: "put",
+        url: `http://127.0.0.1:8000/api/lectures/videowatchrecords/${videoWatchRecordId}`,
+        data: clicked,
     }).then(response => { return response.data })
         .catch(error => rejectWithValue(error.response.data));
 });
@@ -65,6 +74,7 @@ const initialState = {
     videosData: [],
     videoData: {},
     videoWatchRecordsData:[],
+    videoWatchRecordData:{},
     loading: false,
     error: null,
 };
@@ -163,6 +173,18 @@ export const videosSlice = createSlice({
                 state.videoData = payload;
             })
             .addCase(updateVideo.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
+            .addCase(updateVideoWatchRecord.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(updateVideoWatchRecord.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.videoWatchRecordData = payload;
+            })
+            .addCase(updateVideoWatchRecord.rejected, (state, { payload }) => {
                 state.error = payload;
                 state.loading = false;
             });

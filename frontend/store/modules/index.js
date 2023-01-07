@@ -7,6 +7,7 @@ import { enrollsSlice } from "./enrollsSlice";
 import { lecturesSlice } from "./lecturesSlice";
 import { lessonsSlice } from "./lessonsSlice";
 import { modalSlice } from "./modalSlice";
+import { questionsSlice } from "./questionsSlice";
 import { studentsSlice } from "./studentsSlice";
 import { teachersSlice } from "./teachersSlice";
 import { testsSlice } from "./testsSlice";
@@ -29,6 +30,7 @@ const rootReducer = (state, action) => {
             tests: testsSlice.reducer,
             modal: modalSlice.reducer,
             accounts: accountsSlice.reducer,
+            questions: questionsSlice.reducer,
         })(state, action);
     }
   };
