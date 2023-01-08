@@ -114,7 +114,7 @@ const AdminLessonDetailPage = ({ lessonData, upcomingLessonsData, completedLesso
                 <div className="col-lg-3">
                     <VideoListCard title="강의영상" lessonData={lessonData}/>
                     <AttachmentListCard title="참고자료" />
-                    <CommentCard title="질문/답변" />
+                    <CommentCard title="질문/답변" lessonData={lessonData}/>
                 </div>
                 <div className="col-lg-3">
                     <div className="card">

@@ -3,6 +3,13 @@ import axios from 'axios';
 import moment from "moment";
 import "moment/locale/ko";
 
+export const fetchQuestion = createAsyncThunk("GET/QUESTION", async (questionId, { rejectWithValue }) => {
+    return axios({
+        method: "get",
+        url: `http://127.0.0.1:8000/api/lectures/questions/${questionId}`,
+    }).then(response => { return response.data })
+        .catch(error => rejectWithValue(error.response.data));
+});
 
 export const fetchLessonQuestions = createAsyncThunk("GET/LESSON/QUESTION", async (lessonId, { rejectWithValue }) => {
     return axios({
@@ -37,11 +44,11 @@ export const deleteQuestion = createAsyncThunk("DELETE/QUESTION", async (questio
         .catch(error => console.log(error.response.data));
 });
 
-export const updateQuestion = createAsyncThunk("UPDATE/QUESTION", async ({ Answer, questionId }, { rejectWithValue }) => {
+export const updateQuestion = createAsyncThunk("UPDATE/QUESTION", async ({ answer, questionId }, { rejectWithValue }) => {
     return axios({
         method: "put",
         url: `http://127.0.0.1:8000/api/lectures/questions/${questionId}`,
-        data: Answer,
+        data: answer,
     }).then(response => { return response.data })
         .catch(error => console.log(error.response.data));
 });
@@ -63,6 +70,18 @@ export const questionsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(fetchQuestion.pending, (state) => {
+                state.error = null;
+                state.loading = true;
+            })
+            .addCase(fetchQuestion.fulfilled, (state, { payload }) => {
+                state.loading = false;
+                state.questionData = payload;
+            })
+            .addCase(fetchQuestion.rejected, (state, { payload }) => {
+                state.error = payload;
+                state.loading = false;
+            })
             .addCase(createQuestion.pending, (state) => {
                 state.error = null;
                 state.loading = true;

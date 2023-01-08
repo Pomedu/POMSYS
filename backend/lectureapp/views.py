@@ -510,6 +510,11 @@ class QuestionDetail(APIView):
         except Question.DoesNotExist:
             raise Http404
     
+    def get(self, request, question_pk, format=None):
+        question = self.get_object(question_pk)
+        serializer = QuestionSerializer(question)
+        return Response(serializer.data)
+
     def put(self, request, question_pk, format=None):
         question = self.get_object(question_pk)
         serializer = QuestionUpdateSerializer(question, data=request.data)

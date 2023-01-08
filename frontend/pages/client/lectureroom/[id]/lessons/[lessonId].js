@@ -16,7 +16,7 @@ import VideoListCard from "../../../../../components/Common/VideoListCard";
 import AttachmentListCard from "../../../../../components/Common/AttachmentListCard";
 import CommentCard from "../../../../../components/Common/CommentCard";
 import { fetchLessonAttachments } from "../../../../../store/modules/attachmentsSlice";
-import { fetchStudents } from "../../../../../store/modules/studentsSlice";
+import { fetchStudent, fetchStudents } from "../../../../../store/modules/studentsSlice";
 import { fetchLessonQuestions } from "../../../../../store/modules/questionsSlice";
 
 const ClientLessonDetailPage = ({ lectureData, studentsData, lessonData, lessonsData,
@@ -35,6 +35,7 @@ const ClientLessonDetailPage = ({ lectureData, studentsData, lessonData, lessons
             dispatch(fetchStudentTestRecords(student_pk));
             dispatch(fetchStudentAttendances(student_pk));
             dispatch(fetchStudentVideoWatchRecords(student_pk));
+            dispatch(fetchStudent(student_pk));
         }
     }, [])
 
@@ -153,7 +154,7 @@ const ClientLessonDetailPage = ({ lectureData, studentsData, lessonData, lessons
                 <div className="col-lg-3">
                     <VideoListCard title="강의영상" lessonData={lessonData}/>
                     <AttachmentListCard title="참고자료" />
-                    <CommentCard title="질문/답변" lessonData={lessonData} />
+                    <CommentCard title="질문/답변" lessonData={lessonData}/>
                 </div>
                 <div className="col-lg-3">
                     <div className="card">

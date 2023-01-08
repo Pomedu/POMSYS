@@ -85,6 +85,6 @@ class Question(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='questions')
     question = models.TextField(null=True,blank=True)
     answer = models.TextField(null=True,blank=True)
-    answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions')
+    answerer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='questions', null=True,blank=True)
     created_at = models.DateField(auto_now_add=True, null=False)
 
